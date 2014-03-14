@@ -3,7 +3,6 @@ import os,re,sys
 
 
 app = Flask(__name__)
-print __name__
 
 # VIEWS
 
