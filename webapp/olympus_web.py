@@ -4,7 +4,7 @@ import os,re,sys
 
 app = Flask(__name__)
 
-# VIEWS
+# ROUTES #
 
 @app.route("/")
 def index():
@@ -56,18 +56,18 @@ def loadPage(filename):
 	else:
 		abort(404)
 		return False;
-	
+
 		
 # TESTING #
 
 def test_loadJs():
-	assert loadJs("bootstrap.min.js"), "Could not load necessary JS file. There is something wrong with the loadJs method."
+	assert loadJs("bootstrap.min.js"), "Could not load necessary JS file."
 	
 def test_loadCss():
-	assert loadCss("style.css"), "Could not load necessary CSS file. There is something wrong with the loadCss method."
+	assert loadCss("style.css"), "Could not load necessary CSS file."
 
 def test_loadFont():
-	assert loadFont("glyphicons-halflings-regular.woff"), "Could not load necessary Font file. There is something wrong with the loadFont method."
+	assert loadFont("glyphicons-halflings-regular.woff"), "Could not load necessary Font file."
 
 	
 if __name__ == "__main__":
