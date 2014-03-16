@@ -6,4 +6,6 @@ virtualenv:
   system_site_packages: true
 
 install: "pip install -r requirements.txt"
-script: tests.sh
+script:
+ - nosetests webapp/olympus_web.py
+ - nosetests lib/Storage.py
