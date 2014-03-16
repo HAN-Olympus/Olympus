@@ -2,5 +2,8 @@ language: python
 python: 
   - "2.6"
   - "2.7"
+virtualenv:
+  system_site_packages: true
+
 install: "pip install -r requirements.txt"
-script: nosetests webapp/start.py lib/Storage.py
+script: tests.sh
