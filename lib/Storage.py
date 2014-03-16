@@ -90,7 +90,6 @@ def test_isAlive():
 def test_getDatabase():
 	storage = Storage()
 	
-
 def test_getCollection():
 	storage = Storage()
 	storage.getDatabase("test_database")
