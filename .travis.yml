@@ -7,5 +7,5 @@ virtualenv:
 
 install: "pip install -r requirements.txt"
 script:
- - nosetests webapp/olympus_web.py
+ - nosetests webapp/start.py
  - nosetests lib/Storage.py
