@@ -13,5 +13,5 @@ import Module
 
 class AcquisitionModule(Module.Module):
 	
-	def __init__(self, arg1, arg2):
+	def __init__(self):
 		pass
