@@ -57,15 +57,17 @@ class Storage(Singleton.Singleton):
 		self.__currentCollection.remove(match)
 		return True
 		
-	def getDocuments(self, match):
+	def getDocuments(self, match, limit=None):
 		if self.__currentDatabase == None:
 			raise ValueError, "There was no database selected"
 			
 		if self.__currentCollection == None:
 			raise ValueError, "There was no collection selected"
-			
-		return self.__currentCollection.find(match)		
 		
+		if limit is None:
+			return self.__currentCollection.find(match)
+		else:
+			return self.__currentCollection.find(match).limit(limit)
 			
 	def __del__(self):
 		self.__client.close()
