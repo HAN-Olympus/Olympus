@@ -99,8 +99,8 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 				articleObject.dateCompleted["Pubmed"] = dateCompleted
 				
 			if attr == "Article":
-				articleObject.title["pubmed"] = str(medlineCitation["Article"]["ArticleTitle"])
-				articleObject.abstract["pubmed"] = str(medlineCitation["Article"]["Abstract"]["AbstractText"])
+				articleObject.title["pubmed"] = medlineCitation["Article"]["ArticleTitle"].encode('utf8')
+				articleObject.abstract["pubmed"] = medlineCitation["Article"]["Abstract"]["AbstractText"].encode('utf8')
 				
 				articleObject.authors["pubmed"] = []
 				for author in medlineCitation["Article"]["AuthorList"]:
@@ -123,7 +123,8 @@ def test_formatTerm():
 	pm = PubMed()
 	assert pm.formatTerm(term="C. elegans") == "C. elegans"
 	assert pm.formatTerm(term="C. elegans", tAnd = ["toxin","zinc"]) == "C. elegans (toxin AND zinc)"
-	assert pm.formatTerm(term="C. elegans", tAnd = ["toxin","zinc"], tOr = ["Zebrafish", "C. elegans"]) == "C. elegans (toxin AND zinc) (Zebrafish OR C. elegans)"
+	complexQuery = "C. elegans (toxin AND zinc) (Zebrafish OR C. elegans)"
+	assert pm.formatTerm(term="C. elegans", tAnd = ["toxin","zinc"], tOr = ["Zebrafish", "C. elegans"]) == complexQuery
 	assert pm.formatTerm(Orgn="C. elegans") == "C. elegans[Orgn]"
 	
 def test_getBySearchTerm():
