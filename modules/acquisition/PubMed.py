@@ -153,6 +153,6 @@ def test_saveArticle():
 	article._database = "test_database"
 	article._collection = "test_collection"
 	article.save()
-	#article.remove()
+	article.remove()
 	
 	
