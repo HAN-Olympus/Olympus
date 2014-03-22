@@ -24,7 +24,6 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 			
 		for type,word in kwargs.items():
 			q.append( "%s[%s]" % (word,type) )
-		print q
 		return  " ".join(q).strip(" ")
 		
 		
@@ -143,7 +142,6 @@ def test_getById():
 	assert articles is not None
 	assert len(articles) == 1
 	assert articles[0] is not None
-	print articles[0].id
 	assert articles[0].id["pubmed"] == id
 	
 def test_saveArticle():

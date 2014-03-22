@@ -100,8 +100,6 @@ def test_findTestObject():
 def test_removeObject():
 	r = 874549078556789
 	t = TestObject().getObjectsByKey("random",r)
-	print t
-	print type(t[0])
 	t[0]().remove()
 	
 def test_loadFromRawData():
