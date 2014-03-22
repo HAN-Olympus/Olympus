@@ -83,9 +83,7 @@ class StoredObject():
 		
 class TestObject(StoredObject):
 	def __init__(self):
-		self._database = "test_database"
-		self._collection = "test_collection"
-		self._className = self.__class__.__name__		
+		super(TestObject, self).__init__(database = "test_database", collection = "test_collection")
 		
 def test_createTestObject():
 	r = 874549078556789
