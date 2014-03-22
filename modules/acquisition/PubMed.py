@@ -34,7 +34,6 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 	def getBySearchTerm(self, term, limit=10):
 		search = Entrez.esearch("pubmed", term=term, retmax=limit)
 		ids = Entrez.read(search)["IdList"]
-		print ids
 		if len(ids) == 0:
 			return []
 		
@@ -100,7 +99,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 				
 			if attr == "Article":
 				articleObject.title["pubmed"] = medlineCitation["Article"]["ArticleTitle"].encode('utf8')
-				articleObject.abstract["pubmed"] = medlineCitation["Article"]["Abstract"]["AbstractText"].encode('utf8')
+				articleObject.abstract["pubmed"] = medlineCitation["Article"]["Abstract"]["AbstractText"][0].encode('utf8')
 				
 				articleObject.authors["pubmed"] = []
 				for author in medlineCitation["Article"]["AuthorList"]:
