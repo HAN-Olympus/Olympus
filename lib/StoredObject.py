@@ -21,7 +21,6 @@ class StoredObject():
 		self._collection = collection
 	
 	def save(self):
-		print type(self)
 		# Can't save without a database or a table
 		if self._database is None:
 			raise ValueError, "No database has been selected."
@@ -69,7 +68,6 @@ class StoredObject():
 		storage = Storage()
 		database = self._database
 		collection = self._collection
-		print type(self)
 		
 		if database is None or collection is None:
 			raise ValueError, "The object needs to be assigned a database and a collection."
