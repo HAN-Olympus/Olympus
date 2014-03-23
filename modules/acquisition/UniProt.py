@@ -1,10 +1,12 @@
 import AcquisitionModule
 from Protein import Protein
-from collections import OrderedDict
+try:
+	from collections import OrderedDict
+except ImportError:
+	from ordereddict import OrderedDict
 import requests, urllib
 import xmltodict
 import json
-import pprint
 
 class Uniprot(AcquisitionModule.AcquisitionModule):
 	def __init__(self):
