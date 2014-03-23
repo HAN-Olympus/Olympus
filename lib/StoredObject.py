@@ -3,7 +3,7 @@
 
 from abc import ABCMeta, abstractmethod
 from Storage import Storage
-import random, time
+import random, time, datetime
 
 class StoredObject():
 	__metaclass__ = ABCMeta
@@ -12,6 +12,7 @@ class StoredObject():
 		self._database = database
 		self._collection = collection
 		self.name = name
+		self._created = datetime.datetime.now()
 		self._type = self.__class__.__name__
 	
 	def setDatabase(self,database):

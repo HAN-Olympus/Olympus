@@ -9,4 +9,4 @@ sphinx==1.2.1
 numpy>=1.7
 biopython>=1.6
 pymongo>=2.6.3
-uniprot>=1.0.1
+xmltodict>=0.8.6

@@ -4,9 +4,12 @@ class Protein(StoredObject.StoredObject):
 	def __init__(self):
 		self.id = {}
 		self.name = {}
-		self.genename = {}
+		self.existence = {}
+		self.creationDate = {}
+		self.modifiedDate = {}
+		self.geneName = {}
 		self.organism = {}
 		self.sequence = {}
-		self.sequencestatus = {}		
+		self.sequencelength = {}
 		
-		super(Article, self).__init__(database = "olympus", collection = "proteins")
+		super(Protein, self).__init__(database = "olympus", collection = "proteins")

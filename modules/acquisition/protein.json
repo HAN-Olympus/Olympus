@@ -1,0 +1,820 @@
+{
+    "uniprot":{
+        "@xmlns":"http://uniprot.org/uniprot",
+        "@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance",
+        "@xsi:schemaLocation":"http://uniprot.org/uniprot http://www.uniprot.org/support/docs/uniprot.xsd",
+        "copyright":"Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms\nDistributed under the Creative Commons Attribution-NoDerivs License",
+        "entry":{
+            "@created":"2007-01-09",
+            "@dataset":"TrEMBL",
+            "@modified":"2014-02-19",
+            "@version":"64",
+            "accession":"A0QSU3",
+            "comment":[
+                {
+                    "@type":"function",
+                    "text":{
+                        "#text":"Catalyzes the conversion of inosine 5'-phosphate (IMP) to xanthosine 5'-phosphate (XMP), the first committed and rate-limiting step in the de novo synthesis of guanine nucleotides, and therefore plays an important role in the regulation of cell growth (By similarity).",
+                        "@evidence":"5"
+                    }
+                },
+                {
+                    "@type":"catalytic activity",
+                    "text":{
+                        "#text":"Inosine 5'-phosphate + NAD(+) + H(2)O = xanthosine 5'-phosphate + NADH.",
+                        "@evidence":"4 5"
+                    }
+                },
+                {
+                    "@type":"cofactor",
+                    "text":{
+                        "#text":"Potassium (By similarity).",
+                        "@evidence":"5"
+                    }
+                },
+                {
+                    "@type":"enzyme regulation",
+                    "text":{
+                        "#text":"Mycophenolic acid (MPA) is a non-competitive inhibitor that prevents formation of the closed enzyme conformation by binding to the same site as the amobile flap. In contrast, mizoribine monophosphate (MZP) is a competitive inhibitor that induces the closed conformation. MPA is a potent inhibitor of mammalian IMPDHs but a poor inhibitor of the bacterial enzymes. MZP is a more potent inhibitor of bacterial IMPDH (By similarity).",
+                        "@evidence":"5"
+                    }
+                },
+                {
+                    "@evidence":"4 5",
+                    "@type":"pathway",
+                    "text":"Purine metabolism; XMP biosynthesis via de novo pathway; XMP from IMP: step 1/1."
+                },
+                {
+                    "@type":"subunit",
+                    "text":{
+                        "#text":"Homotetramer (By similarity).",
+                        "@evidence":"5"
+                    }
+                },
+                {
+                    "@type":"similarity",
+                    "text":{
+                        "#text":"Belongs to the IMPDH/GMPR family.",
+                        "@evidence":"1 5"
+                    }
+                },
+                {
+                    "@type":"similarity",
+                    "text":{
+                        "#text":"Contains 2 CBS domains.",
+                        "@evidence":"5"
+                    }
+                }
+            ],
+            "dbReference":[
+                {
+                    "@evidence":"5",
+                    "@id":"1.1.1.205",
+                    "@type":"EC"
+                },
+                {
+                    "@id":"CP000480",
+                    "@type":"EMBL",
+                    "property":[
+                        {
+                            "@type":"protein sequence ID",
+                            "@value":"ABK69632.1"
+                        },
+                        {
+                            "@type":"molecule type",
+                            "@value":"Genomic_DNA"
+                        }
+                    ]
+                },
+                {
+                    "@id":"YP_885981.1",
+                    "@type":"RefSeq",
+                    "property":{
+                        "@type":"nucleotide sequence ID",
+                        "@value":"NC_008596.1"
+                    }
+                },
+                {
+                    "@id":"A0QSU3",
+                    "@type":"ProteinModelPortal"
+                },
+                {
+                    "@id":"246196.MSMEG_1602",
+                    "@type":"STRING"
+                },
+                {
+                    "@id":"ABK69632",
+                    "@type":"EnsemblBacteria",
+                    "property":[
+                        {
+                            "@type":"protein sequence ID",
+                            "@value":"ABK69632"
+                        },
+                        {
+                            "@type":"gene ID",
+                            "@value":"MSMEG_1602"
+                        }
+                    ]
+                },
+                {
+                    "@id":"4535458",
+                    "@type":"GeneID"
+                },
+                {
+                    "@id":"msm:MSMEG_1602",
+                    "@type":"KEGG"
+                },
+                {
+                    "@id":"18075663",
+                    "@type":"PATRIC",
+                    "property":{
+                        "@type":"gene designation",
+                        "@value":"VBIMycSme59918_1588"
+                    }
+                },
+                {
+                    "@id":"COG0517",
+                    "@type":"eggNOG"
+                },
+                {
+                    "@id":"HOG000165755",
+                    "@type":"HOGENOM"
+                },
+                {
+                    "@id":"K00088",
+                    "@type":"KO"
+                },
+                {
+                    "@id":"SSMGYCG",
+                    "@type":"OMA"
+                },
+                {
+                    "@id":"EOG6GTZPV",
+                    "@type":"OrthoDB"
+                },
+                {
+                    "@id":"PRK05567",
+                    "@type":"ProtClustDB"
+                },
+                {
+                    "@id":"MSME246196:GJ4Y-1602-MONOMER",
+                    "@type":"BioCyc"
+                },
+                {
+                    "@id":"UPA00601",
+                    "@type":"UniPathway",
+                    "property":{
+                        "@type":"reaction ID",
+                        "@value":"UER00295"
+                    }
+                },
+                {
+                    "@id":"GO:0030554",
+                    "@type":"GO",
+                    "property":[
+                        {
+                            "@type":"term",
+                            "@value":"F:adenyl nucleotide binding"
+                        },
+                        {
+                            "@type":"evidence",
+                            "@value":"IEA:InterPro"
+                        }
+                    ]
+                },
+                {
+                    "@id":"GO:0003938",
+                    "@type":"GO",
+                    "property":[
+                        {
+                            "@type":"term",
+                            "@value":"F:IMP dehydrogenase activity"
+                        },
+                        {
+                            "@type":"evidence",
+                            "@value":"IEA:UniProtKB-HAMAP"
+                        }
+                    ]
+                },
+                {
+                    "@id":"GO:0046872",
+                    "@type":"GO",
+                    "property":[
+                        {
+                            "@type":"term",
+                            "@value":"F:metal ion binding"
+                        },
+                        {
+                            "@type":"evidence",
+                            "@value":"IEA:UniProtKB-HAMAP"
+                        }
+                    ]
+                },
+                {
+                    "@id":"GO:0006177",
+                    "@type":"GO",
+                    "property":[
+                        {
+                            "@type":"term",
+                            "@value":"P:GMP biosynthetic process"
+                        },
+                        {
+                            "@type":"evidence",
+                            "@value":"IEA:UniProtKB-HAMAP"
+                        }
+                    ]
+                },
+                {
+                    "@id":"3.20.20.70",
+                    "@type":"Gene3D",
+                    "property":{
+                        "@type":"match status",
+                        "@value":"1"
+                    }
+                },
+                {
+                    "@id":"MF_01964",
+                    "@type":"HAMAP",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"IMPDH"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"1"
+                        }
+                    ]
+                },
+                {
+                    "@id":"IPR013785",
+                    "@type":"InterPro",
+                    "property":{
+                        "@type":"entry name",
+                        "@value":"Aldolase_TIM"
+                    }
+                },
+                {
+                    "@id":"IPR000644",
+                    "@type":"InterPro",
+                    "property":{
+                        "@type":"entry name",
+                        "@value":"CBS_dom"
+                    }
+                },
+                {
+                    "@id":"IPR005990",
+                    "@type":"InterPro",
+                    "property":{
+                        "@type":"entry name",
+                        "@value":"IMP_DH"
+                    }
+                },
+                {
+                    "@id":"IPR015875",
+                    "@type":"InterPro",
+                    "property":{
+                        "@type":"entry name",
+                        "@value":"IMP_DH/GMP_Rdtase_CS"
+                    }
+                },
+                {
+                    "@id":"IPR001093",
+                    "@type":"InterPro",
+                    "property":{
+                        "@type":"entry name",
+                        "@value":"IMP_DH_GMPRt"
+                    }
+                },
+                {
+                    "@id":"PTHR11911:SF6",
+                    "@type":"PANTHER",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"PTHR11911:SF6"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"1"
+                        }
+                    ]
+                },
+                {
+                    "@id":"PF00571",
+                    "@type":"Pfam",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"CBS"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"2"
+                        }
+                    ]
+                },
+                {
+                    "@id":"PF00478",
+                    "@type":"Pfam",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"IMPDH"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"1"
+                        }
+                    ]
+                },
+                {
+                    "@id":"PIRSF000130",
+                    "@type":"PIRSF",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"IMPDH"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"1"
+                        }
+                    ]
+                },
+                {
+                    "@id":"SM00116",
+                    "@type":"SMART",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"CBS"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"2"
+                        }
+                    ]
+                },
+                {
+                    "@id":"TIGR01302",
+                    "@type":"TIGRFAMs",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"IMP_dehydrog"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"1"
+                        }
+                    ]
+                },
+                {
+                    "@id":"PS51371",
+                    "@type":"PROSITE",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"CBS"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"2"
+                        }
+                    ]
+                },
+                {
+                    "@id":"PS00487",
+                    "@type":"PROSITE",
+                    "property":[
+                        {
+                            "@type":"entry name",
+                            "@value":"IMP_DH_GMP_RED"
+                        },
+                        {
+                            "@type":"match status",
+                            "@value":"1"
+                        }
+                    ]
+                }
+            ],
+            "evidence":[
+                {
+                    "@key":"1",
+                    "@type":"ECO:0000203",
+                    "source":{
+                        "dbReference":{
+                            "@id":"RU003927",
+                            "@type":"RuleBase"
+                        }
+                    }
+                },
+                {
+                    "@key":"2",
+                    "@type":"ECO:0000203"
+                },
+                {
+                    "@key":"3",
+                    "@type":"ECO:0000203",
+                    "source":{
+                        "dbReference":{
+                            "@id":"PIRSR000130-1",
+                            "@type":"PIRSR"
+                        }
+                    }
+                },
+                {
+                    "@key":"4",
+                    "@type":"ECO:0000203",
+                    "source":{
+                        "dbReference":{
+                            "@id":"RU003928",
+                            "@type":"RuleBase"
+                        }
+                    }
+                },
+                {
+                    "@key":"5",
+                    "@type":"ECO:0000203",
+                    "source":{
+                        "dbReference":{
+                            "@id":"MF_01964",
+                            "@type":"HAMAP-Rule"
+                        }
+                    }
+                },
+                {
+                    "@key":"6",
+                    "@type":"ECO:0000313",
+                    "source":{
+                        "dbReference":{
+                            "@id":"ABK69632.1",
+                            "@type":"EMBL"
+                        }
+                    }
+                }
+            ],
+            "feature":[
+                {
+                    "@description":"CBS 1",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"domain",
+                    "location":{
+                        "begin":{
+                            "@position":"113"
+                        },
+                        "end":{
+                            "@position":"169"
+                        }
+                    }
+                },
+                {
+                    "@description":"CBS 2",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"domain",
+                    "location":{
+                        "begin":{
+                            "@position":"173"
+                        },
+                        "end":{
+                            "@position":"230"
+                        }
+                    }
+                },
+                {
+                    "@description":"NAD",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"nucleotide phosphate-binding region",
+                    "location":{
+                        "begin":{
+                            "@position":"318"
+                        },
+                        "end":{
+                            "@position":"320"
+                        }
+                    }
+                },
+                {
+                    "@description":"IMP binding",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"region of interest",
+                    "location":{
+                        "begin":{
+                            "@position":"358"
+                        },
+                        "end":{
+                            "@position":"360"
+                        }
+                    }
+                },
+                {
+                    "@description":"IMP binding",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"region of interest",
+                    "location":{
+                        "begin":{
+                            "@position":"381"
+                        },
+                        "end":{
+                            "@position":"382"
+                        }
+                    }
+                },
+                {
+                    "@description":"IMP binding",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"region of interest",
+                    "location":{
+                        "begin":{
+                            "@position":"405"
+                        },
+                        "end":{
+                            "@position":"409"
+                        }
+                    }
+                },
+                {
+                    "@description":"Thioimidate intermediate",
+                    "@evidence":"3 5",
+                    "@status":"by similarity",
+                    "@type":"active site",
+                    "location":{
+                        "position":{
+                            "@position":"325"
+                        }
+                    }
+                },
+                {
+                    "@description":"Potassium; via carbonyl oxygen",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"metal ion-binding site",
+                    "location":{
+                        "position":{
+                            "@position":"320"
+                        }
+                    }
+                },
+                {
+                    "@description":"Potassium; via carbonyl oxygen",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"metal ion-binding site",
+                    "location":{
+                        "position":{
+                            "@position":"322"
+                        }
+                    }
+                },
+                {
+                    "@description":"Potassium; via carbonyl oxygen",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"metal ion-binding site",
+                    "location":{
+                        "position":{
+                            "@position":"325"
+                        }
+                    }
+                },
+                {
+                    "@description":"Potassium; via carbonyl oxygen; shared with tetrameric partner",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"metal ion-binding site",
+                    "location":{
+                        "position":{
+                            "@position":"495"
+                        }
+                    }
+                },
+                {
+                    "@description":"Potassium; via carbonyl oxygen; shared with tetrameric partner",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"metal ion-binding site",
+                    "location":{
+                        "position":{
+                            "@position":"496"
+                        }
+                    }
+                },
+                {
+                    "@description":"Potassium; via carbonyl oxygen; shared with tetrameric partner",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"metal ion-binding site",
+                    "location":{
+                        "position":{
+                            "@position":"497"
+                        }
+                    }
+                },
+                {
+                    "@description":"NAD",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"binding site",
+                    "location":{
+                        "position":{
+                            "@position":"267"
+                        }
+                    }
+                },
+                {
+                    "@description":"IMP",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"binding site",
+                    "location":{
+                        "position":{
+                            "@position":"323"
+                        }
+                    }
+                },
+                {
+                    "@description":"IMP",
+                    "@evidence":"5",
+                    "@status":"by similarity",
+                    "@type":"binding site",
+                    "location":{
+                        "position":{
+                            "@position":"442"
+                        }
+                    }
+                }
+            ],
+            "gene":{
+                "name":[
+                    {
+                        "#text":"guaB",
+                        "@evidence":"5 6",
+                        "@type":"primary"
+                    },
+                    {
+                        "#text":"MSMEG_1602",
+                        "@evidence":"6",
+                        "@type":"ordered locus"
+                    }
+                ]
+            },
+            "keyword":[
+                {
+                    "#text":"CBS domain",
+                    "@evidence":"5",
+                    "@id":"KW-0129"
+                },
+                {
+                    "#text":"Complete proteome",
+                    "@evidence":"2",
+                    "@id":"KW-0181"
+                },
+                {
+                    "#text":"GMP biosynthesis",
+                    "@evidence":"4 5",
+                    "@id":"KW-0332"
+                },
+                {
+                    "#text":"Metal-binding",
+                    "@evidence":"4 5",
+                    "@id":"KW-0479"
+                },
+                {
+                    "#text":"NAD",
+                    "@evidence":"4 5",
+                    "@id":"KW-0520"
+                },
+                {
+                    "#text":"Oxidoreductase",
+                    "@evidence":"1 5 6",
+                    "@id":"KW-0560"
+                },
+                {
+                    "#text":"Potassium",
+                    "@evidence":"4 5",
+                    "@id":"KW-0630"
+                },
+                {
+                    "#text":"Purine biosynthesis",
+                    "@evidence":"4 5",
+                    "@id":"KW-0658"
+                },
+                {
+                    "#text":"Reference proteome",
+                    "@evidence":"2",
+                    "@id":"KW-1185"
+                },
+                {
+                    "#text":"Repeat",
+                    "@evidence":"5",
+                    "@id":"KW-0677"
+                }
+            ],
+            "name":"A0QSU3_MYCS2",
+            "organism":{
+                "@evidence":"2 6",
+                "dbReference":{
+                    "@id":"246196",
+                    "@type":"NCBI Taxonomy"
+                },
+                "lineage":{
+                    "taxon":[
+                        "Bacteria",
+                        "Actinobacteria",
+                        "Actinobacteridae",
+                        "Actinomycetales",
+                        "Corynebacterineae",
+                        "Mycobacteriaceae",
+                        "Mycobacterium"
+                    ]
+                },
+                "name":{
+                    "#text":"Mycobacterium smegmatis (strain ATCC 700084 / mc(2)155)",
+                    "@type":"scientific"
+                }
+            },
+            "protein":{
+                "recommendedName":{
+                    "ecNumber":{
+                        "#text":"1.1.1.205",
+                        "@evidence":"5"
+                    },
+                    "fullName":{
+                        "#text":"Inosine-5'-monophosphate dehydrogenase",
+                        "@evidence":"5"
+                    },
+                    "shortName":[
+                        {
+                            "#text":"IMP dehydrogenase",
+                            "@evidence":"5"
+                        },
+                        {
+                            "#text":"IMPD",
+                            "@evidence":"5"
+                        },
+                        {
+                            "#text":"IMPDH",
+                            "@evidence":"5"
+                        }
+                    ]
+                }
+            },
+            "proteinExistence":{
+                "@type":"inferred from homology"
+            },
+            "reference":{
+                "@evidence":"2 6",
+                "@key":"1",
+                "citation":{
+                    "@date":"2006-10",
+                    "@db":"EMBL/GenBank/DDBJ databases",
+                    "@type":"submission",
+                    "authorList":{
+                        "person":[
+                            {
+                                "@name":"Fleischmann R.D."
+                            },
+                            {
+                                "@name":"Dodson R.J."
+                            },
+                            {
+                                "@name":"Haft D.H."
+                            },
+                            {
+                                "@name":"Merkel J.S."
+                            },
+                            {
+                                "@name":"Nelson W.C."
+                            },
+                            {
+                                "@name":"Fraser C.M."
+                            }
+                        ]
+                    }
+                },
+                "scope":"NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]",
+                "source":{
+                    "strain":{
+                        "#text":"ATCC 700084 / mc(2)155",
+                        "@evidence":"2"
+                    }
+                }
+            },
+            "sequence":{
+                "#text":"MSIAESSVPIAVPVPTGGDDPTKVAMLGLTFDDVLLLPAASDVVPATADTSSQLTKRIRL\nRVPLVSSAMDTVTESRMAIAMARAGGMGVLHRNLPVAEQAGQVETVKRSEAGMVTDPVTC\nSPDNTLAEVDAMCARFRISGLPVVDDTGELVGIITNRDMRFEVDQSKPVSEVMTKAPLIT\nAKEGVSAEAALGLLRRHKIEKLPIVDGHGKLTGLITVKDFVKTEQFPLSTKDSDGRLLVG\nAAVGVGDDAWTRAMTLVDAGVDVLIVDTAHAHNRGVLDMVSRLKQAVGERVDVVGGNVAT\nRAAAAALVEAGADAVKVGVGPGSICTTRVVAGVGAPQITAILEAVAACKPYGVPVIADGG\nLQYSGDIAKALAAGASTAMLGSLLAGTAESPGELIFVNGKQFKSYRGMGSLGAMQGRGAA\nKSYSKDRYFQDDVLSEDKLVPEGIEGRVPFRGPLGTVIHQLTGGLRAAMGYTGSATIEQL\nQQAQFVQITAAGLKESHPHDITMTVEAPNYYTR",
+                "@checksum":"160D02EAA40E23AC",
+                "@length":"513",
+                "@mass":"53332",
+                "@modified":"2007-01-09",
+                "@version":"1"
+            }
+        }
+    }
+}

@@ -40,7 +40,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		records = Entrez.parse(handle)
 		articles = []
 		for record in records:
-			articles.append( self.convertPubmedArticle(record) )
+			articles.append( self.convertToArticle(record) )
 			
 		return articles
 		
@@ -56,61 +56,53 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		records = Entrez.parse(handle)
 		articles = []
 		for record in records:
-			articles.append( self.convertPubmedArticle(record) )
+			articles.append( self.convertToArticle(record) )
 			
 		return articles
 		
 		
-	# Convert Pubmeds day, month, year notation to a python datetime object
-	# @param day	: Numeric, the day (1-31)
-	# @param month	: Numeric, the month (1-12)
-	# @param year	: Numeric, the year
-	# @returns		: A properly formed datetime object
-	def convertDateToNative(self, day, month, year):
-		dt = datetime.datetime(int(year), int(month), int(day))
-		return dt
-		
 	# Takes the parsed Pubmed article and converts it to our lightweight format.
 	# @param article: A parsed Pubmed article
 	# @returns		: A properly formatted Article Object ( Stored Object )
-	def convertPubmedArticle(self, article):
+	def convertToArticle(self, article):
 		articleObject = Article()
 		
 		# Loop over all the citation data
 		medlineCitation = article["MedlineCitation"]
 		for attr in medlineCitation:
 			if attr == "PMID":
-				articleObject.id["pubmed"] = str( medlineCitation["PMID"] )
+				articleObject.addAttribute("id","pubmed",str( medlineCitation["PMID"] ))
 				
 			if attr == "DateCreated":
 				day = medlineCitation["DateCreated"]["Day"]
 				month = medlineCitation["DateCreated"]["Month"]
 				year = medlineCitation["DateCreated"]["Year"]
 				dateCreated = self.convertDateToNative( day, month, year )
-				articleObject.dateCreated["pubmed"] = dateCreated
+				articleObject.addAttribute("dateCreated","pubmed",dateCreated)
 				
 			if attr == "DateCompleted":
 				day = medlineCitation["DateCompleted"]["Day"]
 				month = medlineCitation["DateCompleted"]["Month"]
 				year = medlineCitation["DateCompleted"]["Year"]
 				dateCompleted = self.convertDateToNative( day, month, year )
-				articleObject.dateCompleted["pubmed"] = dateCompleted
+				articleObject.addAttribute("dateCompleted","pubmed",dateCompleted)
 				
 			if attr == "Article":
-				articleObject.title["pubmed"] = medlineCitation["Article"]["ArticleTitle"].encode('utf8')
-				articleObject.abstract["pubmed"] = medlineCitation["Article"]["Abstract"]["AbstractText"][0].encode('utf8')
+				articleObject.addAttribute("title","pubmed", medlineCitation["Article"]["ArticleTitle"].encode('utf8') )
+				articleObject.addAttribute("abstract","pubmed", medlineCitation["Article"]["Abstract"]["AbstractText"][0].encode('utf8') )
 				
-				articleObject.authors["pubmed"] = []
+				authors = []
 				for author in medlineCitation["Article"]["AuthorList"]:
-					articleObject.authors["pubmed"].append( "%s %s" % (author["ForeName"], author["LastName"]))
+					authors.append( "%s %s" % (author["ForeName"], author["LastName"]))
+				articleObject.addAttribute("authors", "pubmed", authors)
 				
-				articleObject.source["pubmed"] = str(medlineCitation["Article"]["Journal"]["Title"])
+				articleObject.addAttribute("source","pubmed",str(medlineCitation["Article"]["Journal"]["Title"]))
 		
 		# Loop over all the aspects of the pubmed data
 		for attr in article["PubmedData"]:
 			if attr == "ArticleIdList":
 				for id in article["PubmedData"]["ArticleIdList"]:
-					articleObject.id[id.attributes["IdType"]] = str(id)
+					articleObject.addAttribute("id",id.attributes["IdType"],str(id))
 		
 		return articleObject
 		
