@@ -10,3 +10,4 @@ numpy>=1.7
 biopython>=1.6
 pymongo>=2.6.3
 xmltodict>=0.8.6
+ordereddict>=1.1
