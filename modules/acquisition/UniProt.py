@@ -1,6 +1,5 @@
 import AcquisitionModule
-from Bio import Entrez
-from Bio import Medline
+import uniprot
 
 class Uniprot(AcquisitionModule.AcquisitionModule):
 	def __init__(self):

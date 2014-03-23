@@ -87,14 +87,14 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 				month = medlineCitation["DateCreated"]["Month"]
 				year = medlineCitation["DateCreated"]["Year"]
 				dateCreated = self.convertDateToNative( day, month, year )
-				articleObject.dateCreated["Pubmed"] = dateCreated
+				articleObject.dateCreated["pubmed"] = dateCreated
 				
 			if attr == "DateCompleted":
 				day = medlineCitation["DateCompleted"]["Day"]
 				month = medlineCitation["DateCompleted"]["Month"]
 				year = medlineCitation["DateCompleted"]["Year"]
 				dateCompleted = self.convertDateToNative( day, month, year )
-				articleObject.dateCompleted["Pubmed"] = dateCompleted
+				articleObject.dateCompleted["pubmed"] = dateCompleted
 				
 			if attr == "Article":
 				articleObject.title["pubmed"] = medlineCitation["Article"]["ArticleTitle"].encode('utf8')
@@ -150,6 +150,8 @@ def test_saveArticle():
 	article = pm.getById(id)[0]
 	article._database = "test_database"
 	article._collection = "test_collection"
+	article.setDatabase("test_database")
+	article.setCollection("test_collection")
 	article.save()
 	article.remove()
 	

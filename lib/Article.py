@@ -10,4 +10,4 @@ class Article(StoredObject.StoredObject):
 		self.dateCreated = {}
 		self.dateCompleted = {}
 		
-		super(Article, self).__init__(database = "test_database", collection = "test_collection")
+		super(Article, self).__init__(database = "olympus", collection = "articles")

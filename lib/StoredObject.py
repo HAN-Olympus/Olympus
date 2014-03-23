@@ -12,7 +12,7 @@ class StoredObject():
 		self._database = database
 		self._collection = collection
 		self.name = name
-		self._className = self.__class__.__name__
+		self._type = self.__class__.__name__
 	
 	def setDatabase(self,database):
 		self._database = database
@@ -30,7 +30,7 @@ class StoredObject():
 		# Check private variables. We probably shouldn't store these.
 		document = {}	
 		for key, value in self.__dict__.items():
-			key = key.replace("_"+self._className, "")
+			key = key.replace("_"+self._type, "")
 			if key.startswith("__"):
 				continue
 			document[key] = value
@@ -75,32 +75,64 @@ class StoredObject():
 		storage.getDatabase(database)
 		storage.getCollection(collection)
 		documents = storage.removeDocuments({"_id":self._id})
-					
+		
+	def setAttribute(self, attr, source, value):
+		attribute = {}
+		attribute[source] = value
+		setattr(self,attr,attribute)
+		
+	def addAttribute(self, attr, source, value):
+		attribute = getattr(self, attr, {})
+		attribute[source] = value
+		setattr(self,attr,attribute)
+
+	def getAttribute(self, attr, source):
+		if not hasattr(self, attr):
+			return None			
+		attribute = getattr(self, attr, {})
+		return attribute.get(source, None)
+		
 		
 # For testing purposes only #
 		
 class TestObject(StoredObject):
 	def __init__(self):
 		super(TestObject, self).__init__(database = "test_database", collection = "test_collection")
+
+import random
+r = random.randrange(1000000000,9999999999)
+		
+def test_setAttribute():
+	t = TestObject()
+	t.setAttribute("random", "python", r)
+	assert t.random["python"] == r
+	
+def test_addAttribute():
+	t = TestObject()
+	t.addAttribute("random", "python", r)
+	t.addAttribute("random", "lua", r+1)
+	assert t.random["python"] == r
+	assert t.random["lua"] == r+1
+	
+def test_getAttribute():
+	t = TestObject()
+	t.addAttribute("random", "python", r)
+	assert t.getAttribute("random", "python") == r
 		
 def test_createTestObject():
-	r = 874549078556789
-	tn = TestObject()
-	tn.random = r
-	tn.save()
+	t = TestObject()
+	t.random = r
+	t.save()
 
 def test_findTestObject():
-	r = 874549078556789
 	t = TestObject().getObjectsByKey("random",r)
 	assert len(t) > 0
 	assert t[0].random == r
 	
 def test_removeObject():
-	r = 874549078556789
 	t = TestObject().getObjectsByKey("random",r)
 	t[0]().remove()
 	
 def test_loadFromRawData():
-	r = 984598324040348
 	t = TestObject().loadFromRawData({"r":r})
 	assert t.r == r

@@ -1,13 +1,12 @@
 import StoredObject
 
-class Article(StoredObject.StoredObject):
+class Protein(StoredObject.StoredObject):
 	def __init__(self):
 		self.id = {}
-		self.title = {}
-		self.source = {}
-		self.authors = {}
-		self.abstract = {}
-		self.dateCreated = {}
-		self.dateCompleted = {}
+		self.name = {}
+		self.genename = {}
+		self.organism = {}
+		self.sequence = {}
+		self.sequencestatus = {}		
 		
-		super(Article, self).__init__(database = "test_database", collection = "test_collection")
+		super(Article, self).__init__(database = "olympus", collection = "proteins")
