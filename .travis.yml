@@ -11,7 +11,7 @@ virtualenv:
 
 install: "pip install -r requirements.txt"
 script:
- - nosetests webapp/start.py lib/*.py modules/acquisition/*.py
+ - nosetests webapp/start.py lib/*.py modules/acquisition/*.py core/*.py
 
 matrix:
   allow_failures:
