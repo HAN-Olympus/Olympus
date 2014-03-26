@@ -3,7 +3,7 @@
 
 from abc import ABCMeta, abstractmethod
 from Storage import Storage
-import random, time, datetime
+import random, time, datetime, copy
 
 class StoredObject():
 	__metaclass__ = ABCMeta
@@ -93,6 +93,35 @@ class StoredObject():
 		attribute = getattr(self, attr, {})
 		return attribute.get(source, None)
 		
+	def __add__(self, other):
+		attributes = self.mergeObjects(self,other)
+		newObject = self.__class__()
+		newObject.__dict__ = attributes
+		return newObject
+		
+	def mergeObjects(self, objectOne, objectTwo, path=None):
+		a = copy.deepcopy(objectOne.__dict__)
+		b = copy.deepcopy(objectTwo.__dict__)
+		
+		attributes = self.merge(a,b,path)
+		return attributes
+		
+	def merge(self, a, b, path=None):
+		if path is None: path = []
+		for key in b:
+			if key in a:
+				if isinstance(a[key], dict) and isinstance(b[key], dict):
+					self.merge(a[key], b[key], path + [str(key)])
+				elif a[key] == b[key]:
+					pass # same leaf value
+				else:
+					# Conflict, use the value from A
+					pass
+					
+			else:
+				a[key] = b[key]
+		return a
+		
 		
 # For testing purposes only #
 		
@@ -137,3 +166,25 @@ def test_removeObject():
 def test_loadFromRawData():
 	t = TestObject().loadFromRawData({"r":r})
 	assert t.r == r
+	
+def test_mergeObjects():
+	t1 = TestObject()
+	t2 = TestObject()
+	
+	t1.addAttribute("rand", "python", r)
+	t2.addAttribute("rand", "lua", r+1)
+	resultingAttributes = TestObject().mergeObjects(t1,t2)
+	
+	assert resultingAttributes["rand"]["python"] == r
+	assert resultingAttributes["rand"]["lua"] == r+1
+	
+def test_mergeByAddOperator():
+	t1 = TestObject()
+	t2 = TestObject()
+	t1.addAttribute("rand", "python", r)
+	t2.addAttribute("rand", "lua", r+1)
+	
+	t3 = t1+t2
+	assert t3.getAttribute("rand", "python") == r
+	assert t3.getAttribute("rand", "lua") == r+1
+	
