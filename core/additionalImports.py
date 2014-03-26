@@ -2,7 +2,7 @@
 # Allow importing modules from the lib and modules directories
 import os, sys
 currentDir = os.path.dirname(__file__)
-relLibDir = currentDir + "/../../lib"
+relLibDir = currentDir + "../../lib"
 absLibDir = os.path.abspath(relLibDir)
 sys.path.insert(0, absLibDir)
 
@@ -15,4 +15,4 @@ for moduleType in os.listdir(absModuleDir):
 def test_Import():
 	for file in os.listdir(absLibDir):
 		if file[-3:] == ".py":
-			__import__(file[:-3])		
+			__import__(file[:-3])
