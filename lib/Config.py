@@ -13,7 +13,7 @@ class Config():
 			self.conf = json.load( open(olympusConfName, "r") )
 		else:
 			try:
-				self.conf = json.load( open(olympusConfName, "r") )
+				self.conf = json.load( open(defaultConfName, "r") )
 			except:
 				raise IOError, "No default configuration file found, you need a configuration file to use this module."
 		
