@@ -5,6 +5,10 @@
 __pycache__/
 *.py[cod]
 
+# Configurations
+*.conf
+!default.conf
+
 # C extensions
 *.so
 
