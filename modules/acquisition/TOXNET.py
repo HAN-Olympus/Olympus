@@ -36,9 +36,7 @@ class TOXNET(AcquisitionModule.AcquisitionModule):
 			
 				print db
 				self.parseQueryResult(r.text)
-			
-			raise Exception
-			
+						
 		if isinstance(query, str):
 			return chemicals[0]
 		elif isinstance(query, list):
