@@ -1,7 +1,8 @@
+"""additionalImports is used by Core scripts to allow access into the lib and modules directory including any subdirectory of in the case of 'modules'."""
 # Allow importing modules from the lib and modules directories
 import os, sys
 currentDir = os.path.dirname(__file__)
-relLibDir = currentDir + "../../lib"
+relLibDir = currentDir + "/../../lib"
 absLibDir = os.path.abspath(relLibDir)
 sys.path.insert(0, absLibDir)
 

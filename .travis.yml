@@ -8,10 +8,13 @@ services:
   - mongodb
 virtualenv:
   system_site_packages: true
-
+before_instal:
+  - apt-get install python-sphinx
 install: "pip install -r requirements.txt"
 script:
- - nosetests webapp/start.py lib/*.py modules/acquisition/*.py core/*.py
+  - nosetests webapp/start.py lib/*.py modules/acquisition/*.py core/*.py
+  - cd docs
+  - make html
 
 matrix:
   allow_failures:
