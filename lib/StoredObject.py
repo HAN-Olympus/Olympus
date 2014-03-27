@@ -143,11 +143,11 @@ class StoredObject():
 			
 		    ProteinOne = Protein()
 		    ProteinTwo = Protein()
-		    ProteinOne.setAttr("attribute", "source", "ValueOne")
-		    ProteinOne.setAttr("attribute", "source", "ValueTwo")
+		    ProteinOne.setAttribute("attribute", "source", "ValueOne")
+		    ProteinOne.setAttribute("attribute", "source", "ValueTwo")
 			
 		    ProteinMerged = ProteinOne + ProteinTwo
-		    assert ProteinMerged.getAttribute("attribute","source") == "ValueOne" # Yields True
+		    ProteinMerged.getAttribute("attribute","source") == "ValueOne" # Yields True
 		
 		The original two objects will not be affected.
 		
