@@ -93,4 +93,67 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 			if attr == "DateCompleted":
 				day = medlineCitation["DateCompleted"]["Day"]
 				month = medlineCitation["DateCompleted"]["Month"]
+				year = medlineCitation["DateCompleted"]["Year"]
+				dateCompleted = self.convertDateToNative( day, month, year )
+				articleObject.addAttribute("dateCompleted","pubmed",dateCompleted)
+
+			if attr == "Article":
+				articleObject.addAttribute("title","pubmed", medlineCitation["Article"]["ArticleTitle"].encode('utf8') )
+				articleObject.addAttribute("abstract","pubmed", medlineCitation["Article"]["Abstract"]["AbstractText"][0].encode('utf8') )
+
+				authors = []
+				for author in medlineCitation["Article"]["AuthorList"]:
+					authors.append( "%s %s" % (author["ForeName"], author["LastName"]))
+				articleObject.addAttribute("authors", "pubmed", authors)
+
+				articleObject.addAttribute("source","pubmed",str(medlineCitation["Article"]["Journal"]["Title"]))
+
+		# Loop over all the aspects of the pubmed data
+		for attr in article["PubmedData"]:
+			if attr == "ArticleIdList":
+				for id in article["PubmedData"]["ArticleIdList"]:
+					articleObject.addAttribute("id",id.attributes["IdType"],str(id))
+
+		return articleObject
+
+
+# TESTING #
+
+def test_formatTerm():
+	pm = PubMed()
+	assert pm.formatTerm(term="C. elegans") == "C. elegans"
+	assert pm.formatTerm(term="C. elegans", tAnd = ["toxin","zinc"]) == "C. elegans (toxin AND zinc)"
+	complexQuery = "C. elegans (toxin AND zinc) (Zebrafish OR C. elegans)"
+	assert pm.formatTerm(term="C. elegans", tAnd = ["toxin","zinc"], tOr = ["Zebrafish", "C. elegans"]) == complexQuery
+	assert pm.formatTerm(Orgn="C. elegans") == "C. elegans[Orgn]"
+
+def test_getBySearchTerm():
+	pm = PubMed()
+	articles = pm.getBySearchTerm("zinc")
+	assert len(articles) == 10
+
+def test_convertDateToNative():
+	dt = PubMed().convertDateToNative(1,1,2014)
+	assert isinstance(dt, datetime.datetime)
+	assert dt.year == 2014
+
+def test_getById():
+	pm = PubMed()
+	id = "17284678"
+	articles = pm.getById(id)
+	assert articles is not None
+	assert len(articles) == 1
+	assert articles[0] is not None
+	assert articles[0].id["pubmed"] == id
+
+def test_saveArticle():
+	pm = PubMed()
+	id = "17284678"
+	article = pm.getById(id)[0]
+	article._database = "test_database"
+	article._collection = "test_collection"
+	article.setDatabase("test_database")
+	article.setCollection("test_collection")
+	article.save()
+	article.remove()
 	

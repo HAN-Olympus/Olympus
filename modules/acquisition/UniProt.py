@@ -100,4 +100,29 @@ class Uniprot(AcquisitionModule.AcquisitionModule):
 			
 			if element == "sequence":
 				proteinObject.addAttribute("sequence", "uniprot",value["#text"].replace("\n",""))
-				p
+				proteinObject.addAttribute("sequencelength", "uniprot",value["@length"].replace("\n",""))
+
+
+		return proteinObject
+		
+# TESTING #
+
+def test_composeQueryUrl():
+	u = Uniprot()
+	params = {
+		'from':'ACC',
+		'to':'P_REFSEQ_AC',
+		'format':'tab',
+		'query':'P13368 P20806 Q9UM73 P97793 Q17192'
+	}
+	desiredUrl = "http://www.uniprot.org/uniprot/?to=P_REFSEQ_AC&query=P13368+P20806+Q9UM73+P97793+Q17192&from=ACC&format=tab"
+	url = u.composeQueryUrl(params)
+	assert url == desiredUrl
+
+def test_getByIdSingle():
+	u = Uniprot()
+	results = u.getById('A0QSU3')
+
+def test_getByIdList():
+	u = Uniprot()
+	results = u.getById('P13368 P20806 Q9UM73 P97793 Q17192'.split(" "))
