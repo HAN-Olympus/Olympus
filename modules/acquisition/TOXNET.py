@@ -9,15 +9,21 @@ import xmltodict
 import json
 
 class TOXNET(AcquisitionModule.AcquisitionModule):
+	""" This module allows for retrieval of chemicals from the TOXNET API.
+	
+	The TOXNET API envelops many toxicology databases, but does not not provide a lot of easily parsed information. Most of it is enclosed in text-heavy HTML documents. This module has a lot of potential for future development when large slabs of text are required for analysis. As of now, however, it will only provide a dictionary containing the query results.
+	"""
 	def __init__(self):
 		self.api_url = "http://toxgate.nlm.nih.gov/cgi-bin/sis/search"	
 		self.databases = ["hsdb","ccris","genetox","iris","iter","lact"]
 	
-	# Retreives the ids or more TOXNET chemicals based on a query
-	# @param query	: A single query or a list of queries.
-	# @param dbs	: (optional) A list of databases to search in. Will search in ALL available databases if it is not defined.
-	# @returns		: Either a single Chemical object or a list of Chemical objects if a list of queries was inserted. No result will return None.
 	def findByQuery(self, query, dbs=[]):
+		"""Retreives the ids or more TOXNET chemicals based on a query
+	
+		:param query: A single query or a list of queries.
+		:param dbs: (optional) A list of databases to search in. Will search in ALL available databases if it is not defined.
+		:rtype: Either a single dictionary or a list of dictionaries if a list of queries was inserted. No result will return None.
+		"""
 		chemicals = []		
 		if isinstance(query, str):
 			query = [query]
@@ -35,7 +41,7 @@ class TOXNET(AcquisitionModule.AcquisitionModule):
 				r = requests.post(self.api_url,data=payload)
 			
 				print db
-				self.parseQueryResult(r.text)
+				chemicals.append( self.parseQueryResult(r.text) )
 						
 		if isinstance(query, str):
 			return chemicals[0]
@@ -43,20 +49,18 @@ class TOXNET(AcquisitionModule.AcquisitionModule):
 			return chemicals
 			
 	def parseQueryResult(self, xml):
+		"""Parses the XML result of a TOXNET Query
+		
+		:param xml: The XML returned by TOXNET
+		:rtype: A dictionary with the results from the query.
+		"""
+		
 		# The Query result will contain some HTML linebreaks, which do not count as correct XML
 		xml = xml.replace("<br>","\n")
 		dictionary = xmltodict.parse(xml)
 		root = dictionary["QueryResult"]
 		print json.dumps(root, sort_keys=True, indent=4, separators=(',', ': '))
 		return root
-		
-	
-	# Turns raw XML from TOXNET into a proper TOXNETResult object
-	# @param xml	: An XML string to be parsed.
-	# @returns		: A Chemical object.	
-	def convertXmlToChemical(self, xml):
-		chemicalObject = Chemical()			
-		return chemicalObject
 		
 # TESTING #
 def test_findByQuery():

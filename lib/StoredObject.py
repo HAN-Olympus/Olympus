@@ -6,9 +6,18 @@ from Storage import Storage
 import random, time, datetime, copy
 
 class StoredObject():
+	""" This is a StoredObject, the base class of anything that is to be stored in our database.
+	Inheriting from this in lieu of communicating directly with PyMongo or Storage() will allow you to instantaneously save, merge and remove your objects. As this is an abstract class it cannot be instantiated directly and must therefor be subclassed.
+	"""
 	__metaclass__ = ABCMeta
 	
 	def __init__(self, database=None, collection=None, name = ""):
+		""" Sets up the object
+		
+		:param database: Optional, the database where this object is to be stored.
+		:param collection: Optional, the collecion where this object is to be stored.
+		:param name: The pretty name of this object.
+		"""
 		self._database = database
 		self._collection = collection
 		self.name = name
@@ -16,12 +25,15 @@ class StoredObject():
 		self._type = self.__class__.__name__
 	
 	def setDatabase(self,database):
+		"""Sets the database for this object."""
 		self._database = database
 		
 	def setCollection(self, collection):
+		"""Sets the collection for this object. This is analogous to a table in relational databases."""
 		self._collection = collection
 	
 	def save(self):
+		"""Save this object into the database with all its public attributes."""
 		# Can't save without a database or a table
 		if self._database is None:
 			raise ValueError, "No database has been selected."
@@ -44,6 +56,11 @@ class StoredObject():
 		self._id = document["_id"]
 	
 	def loadFromRawData(self, data):
+		""" This will create an object of the given class from a raw dictionary. Typically this would be what comes out of a the database, but it can also be used to initiate a whole new object from scratch.
+		
+		:param data: A dictionary containing the data to be set for this new object.
+		:rtype: A new instance of this class with all the data specified pre set.
+		"""
 		newObject = self.__class__
 		for key, value in data.items():
 			setattr(newObject, key, value)
@@ -51,6 +68,13 @@ class StoredObject():
 		return newObject
 	
 	def getObjectsByKey(self, key, value, limit=None):
+		""" This will retrieve documents from the database and collection specified by this object based on one of their keys and convert them to their proper Python object state.
+		
+		:param key: The key to select on.
+		:param value: The value to search for.
+		:param limit: The maximum amount of objects to return. Will return all results by default.
+		:rtype: All the matching objects stored in the database.
+		"""
 		storage = Storage()
 		database = self._database
 		collection = self._collection
@@ -66,6 +90,7 @@ class StoredObject():
 		return objects
 		
 	def remove(self):
+		""" Removes this object from the database. It will still remain in memory, however, and can be resaved at a later time provided that the original reference is maintained."""
 		storage = Storage()
 		database = self._database
 		collection = self._collection
@@ -78,28 +103,70 @@ class StoredObject():
 		documents = storage.removeDocuments({"_id":self._id})
 		
 	def setAttribute(self, attr, source, value):
+		""" Set the given attribute to this value. It will overwrite any previous data.
+		
+		:param attr: The name of the attribute.
+		:param source: The source of data to be set.
+		:param value: The value that should be set for this source.
+		"""
 		attribute = {}
 		attribute[source] = value
 		setattr(self,attr,attribute)
 		
 	def addAttribute(self, attr, source, value):
+		""" Add the given attribute to this value. It will retain any other data from other sources, but will overwrite any data from the same source in this attribute.
+		
+		:param attr: The name of the attribute.
+		:param source: The source of data to be set.
+		:param value: The value that should be set for this source.
+		"""
 		attribute = getattr(self, attr, {})
 		attribute[source] = value
 		setattr(self,attr,attribute)
 
 	def getAttribute(self, attr, source):
+		""" Will return the data stored in this attribute from the given source.
+		
+		:param attr: The name of the attribute.
+		:param source: The source of data to be set.
+		:rtype: The data stored in this attribute from this source.
+		"""
 		if not hasattr(self, attr):
 			return None			
 		attribute = getattr(self, attr, {})
 		return attribute.get(source, None)
 		
 	def __add__(self, other):
+		""" Overloads the + (plus) operator and uses it to merge two objects. If there is a conflict for a key the value from the first object in the equation will be chosen.
+		
+		For example::
+			
+		    ProteinOne = Protein()
+		    ProteinTwo = Protein()
+		    ProteinOne.setAttr("attribute", "source", "ValueOne")
+		    ProteinOne.setAttr("attribute", "source", "ValueTwo")
+			
+		    ProteinMerged = ProteinOne + ProteinTwo
+		    assert ProteinMerged.getAttribute("attribute","source") == "ValueOne" # Yields True
+		
+		The original two objects will not be affected.
+		
+		:param other: The object that this object will be merged with.
+		:rtype: A new object with the merged date from the two given objects.
+		"""
 		attributes = self.mergeObjects(self,other)
 		newObject = self.__class__()
 		newObject.__dict__ = attributes
 		return newObject
 		
 	def mergeObjects(self, objectOne, objectTwo, path=None):
+		""" Takes the attributes from two objects and attempts to merge them. If there is a conflict for a key the value from the first object in will be chosen.
+		
+		:param objectOne: The first object
+		:param objectTwo: The second object
+		:param path: The root of the merger.
+		:rtype: A dictionary of merged values.
+		"""
 		a = copy.deepcopy(objectOne.__dict__)
 		b = copy.deepcopy(objectTwo.__dict__)
 		
@@ -107,6 +174,13 @@ class StoredObject():
 		return attributes
 		
 	def merge(self, a, b, path=None):
+		""" Recursively merges two dictionaries. If there is a conflict for a key the value from the first object in will be chosen. All the changes are inserted into the first dictionary.
+		
+		:param a: The first dictionary.
+		:param b: The second dictionary.
+		:param path: The root of the merger.
+		:rtype: A dictionary of merged values.
+		"""
 		if path is None: path = []
 		for key in b:
 			if key in a:
@@ -126,6 +200,7 @@ class StoredObject():
 # For testing purposes only #
 		
 class TestObject(StoredObject):
+	""" TestObject implements only the most basic of the StorageObject's methods for testing purposes. """
 	def __init__(self):
 		super(TestObject, self).__init__(database = "test_database", collection = "test_collection")
 

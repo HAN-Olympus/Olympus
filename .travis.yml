@@ -13,6 +13,7 @@ before_instal:
 install: "pip install -r requirements.txt"
 script:
   - nosetests webapp/start.py lib/*.py modules/acquisition/*.py core/*.py
+  - ls -al
   - sphinx-build -nW -b html -d docs/_build/doctrees docs docs/_build/html
 
 matrix:

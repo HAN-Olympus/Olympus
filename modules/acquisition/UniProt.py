@@ -9,18 +9,25 @@ import xmltodict
 import json
 
 class Uniprot(AcquisitionModule.AcquisitionModule):
+	""" This module allows for retrieval of protein information from the Uniprot API."""
 	def __init__(self):
 		self.api_url = "http://www.uniprot.org/uniprot/"
 		
 	def composeQueryUrl(self, params):
+		""" Composes a proper URL based on the given parameters.
+		
+		:param params: A dictionary with parameters
+		:rtype: A string containing a URL to the API
+		"""
 		textparams = urllib.urlencode(params)
 		return self.api_url + "?" + textparams		
 	
-	# Retreives one or more Uniprot proteins by their identification code and returns a list of Protein objects
-	# @param ids	: A single ID or a list of IDs
-	# @returns		: A list of Protein objects, will insert None if no result was found for a given ID
-	
 	def getById(self, ids):
+		"""Retreives one or more Uniprot proteins by their identification code and returns a list of Protein objects
+		
+		:param ids: A single ID or a list of IDs
+		:rtype: A list of Protein objects, will insert None if no result was found for a given ID
+		"""
 		proteins = []
 		ids = [ids] if isinstance(ids, str) else ids
 		for id in ids:
@@ -35,10 +42,12 @@ class Uniprot(AcquisitionModule.AcquisitionModule):
 			
 		return proteins
 	
-	# Turns raw XML from Uniprot into a proper Protein object
-	# @param xml	: An XML string to be parsed.
-	# @returns		: A Protein object.	
 	def convertXmlToProtein(self, xml):
+		"""Turns raw XML from Uniprot into a proper Protein object.
+		
+		:param xml: An XML string to be parsed.
+		:rtype: A Protein object.
+		"""
 		# XML to dictionary
 		proteinObject = Protein()
 		
@@ -91,29 +100,4 @@ class Uniprot(AcquisitionModule.AcquisitionModule):
 			
 			if element == "sequence":
 				proteinObject.addAttribute("sequence", "uniprot",value["#text"].replace("\n",""))
-				proteinObject.addAttribute("sequencelength", "uniprot",value["@length"].replace("\n",""))
-			
-			
-		return proteinObject
-# TESTING #
-
-def test_composeQueryUrl():
-	u = Uniprot()
-	params = {
-		'from':'ACC',
-		'to':'P_REFSEQ_AC',
-		'format':'tab',
-		'query':'P13368 P20806 Q9UM73 P97793 Q17192'
-	}
-	desiredUrl = "http://www.uniprot.org/uniprot/?to=P_REFSEQ_AC&query=P13368+P20806+Q9UM73+P97793+Q17192&from=ACC&format=tab"
-	url = u.composeQueryUrl(params)
-	assert url == desiredUrl
-
-def test_getByIdSingle():
-	u = Uniprot()
-	results = u.getById('A0QSU3')
-	
-def test_getByIdList():
-	u = Uniprot()
-	results = u.getById('P13368 P20806 Q9UM73 P97793 Q17192'.split(" "))
-	
+				p

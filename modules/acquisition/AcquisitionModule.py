@@ -1,6 +1,7 @@
 """ Acquisition base class 
 Abstract class that provides base classes and access to classes in the ../lib directory
 Uses part of the additionalImport script to allow access to the lib classes.
+Refer to the page on Acquisition modules for a list of modules distributed with this version of Olympus.
 """
 # Add the ../lib directory to the system path
 import os, sys
@@ -21,10 +22,11 @@ class AcquisitionModule(Module.Module):
 	
 	def convertDateToNative(self, day, month, year):
 		"""Convert a day, month, year notation to a Python datetime object
-		@param day	: Numeric, the day (1-31)
-		@param month	: Numeric, the month (1-12)
-		@param year	: Numeric, the year
-		@returns		: A properly formed datetime object
+		
+		:param day: Numeric, the day (1-31)
+		:param month: Numeric, the month (1-12)
+		:param year: Numeric, the year
+		:rtype: A properly formed datetime object
 		"""
 		
 		dt = datetime.datetime(int(year), int(month), int(day))
