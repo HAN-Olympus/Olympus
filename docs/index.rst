@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Olympus's documentation!
-===================================
+Welcome to the Olympus documentation
+====================================
 
 This documentation is automatically generated based on the code provided with your current
 distribution of Olympus. It contains everything you ought to know to get going with Olympus,
