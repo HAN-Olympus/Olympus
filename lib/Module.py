@@ -2,7 +2,6 @@
 # Olympus Module Class
 
 from abc import ABCMeta, abstractmethod
-import Config
 
 class Module():
 	""" This abstract class is the basis for all modules. It does not as of yet implement any methods. """
