@@ -18,6 +18,7 @@ class AcquisitionModule(Module.Module):
 	""" Base class for all acquisition modules. Provides some generic methods. """
 	
 	def __init__(self):
+		""" Does nothing. """
 		pass
 	
 	def convertDateToNative(self, day, month, year):
