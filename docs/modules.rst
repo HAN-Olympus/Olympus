@@ -17,6 +17,12 @@ Olympus modules are generally divided into 4 categories:
 * Interface
    
    
+ModuleLoader
+------------
+
+.. automodule:: ModuleLoader
+	:members:
+   
 Module
 ------
 

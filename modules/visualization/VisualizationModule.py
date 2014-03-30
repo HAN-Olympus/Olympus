@@ -36,7 +36,7 @@ class VisualizationModule(Module.Module):
 		:rtype: The dictionary formatted as a table
 		"""
 				
-		html = [ "<table>", "<thead>","<tr>"]
+		html = [ "<table class='table'>", "<thead>","<tr>"]
 		
 		keys = []
 		for subject, variables in dictionary.items():
