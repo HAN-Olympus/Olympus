@@ -36,6 +36,19 @@ def loadJs(filename):
 	jsFile.close()
 	return Response(js, mimetype="application/javascript")
 	
+@app.route("/img/<filename>")
+def loadImg(filename):
+	if os.path.isfile("img/%s" % filename):
+		imgFile = open("img/%s" % filename)
+	elif os.path.isfile("bootstrap/img/%s" % filename):
+		imgFile = open("bootstrap/img/%s" % filename)
+	else:
+		abort(404)
+		
+	img = imgFile.read()
+	imgFile.close()
+	return Response(img, mimetype="image/jpeg")	
+
 @app.route("/fonts/<filename>")
 def loadFont(filename):
 	if os.path.isfile("fonts/%s" % filename):
@@ -47,7 +60,7 @@ def loadFont(filename):
 		
 	font = fontFile.read()
 	fontFile.close()
-	return Response(font, mimetype="application/javascript")	
+	return Response(font, mimetype="font/ttf")	
 
 @app.route("/<filename>")
 def loadPage(filename):
