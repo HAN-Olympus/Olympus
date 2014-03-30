@@ -1,5 +1,5 @@
-Olympus Acquisition Modules
-===========================
+Olympus Visualization Modules
+=============================
 .. toctree::
    :maxdepth: 2
    
