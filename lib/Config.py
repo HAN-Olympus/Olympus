@@ -2,6 +2,12 @@ import Singleton
 import json, os, sys
 
 class Config(Singleton.Singleton):
+	""" Config is a Singleton that persistently stores settings and configurations for Olympus. 
+	When called upon, it will export these to the configuration file for later retrieval.
+	Among other things, it stores your username, your email for Entrez notifications and the enabled Olympus modules.
+	The configuration files are set to be stored in a 'pretty' format, so as to be easily human-readable and -editable.
+	"""
+	
 	def __init__(self):
 		currentDir = os.path.dirname(__file__)
 		# Olympus.conf is the configuration file that is loaded for Olympus
@@ -12,30 +18,114 @@ class Config(Singleton.Singleton):
 		# own Olympus you should copy this and work from there.
 		defaultConfName = "../default.conf"
 		defaultConfPath = os.path.abspath(currentDir + "/" + defaultConfName)
-		print defaultConfPath
 		
 		if os.path.exists(olympusConfPath):
-			self.conf = json.load( open(olympusConfPath, "r") )
+			self.setConfig(json.load( open(olympusConfPath, "r") ))
+			self.configFileName = olympusConfPath
 		else:
 			try:
-				self.conf = json.load( open(defaultConfPath, "r") )
+				self.setConfig(json.load( open(defaultConfPath, "r") ))
+				self.configFileName = defaultConfPath
 			except:
 				raise IOError, "No default configuration file found, you need a configuration file to use this module."
 		
 		self.applyConfig()
 		
+	def clear(self):
+		""" Clears the Config instance from any and all attributes """
+		self.__dict__ = {}
+		
+	def delete(self, key):
+		""" Deletes a single key and its respective value from the Config
+		
+		:param key: The attribute that should be removed.
+		"""
+		delattr(self, key)
+		
+	def setConfig(self, config):
+		""" Adds a while dictionary to set as a configuration file.
+		After it has been set it should still be applied with `applyConfig()`.
+		This will overwrite any attributes with the same key.
+		
+		:param config: The dictionary that should be set for the configuration. """
+		self.conf = config
+		
 	def applyConfig(self):
+		""" Applies the configuration dictionary that was set with `setConfig()`. 
+		
+		:rtype: returns True if the configuration was set successfully. False if otherwise."""
+		if not hasattr(self, "conf"):
+			return False
+		
 		for key,value in self.conf.items():
 			setattr(self, key, value)
 			
-	def saveConfig(self):
-		pass
+		del self.conf
+		return True
+			
+	def addAttribute(self, key, value):
+		""" Adds an attribute to the Config. 
+		If the key does not yet exist, it will be added to the Config and placed in a list.
+		If the key already exists and is not a list, it will be converted to a list containing the original value and the new value.
 		
-
-if "nosetests" not in sys.argv[0] :
+		:param key: The key of the attribute
+		:param value: The value that will be added.
+		"""
+		if key not in self.__dict__:
+			setattr(self, key, [value])
+		else:
+			if isinstance(self.key, list):
+				self.key.append(value)
+			else:
+				self.key = [self.key, value]
+	
+	def getAttributes(self):
+		""" Returns all the attributes currently in this Config.
+			
+		:rtype: A dictionary containing all the attributes in this Config.
+		"""
+		return self.__dict__
+	
+	def save(self):
+		""" Saves the Config to the file it was initialized from. By default, this is `default.conf`. """
+		print self.__dict__
+		confFile = open(self.configFileName, "w")
+		del self.configFileName
+		json.dump(self.getAttributes(), confFile, sort_keys=True, indent=4, separators=(',', ': '))
+		confFile.close()
+		
+if all([p not in sys.argv[0] for p in ["nosetests", "sphinx"]]):
 	Config = Config()
 
 def test_Config():
 	c = Config()
 	assert c.__dict__["username"] == c.username
 	assert c.username == "default" or c.username == "olympus"
+
+def test_addAttribute():
+	c = Config()
+	c.addAttribute("a", "b")
+	assert c.a == ["b"]
+
+def test_getAttributes():
+	c = Config() # Config is a singleton so the 'a' value should have been carried over.
+	assert c.getAttributes()["a"] == ["b"]
+	
+def test_save():
+	c = Config()
+	c.save()
+	print c.configFileName
+	assert False
+	
+def test_clear():
+	c = Config()
+	c.clear()
+	assert not hasattr(c, "a")
+	
+def test_save():
+	c = Config()
+	nameParts = c.configFileName.split("/")
+	newName = "/".join(nameParts[:-1]) + "/test.conf"
+	c.configFileName = newName
+	c.save()
+	os.remove(newName)

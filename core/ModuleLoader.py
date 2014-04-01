@@ -11,8 +11,6 @@ import os
 
 class ModuleLoader():
 	""" The base class for the loading of modules. This class provides all the functionality for actually adding, removing and finding modules.	"""
-	def __init__(self):
-		self.config = Config
 		
 	def getAllAvailableModules(self):
 		""" Returns a dictionary with every single available module in your distribution. The modules are divided up by their category."""
@@ -33,11 +31,23 @@ class ModuleLoader():
 				
 		return modules
 		
+	def loadModule(self, name):
+		__import__(name)
+	
 	def enableModule(self, category, name):
-		self.config
+		if modules not in Config.getAttributes():
+			Config.addAttribute("modules", {})
+		if "enabled" not in Config.modules:
+			Config.modules["enabled"] = {}
+		if category not in Config.modules["enabled"]:
+			Config.modules["enabled"][category] = []
 		
-	def getEnabledModule(self):
-		self.config
+		Config.modules["enabled"][category].append(name)
+		
+		Config.save()
+		
+	def getEnabledModules(self):
+		return self.config["modules"]["enabled"]
 		
 import curses,time, json
 		

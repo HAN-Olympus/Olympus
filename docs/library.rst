@@ -20,3 +20,9 @@ Storage
 
 .. automodule:: Storage
 	:members:
+	
+Config
+------
+
+.. automodule:: Config
+	:members:
