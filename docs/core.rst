@@ -18,3 +18,9 @@ additionalImports.py
    
 .. automodule:: additionalImports
    :members:
+   
+ModuleLoader
+------------
+
+.. automodule:: ModuleLoader
+	:members:
