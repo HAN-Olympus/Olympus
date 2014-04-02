@@ -19,6 +19,9 @@ class Config(Singleton.Singleton):
 		defaultConfName = "../default.conf"
 		defaultConfPath = os.path.abspath(currentDir + "/" + defaultConfName)
 		
+		self.configFileName = ""
+		""" This attribute stores the location where the configuration is to be saved. """
+		
 		if os.path.exists(olympusConfPath):
 			self.setConfig(json.load( open(olympusConfPath, "r") ))
 			self.configFileName = olympusConfPath
