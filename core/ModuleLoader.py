@@ -1,6 +1,6 @@
 """ ModuleLoader provides an interface to select which modules will be enabled in the next instance of the Olympus Core. 
-The selected modules will be stored in the config file through Config.
-Starting this script from the commandline will automatically open the interface. This interface uses `curses` and is therefor
+The selected modules will be stored in the configuration file through Config.
+Starting this script from the command line will automatically open the interface. This interface uses `curses` and is therefore
 not available on Microsoft Windows.
 """
 
@@ -32,22 +32,39 @@ class ModuleLoader():
 		return modules
 		
 	def loadModule(self, name):
+		""" Loads a module. 
+		
+		:param name: The name of the module that needs to be loaded.
+		"""
 		__import__(name)
 	
 	def enableModule(self, category, name):
-		if modules not in Config.getAttributes():
-			Config.addAttribute("modules", {})
-		if "enabled" not in Config.modules:
-			Config.modules["enabled"] = {}
-		if category not in Config.modules["enabled"]:
-			Config.modules["enabled"][category] = []
+		""" Enables a modules from a given module.
 		
-		Config.modules["enabled"][category].append(name)
+		:param category: The category the module it situated in.
+		:param name: The name of the module to enable.
+		"""
+		c = Config()
+		if "modules" not in c.getAttributes():
+			c.addAttribute("modules", {})
+		if "enabled" not in c.modules:
+			print c.modules
+			c.modules["enabled"] = {}
+		if category not in c.modules["enabled"]:
+			c.modules["enabled"][category] = []
 		
-		Config.save()
+		if name not in c.modules["enabled"][category]:
+			c.modules["enabled"][category].append(name)
+		
+		c.save()
 		
 	def getEnabledModules(self):
-		return self.config["modules"]["enabled"]
+		""" Finds all the enabled modules 
+		
+		:rtype: A dictionary of all the enabled modules.
+		"""
+		c = Config()
+		return c.modules["enabled"]
 		
 import curses,time, json
 		
@@ -197,6 +214,15 @@ def test_getAllAvailableModules():
 	assert "acquisition" in modules
 	assert "interpretation" in modules
 	assert "visualization" in modules
+	
+def test_enableModule():
+	ml = ModuleLoader()
+	ml.enableModule("acquisition","PubMed")
+	
+def test_getEnabledModules():
+	ml = ModuleLoader()
+	enabled = ml.getEnabledModules()
+	assert enabled == {"acquisition":["PubMed"]}
 		
 if __name__ == "__main__":
 	mli = ModuleLoaderInterface()

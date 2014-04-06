@@ -66,7 +66,7 @@ class Config(Singleton.Singleton):
 		del self.conf
 		return True
 			
-	def addAttribute(self, key, value):
+	def addAttribute(self, key, value=None):
 		""" Adds an attribute to the Config. 
 		If the key does not yet exist, it will be added to the Config and placed in a list.
 		If the key already exists and is not a list, it will be converted to a list containing the original value and the new value.
@@ -75,7 +75,10 @@ class Config(Singleton.Singleton):
 		:param value: The value that will be added.
 		"""
 		if key not in self.__dict__:
-			setattr(self, key, [value])
+			if value==None:
+				setattr(self, key, [value])
+			else:
+				setattr(self, key, {})
 		else:
 			if isinstance(self.key, list):
 				self.key.append(value)
