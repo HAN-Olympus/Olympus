@@ -279,6 +279,10 @@ def test_disableModule():
 	ml.disableModule("acquisition", "PubMed")
 	
 def test_teardown():
+	handle = open(Config().configFileName)
+	print "The TEST CONFIG (%s) follows." % Config().configFileName
+	print handle.read()
+	handle.close()
 	os.remove(Config().configFileName)
 		
 if __name__ == "__main__":
