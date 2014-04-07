@@ -1,6 +1,7 @@
 """ Interface base class 
 Abstract class that provides base classes and access to classes in the ../lib directory
 Uses part of the additionalImport script to allow access to the lib classes.
+This type of module allows for "interfacing", eg making the connection between the generated data and humans.
 Refer to the page on Interface modules for a list of modules distributed with this version of Olympus.
 """
 # Add the ../lib directory to the system path
