@@ -9,6 +9,8 @@ class Config(Singleton.Singleton):
 	"""
 	
 	def __init__(self):
+		if self.instantiated:
+			return 
 		currentDir = os.path.dirname(__file__)
 		# Olympus.conf is the configuration file that is loaded for Olympus
 		olympusConfName = "../olympus.conf"
@@ -33,6 +35,8 @@ class Config(Singleton.Singleton):
 				raise IOError, "No default configuration file found, you need a configuration file to use this module."
 		
 		self.applyConfig()
+		self.instantiated = True
+		""" Is true if this object has already been instantiated once. """
 		
 	def clear(self):
 		""" Clears the Config instance from any and all attributes """
@@ -74,16 +78,17 @@ class Config(Singleton.Singleton):
 		:param key: The key of the attribute
 		:param value: The value that will be added.
 		"""
+		
 		if key not in self.__dict__:
-			if value==None:
-				setattr(self, key, [value])
-			else:
-				setattr(self, key, {})
-		else:
-			if isinstance(self.key, list):
-				self.key.append(value)
-			else:
-				self.key = [self.key, value]
+ 			if value!=None:
+ 				setattr(self, key, [value])
+ 			else:
+ 				setattr(self, key, {})
+  		else:
+  			if isinstance(self.key, list):
+  				self.key.append(value)
+  			else:
+  				self.key = [self.key, value]
 	
 	def getAttributes(self):
 		""" Returns all the attributes currently in this Config.
@@ -94,11 +99,13 @@ class Config(Singleton.Singleton):
 	
 	def save(self):
 		""" Saves the Config to the file it was initialized from. By default, this is `default.conf`. """
-		print self.__dict__
 		confFile = open(self.configFileName, "w")
+		# Store the configFileName attribute to make sure it won't be stored in the configuration file.
+		configFileName = self.configFileName
 		del self.configFileName
 		json.dump(self.getAttributes(), confFile, sort_keys=True, indent=4, separators=(',', ': '))
 		confFile.close()
+		self.configFileName = configFileName
 		
 if all([p not in sys.argv[0] for p in ["nosetests", "sphinx"]]):
 	Config = Config()
@@ -111,6 +118,7 @@ def test_Config():
 def test_addAttribute():
 	c = Config()
 	c.addAttribute("a", "b")
+	print c.a
 	assert c.a == ["b"]
 
 def test_getAttributes():
@@ -130,8 +138,10 @@ def test_clear():
 	
 def test_save():
 	c = Config()
+	oldName = c.configFileName
 	nameParts = c.configFileName.split("/")
 	newName = "/".join(nameParts[:-1]) + "/test.conf"
 	c.configFileName = newName
 	c.save()
 	os.remove(newName)
+	c.configFileName = oldName
