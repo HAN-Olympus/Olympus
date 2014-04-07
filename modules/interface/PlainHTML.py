@@ -6,17 +6,30 @@ class PlainHTML(InterfaceModule.InterfaceModule):
 	It contains no styling by default and will try to generate all the Visualizations as HTML, listing them sequentially.
 	"""
 
-	def __init__(self):
+	def __init__(self, title="PlainHTML Generated Page"):
+		""" Initializes a base HTML document with the html library.
+		
+		:param title: The title of the document under construction.
+		"""
 		contents = HTML()
 		self.html = contents.html
 		head = self.html.head
-		head.title("PlainHTML Generated Page")
+		head.title(title)
 		self.body = self.html.body
 		
 	def appendToBody(self, html):
+		""" Appends a piece of HTML to the body. 
+		
+		:param html: The HTML to append to the body element of the document that is currently being constructed.
+		"""
 		self.body.text(html, escape=False)
 		
 	def addVisualizations(self, visualizations):
+		""" Takes a collection of visualizations and attempts to add them to the document as HTML.
+		If the visualization does not have a proper toHTML() function the one in the VisualizationModule superclass will be used.
+		
+		:param visualizations: A collection of visualizations to be added to the body.
+		"""
 		for v in visualizations:
 			vContainer = self.body.div(klass="visualization")
 			vContainer.text(v.toHTML(), escape=False)
@@ -36,4 +49,3 @@ def test_appendToBody():
 	ph.appendToBody(appendText)
 	assert str(ph.html) == testString
 	
-
