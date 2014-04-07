@@ -106,9 +106,6 @@ class Config(Singleton.Singleton):
 		json.dump(self.getAttributes(), confFile, sort_keys=True, indent=4, separators=(',', ': '))
 		confFile.close()
 		self.configFileName = configFileName
-		
-if all([p not in sys.argv[0] for p in ["nosetests", "sphinx"]]):
-	Config = Config()
 
 def test_Config():
 	c = Config()
