@@ -17,3 +17,13 @@ TOXNET
 -------
 .. automodule:: TOXNET
 	:members:
+	
+WormBase
+-------
+.. automodule:: WormBase
+	:members:
+
+GeneOntology
+------------
+.. automodule:: GeneOntology
+	:members:

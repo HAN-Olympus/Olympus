@@ -21,6 +21,14 @@ Storage
 .. automodule:: Storage
 	:members:
 	
+Singleton
+---------
+
+.. automodule:: Singleton
+	:members:
+	:private-members:
+	:special-members:
+	
 Config
 ------
 
