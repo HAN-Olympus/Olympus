@@ -47,7 +47,7 @@ class ModuleLoader():
 				
 		c = Config()
 		if "modules" not in c.getAttributes():
-			c.addAttribute("modules", {})
+			c.modules = {}
 		if "enabled" not in c.modules:
 			c.modules["enabled"] = {}
 		if category not in c.modules["enabled"]:
@@ -67,7 +67,7 @@ class ModuleLoader():
 		print c.configFileName
 		
 		if "modules" not in c.getAttributes():
-			c.addAttribute("modules", {})
+			c.modules = {}
 		if "enabled" not in c.modules:
 			c.modules["enabled"] = {}
 		if category not in c.modules["enabled"]:
