@@ -13,69 +13,49 @@ sys.path.insert(0, absLibDir)
 # Library classes are now accessible
 import Module
 import datetime
+from abc import ABCMeta, abstractmethod
 
 class VisualizationModule(Module.Module):
-	""" Base class for all visualization modules. Provides some generic methods. """
+	""" Abstract base class for all visualization modules. Provides some generic methods. """
+	__metaclass__ = ABCMeta
 	
 	def __init__(self):
 		pass
+		
+	def toXML(self):
+		""" Default XML conversion. This will display if the Visualization Module does not have a toXML function. """
+		return "<VisualizationModule> <%s> <title> '%s' cannot be represented as XML. </title> </%s> </VisualizationModule>" % (self.__class__.__name__, self.__class__.__name__, self.__class__.__name__)
 	
-	def convertDictionaryToHTMLTable(self, dictionary, empty="n/a"):
-		"""Convert a two dimensional dictionary formatted like so: ::
+	def toLatex(self):
+		""" Default LaTeX conversion. This will display if the Visualization Module does not have a toLatex function. """
+		return "{\tt '%s'} cannot be represented as LaTeX." % (self.__class__.__name__)
+	
+	def toHTML(self):
+		""" Default HTML conversion. This will display if the Visualization Module does not have a toHTML function. """
+		return "<p> '%s' cannot be represented as HTML. </p>" % (self.__class__.__name__)
 		
-		    {
-		      "Subject 1" : { "variable 1" : "value", "variable 2" : "value" ... },
-		      "Subject 2" : { "variable 1" : "value", "variable 2" : "value" ... },
-		      ...
-		    }
-			
-		Into an HTML table. If keys are do not exist in every dictionary, they will be filled with the `empty` value.
+	@abstractmethod
+	def toString(self):
+		pass
 		
-		:param dictionary: The dictionary to be formatted
-		:param empty: The filler for cells in rows where a key has been ommitted. Use `None` to throw an exception when this occurs.
-		:rtype: The dictionary formatted as a table
-		"""
-				
-		html = [ "<table class='table'>", "<thead>","<tr>"]
-		
-		keys = []
-		for subject, variables in dictionary.items():
-			keys+=variables.keys()
-		
-		keys = list(set(keys))
-		keys.sort()
-		
-		for key in keys:
-			html.append("<td>%s</td>" % key)
-		
-		html+= ["</tr>", "</thead>", "<tbody>"]
-		for subject, variables in dictionary.items():
-			for key in keys:
-				if key in variables.keys():
-					html.append("<td>%s</td>" % variables[key])
-				else:
-					if empty == None:
-						raise KeyError, "Mismatch between the dictionaries' keys. (%s)" % key
-					else:
-						html.append("<td>%s</td>" % empty)
-					
-		
-		
-		html += [ "</tbody>", "</table>"]
-		return "\n".join(html)
-		
-		
-# Testing #
+# TESTING #
 
-from nose import tools as ntools
-		
-def test_convertDictionaryToHTMLTable():
-	vm = VisualizationModule()
-	d = { "Subject 1" : { "variable 1" : "value", "variable 2" : "value" },"Subject 2" : { "variable 1" : "value", "variable 2" : "value", "variable 3" : "value"} }
-	print vm.convertDictionaryToHTMLTable(d)
-
-@ntools.raises(KeyError)
-def test_fail_convertDictionaryToHTMLTable():
-	vm = VisualizationModule()
-	d = { "Subject 1" : { "variable 1" : "value", "variable 2" : "value" },"Subject 2" : { "variable 1" : "value", "variable 2" : "value", "variable 3" : "value"} }
-	print vm.convertDictionaryToHTMLTable(d, None)
+class TestModule(VisualizationModule):
+	def toString(self):
+		return "test"
+	
+def test_toXML():
+	tm = TestModule()
+	testString = "<VisualizationModule> <TestModule> <title> 'TestModule' cannot be represented as XML. </title> </TestModule> </VisualizationModule>"
+	assert tm.toXML() == testString
+	
+def test_toLatex():
+	tm = TestModule()
+	testString = "{\tt 'TestModule'} cannot be represented as LaTeX."
+	assert tm.toLatex() == testString
+	
+def test_toHTML():
+	tm = TestModule()
+	testString = "<p> 'TestModule' cannot be represented as HTML. </p>"
+	assert tm.toHTML() == testString
+	
