@@ -3,7 +3,8 @@ from html import HTML
 
 class PlainHTML(InterfaceModule.InterfaceModule):
 	""" This module generates a plain HTML document.
-	It contains no styling by default and will try to generate all the Visualizations as HTML, listing them sequentially.
+	It contains no styling by default and can be used to sequentially generate visualizations as HTML.
+	
 	"""
 
 	def __init__(self, title="PlainHTML Generated Page"):

@@ -4,7 +4,7 @@ Olympus Acquisition Modules
    :maxdepth: 2
    
 PubMed
--------
+------
 .. automodule:: PubMed
 	:members:
 
@@ -14,16 +14,11 @@ Uniprot
 	:members:
 	
 TOXNET
--------
+------
 .. automodule:: TOXNET
 	:members:
 	
 WormBase
--------
+--------
 .. automodule:: WormBase
-	:members:
-
-GeneOntology
-------------
-.. automodule:: GeneOntology
 	:members:
