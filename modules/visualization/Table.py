@@ -66,6 +66,15 @@ class Table(VisualizationModule.VisualizationModule):
 		html += [ "</tbody>", "</table>"]
 		return "\n".join(html)
 		
+	def specifyInput(self):
+		pass
+		
+	def specifyOutput(self):
+		pass
+		
+	def start(self, **kwargs):
+		pass
+		
 		
 # Testing #
 

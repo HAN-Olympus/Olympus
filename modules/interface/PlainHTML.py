@@ -34,6 +34,15 @@ class PlainHTML(InterfaceModule.InterfaceModule):
 		for v in visualizations:
 			vContainer = self.body.div(klass="visualization")
 			vContainer.text(v.toHTML(), escape=False)
+			
+	def specifyInput(self):
+		pass
+		
+	def specifyOutput(self):
+		pass
+		
+	def start(self, **kwargs):
+		pass
 
 # TESTING #
 import difflib

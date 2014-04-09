@@ -43,6 +43,15 @@ class VisualizationModule(Module.Module):
 class TestModule(VisualizationModule):
 	def toString(self):
 		return "test"
+		
+	def specifyInput(self):
+		pass
+		
+	def specifyOutput(self):
+		pass
+		
+	def start(self, **kwargs):
+		pass
 	
 def test_toXML():
 	tm = TestModule()

@@ -15,6 +15,15 @@ class WormBase(AcquisitionModule.AcquisitionModule):
 		self.api_url = "http://api.wormbase.org/rest/"
 	
 	def findByField(self, field, value):
-		return None
+		return Nonen
+		
+	def specifyInput(self):
+		pass
+		
+	def specifyOutput(self):
+		pass
+		
+	def start(self, **kwargs):
+		pass
 		
 # TESTING #

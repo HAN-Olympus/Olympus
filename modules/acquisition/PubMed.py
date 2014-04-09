@@ -115,7 +115,15 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 					articleObject.addAttribute("id",id.attributes["IdType"],str(id))
 
 		return articleObject
-
+	
+	def specifyInput(self):
+		pass
+		
+	def specifyOutput(self):
+		pass
+		
+	def start(self, **kwargs):
+		pass
 
 # TESTING #
 

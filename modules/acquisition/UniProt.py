@@ -105,6 +105,15 @@ class Uniprot(AcquisitionModule.AcquisitionModule):
 
 		return proteinObject
 		
+	def specifyInput(self):
+		pass
+		
+	def specifyOutput(self):
+		pass
+		
+	def start(self, **kwargs):
+		pass
+		
 # TESTING #
 
 def test_composeQueryUrl():

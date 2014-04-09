@@ -34,3 +34,9 @@ Config
 
 .. automodule:: Config
 	:members:
+	
+Controls
+--------
+
+.. automodule:: Controls
+	:members:

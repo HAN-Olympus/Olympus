@@ -61,7 +61,17 @@ class TOXNET(AcquisitionModule.AcquisitionModule):
 		root = dictionary["QueryResult"]
 		print json.dumps(root, sort_keys=True, indent=4, separators=(',', ': '))
 		return root
+	
+	def specifyInput(self):
+		pass
 		
+	def specifyOutput(self):
+		pass
+		
+	def start(self, **kwargs):
+		pass
+	
+	
 # TESTING #
 def test_findByQuery():
 	t = TOXNET()
