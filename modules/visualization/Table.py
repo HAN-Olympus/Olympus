@@ -8,7 +8,7 @@ class Table(VisualizationModule.VisualizationModule):
 	It can also select which of the attributes to show.
 	
 	"""
-	def __init__(self, collectionOne, collectionTwo = None, showOnly=[], showNoneOf=[] ):
+	def __init__(self, collectionOne=None, collectionTwo = None, showOnly=[], showNoneOf=[] ):
 		""" Initializes table conversion.
 		
 		:param collectionOne: A collection to convert into a table.

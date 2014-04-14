@@ -1,0 +1,83 @@
+{% extends "main.html" %}
+{% block index %}
+ <div class="container">
+ <p>	
+	  	<ol class="breadcrumb">
+		  <li><a href="/">Olympus</a></li>
+		  <li class="active">Homepage</li>
+		</ol>
+		{% set enabledModules = config.modules["enabled"] %}
+		
+		<div class="row">
+		{% for category in ["acquisition","interpretation","visualization","interface"] %}
+		{% if enabledModules[category]|length > 0 %}
+			<div class="{{category}}-container col-md-{{(12/colCount)|int}}">
+				<h2> {{category.title()}} </h2>
+				<div class="module-container">
+			{% for module in enabledModules[category] %}
+				<div class="module-item panel panel-primary">
+					<div class="panel-heading">
+						<span class="module-name">{{module}}</span>
+					</div>
+					<div class="panel-body">
+						{% set output = modules[category][module]().specifyOutput() %}
+						{% if output != None %}
+							{% for name, types in output.items() %}
+								<span class="module-output label label-default">
+									<span class="module-output-name">{{name.title()}}</span>
+								</span>								
+							{% endfor %}
+							<hr/>
+						{% endif %}
+						
+						
+						{% autoescape false %}
+						{% set doc = modules[category][module].__doc__ %}
+						{% if doc != None %}
+							<span class="module-description">{{doc.strip()|replace("\n","<br/>")}}</span>
+						{% else %}
+							<span class="module-description">This module does not have any documentation.</span>
+						{% endif %}
+						
+						{% endautoescape %}
+					</div>
+					
+				</div>
+			{% endfor %}
+			</div>
+			</div>
+		{% endif %}
+		{% endfor %}
+		</div>
+		
+		<hr />
+		<div class="row">
+		{% for category in ["acquisition","interpretation","visualization","interface"] %}
+		{% if enabledModules[category]|length > 0 %}
+			<div class="{{category}}-container col-md-{{(12/colCount)|int}}">
+				<h2> {{category.title()}} </h2>
+				<div class="module-container">
+				</div>
+			</div>
+			{% endif %}
+		{% endfor %}
+		</div>
+</div>
+
+<script>
+$(function() {
+
+	$(".module-container").each(function() {
+		/* Match the containers with one another */
+		sisterContainerName = "." + $(this).parent().attr("class").replace(" ",".") + " .module-container"
+		$(this).sortable({
+		  connectWith: sisterContainerName,
+		  placeholder: "panel panel-primary",
+		  axis : "y",
+		  handle : ".panel-heading"
+		}).disableSelection();
+	});
+
+});
+</script>
+{% endblock %}

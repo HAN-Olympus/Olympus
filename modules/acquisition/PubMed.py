@@ -2,10 +2,13 @@ import AcquisitionModule
 from Bio import Entrez
 from Bio import Medline
 from Article import Article
+from Collection import Collection
+from Log import Log
 import datetime, urllib
 
 class PubMed(AcquisitionModule.AcquisitionModule):
 	""" This module allows for retrieval of medical articles from the Entrez API."""
+	
 	def __init__(self):
 		# TODO: Configuration should set this
 		Entrez.email = "Your.Name.Here@example.org"
@@ -117,10 +120,18 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		return articleObject
 	
 	def specifyInput(self):
-		pass
+		return None
 		
 	def specifyOutput(self):
-		pass
+		articleCollection = Collection(Article)
+		
+		log = Log()
+		
+		output = {
+			"errors":[log],
+			"result":[articleCollection]
+		}
+		return output
 		
 	def start(self, **kwargs):
 		pass

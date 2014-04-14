@@ -36,7 +36,6 @@ body {
       top: 0;
       left: 0;
       width: 100%;
-	  top: -50%;
     }
 
     .carousel-caption {
@@ -141,3 +140,43 @@ body {
         margin: 0 auto 20px;
       }
     }
+	
+	/* Modules */
+	
+	.module-container {
+		background:  #eee;
+		border-radius: 5px;
+		min-height: 80px;
+		padding: 0px;
+		border: 1px solid #ddd;
+	}
+	
+	.module-item {
+		margin: 10px;
+	}
+	
+	.panel-heading {
+		cursor: move;
+	}
+	
+	.panel-body {
+		max-height: 45px;
+		overflow-y: hidden;
+		padding:0;
+		margin: 15px;
+		transition: all 0.35s linear;
+		position: relative;
+	}
+	
+	.panel-body:hover {
+		max-height: 300px;
+	}
+	
+	.ui-sortable-helper {
+		opacity: 0.8;
+		cursor: move;
+	}
+	
+	.module-output {
+		margin-right: 4px;
+	}

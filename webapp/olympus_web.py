@@ -1,6 +1,7 @@
 from flask import Flask, render_template, abort, Response
 import os,re,sys
-
+import additionalImports
+from Config import Config
 
 app = Flask(__name__)
 
@@ -64,12 +65,28 @@ def loadFont(filename):
 
 @app.route("/<filename>")
 def loadPage(filename):
-	if os.path.isfile("template/%s" % filename):
+	if os.path.isfile("templates/%s" % filename):
 		return render_template(filename, name=filename)
 	else:
 		abort(404)
 		return False;
-
+		
+@app.route("/interface")
+def interface():
+	# Get all the enabled modules
+	enabledModules = Config().modules["enabled"]
+	# The amount of modules category columns
+	colCount = len([ 1 for c in enabledModules if len(enabledModules[c]) > 0])
+	# Load all the enabled modules into a dictionary
+	modules = {}
+	for category in enabledModules:	
+		modules[category] = {}
+		for module in enabledModules[category]:
+			importedModule = __import__(module)
+			if module in importedModule.__dict__.keys():
+				modules[category][module] = __import__(module).__dict__[module]
+		
+	return render_template("picker.html", config=Config(), name="picker", colCount=colCount, modules=modules )	
 		
 # TESTING #
 

@@ -8,8 +8,9 @@ import requests, urllib
 import xmltodict
 import json
 
-class Uniprot(AcquisitionModule.AcquisitionModule):
+class UniProt(AcquisitionModule.AcquisitionModule):
 	""" This module allows for retrieval of protein information from the Uniprot API."""
+	
 	def __init__(self):
 		self.api_url = "http://www.uniprot.org/uniprot/"
 		
@@ -117,7 +118,7 @@ class Uniprot(AcquisitionModule.AcquisitionModule):
 # TESTING #
 
 def test_composeQueryUrl():
-	u = Uniprot()
+	u = UniProt()
 	params = {
 		'from':'ACC',
 		'to':'P_REFSEQ_AC',
@@ -129,9 +130,9 @@ def test_composeQueryUrl():
 	assert url == desiredUrl
 
 def test_getByIdSingle():
-	u = Uniprot()
+	u = UniProt()
 	results = u.getById('A0QSU3')
 
 def test_getByIdList():
-	u = Uniprot()
+	u = UniProt()
 	results = u.getById('P13368 P20806 Q9UM73 P97793 Q17192'.split(" "))
