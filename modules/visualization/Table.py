@@ -1,4 +1,6 @@
 import VisualizationModule
+from Collection import Collection
+from StringContainer import StringContainer
 import json
 
 
@@ -15,8 +17,7 @@ class Table(VisualizationModule.VisualizationModule):
 		:param collectionTwo: Optional. If this argument is given (not None) the secondary operation mode; It converts two object collections into a table by presenting a Cartesian product of all the objects inside of them.
 		:param showOnly: A list of attributes that should ONLY be shown. This option will be selected by default if both `showOnly` and `showNoneOf` are defined, as they are mutually exclusive.
 		:param showNoneOf: A list of attributes that will NOT be shown. This option will be overridden by showOnly if both are defined.
-		"""
-		
+		"""		
 		
 	def toString(self):
 		return self.__class__.__name__
@@ -67,10 +68,24 @@ class Table(VisualizationModule.VisualizationModule):
 		return "\n".join(html)
 		
 	def specifyInput(self):
-		pass
+		collection = Collection()
+				
+		input = {
+			"input":[collection]
+		}
+		return input
 		
 	def specifyOutput(self):
-		pass
+		html = StringContainer("HTML")
+		latex = StringContainer("LaTeX")
+		csv = StringContainer("CSV")
+		
+		output = {
+			"HTML": [html],
+			"LaTeX": [latex],
+			"CSV": [csv]
+		}
+		return output
 		
 	def start(self, **kwargs):
 		pass

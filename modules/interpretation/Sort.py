@@ -1,4 +1,5 @@
 import InterpretationModule
+from Collection import Collection
 
 class Sort(InterpretationModule.InterpretationModule):
 	""" This module sorts a collection on a given attribute."""
@@ -8,10 +9,20 @@ class Sort(InterpretationModule.InterpretationModule):
 		pass
 		
 	def specifyInput(self):
-		pass
+		collection = Collection()
+				
+		input = {
+			"input":[collection]
+		}
+		return input
 		
 	def specifyOutput(self):
-		pass
+		collection = Collection()
+				
+		output = {
+			"result":[collection]
+		}
+		return output
 		
 	def start(self, **kwargs):
 		pass

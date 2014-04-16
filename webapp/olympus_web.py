@@ -1,7 +1,8 @@
-from flask import Flask, render_template, abort, Response
+from flask import Flask, render_template, abort, Response, request
 import os,re,sys
 import additionalImports
 from Config import Config
+import svglib
 
 app = Flask(__name__)
 
@@ -87,7 +88,20 @@ def interface():
 				modules[category][module] = __import__(module).__dict__[module]
 		
 	return render_template("picker.html", config=Config(), name="picker", colCount=colCount, modules=modules )	
-		
+	
+@app.route("/svg/connection")
+def connection():
+	x1 = int(request.args.get("x1"))
+	y1 = int(request.args.get("y1"))
+	x2 = int(request.args.get("x2"))
+	y2 = int(request.args.get("y2"))
+	fill = request.args.get("fill")
+	stroke = request.args.get("stroke")
+	
+	connection = svglib.Connection(x1,y1,x2,y2, stroke, fill)
+	
+	return Response(connection.draw(), mimetype="image/svg+xml")
+	
 # TESTING #
 
 def test_loadJs():

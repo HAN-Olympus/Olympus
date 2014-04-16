@@ -3,7 +3,7 @@ class Collection(object):
 	
 	def __init__(self, restrict = None):
 		self.__contents = []
-		self.__restrict = restrict
+		self.restrict = restrict
 		self.__pointer = 0 # The internal pointer
 		
 	def append(self, object):
@@ -44,6 +44,11 @@ class Collection(object):
 		
 	def __len__(self):
 		return len(self.__contents)
+		
+	def equalsType(self, other):
+		if isinstance(other, Collection) and other.restrict == this.restrict:
+			return True
+		return False
 		
 # Testing #
 from nose.tools import *

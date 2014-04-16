@@ -149,14 +149,28 @@ body {
 		min-height: 80px;
 		padding: 0px;
 		border: 1px solid #ddd;
+		z-index: 60;
 	}
 	
 	.module-item {
 		margin: 10px;
+		position:relative;
+		width: 75%;
 	}
 	
 	.panel-heading {
 		cursor: move;
+	}
+	
+	.module-buttons {
+		float:right;
+		opacity:0;
+		transition: 0.5s all;
+	}
+	
+	.module-item:hover .module-buttons {
+		opacity: 1;
+		transition: 0.5s all;
 	}
 	
 	.panel-body {
@@ -168,15 +182,48 @@ body {
 		position: relative;
 	}
 	
-	.panel-body:hover {
-		max-height: 300px;
-	}
-	
 	.ui-sortable-helper {
 		opacity: 0.8;
 		cursor: move;
 	}
 	
 	.module-output {
-		margin-right: 4px;
+		position: absolute;
+		left: 100%;
+		background: #428bca;
+		padding: 0px 5px 2px 10px;
+		width: 25%;
+		color: white;
 	}
+	
+	.module-output.destination-found {
+		cursor: pointer;
+	}
+	
+	.module-output-name {
+		font-size: 10px;
+	}	
+	
+	.module-connection {
+		 display:inline;
+		 position: absolute;
+		 z-index: 50;
+		 bottom: 0px;
+		 left: 100%;
+		 background-repeat: no-repeat;
+	}
+	
+	.module-connection.connect-top {
+		top:0px;
+	}
+	.module-connection.connect-bottom {
+		bottom:0px;
+	}
+	
+	.module-output.no-destination {
+		background-color: #ccc;
+		border-radius: 0px 3px 3px 0px;
+		border: 1px solid #428bca;
+		border-left: 0px;
+	}
+	

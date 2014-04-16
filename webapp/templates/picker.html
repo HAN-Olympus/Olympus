@@ -2,9 +2,9 @@
 {% block index %}
  <div class="container">
  <p>	
-	  	<ol class="breadcrumb">
-		  <li><a href="/">Olympus</a></li>
-		  <li class="active">Homepage</li>
+			<ol class="breadcrumb">
+			<li><a href="/">Olympus</a></li>
+			<li class="active">Interface</li>
 		</ol>
 		{% set enabledModules = config.modules["enabled"] %}
 		
@@ -14,37 +14,58 @@
 			<div class="{{category}}-container col-md-{{(12/colCount)|int}}">
 				<h2> {{category.title()}} </h2>
 				<div class="module-container">
-			{% for module in enabledModules[category] %}
-				<div class="module-item panel panel-primary">
-					<div class="panel-heading">
-						<span class="module-name">{{module}}</span>
-					</div>
-					<div class="panel-body">
-						{% set output = modules[category][module]().specifyOutput() %}
-						{% if output != None %}
-							{% for name, types in output.items() %}
-								<span class="module-output label label-default">
-									<span class="module-output-name">{{name.title()}}</span>
-								</span>								
-							{% endfor %}
-							<hr/>
-						{% endif %}
+					{% for module in enabledModules[category] %}
+						<div class="module-item">
 						
-						
-						{% autoescape false %}
-						{% set doc = modules[category][module].__doc__ %}
-						{% if doc != None %}
-							<span class="module-description">{{doc.strip()|replace("\n","<br/>")}}</span>
-						{% else %}
-							<span class="module-description">This module does not have any documentation.</span>
-						{% endif %}
-						
-						{% endautoescape %}
-					</div>
-					
+							{% set input = modules[category][module]().specifyInput() %}
+							{% if input != None %}
+								{% for name, types in input.items() %}
+									<span class="module-accept" data-accept="{% for t in types %}{{t.__class__.__name__}}[{{t.restrict if t.restrict!=None else ""}}],{% endfor %}"></span>
+								{% endfor %}
+							{% endif %}
+							
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									<span class="module-name">{{module}}</span>
+									
+									<span class="module-buttons btn-group">
+										<button type="button" class="btn btn-default btn-xs">
+											<span class="glyphicon glyphicon-arrow-down"></span>
+										</button>
+										<button type="button" class="btn btn-default btn-xs">
+											<span class="glyphicon glyphicon-th-large"></span>
+										</button>
+										<button type="button" class="btn btn-default btn-xs">
+											<span class="glyphicon glyphicon-align-left"></span>
+										</button>
+									</span>
+									
+								</div>
+								<div class="panel-body">					
+									{% autoescape false %}
+									{% set doc = modules[category][module].__doc__ %}
+									{% if doc != None %}
+										<span class="module-description">{{doc.strip()|replace("\n","<br/>")}}</span>
+									{% else %}
+										<span class="module-description">This module does not have any documentation.</span>
+									{% endif %}									
+									{% endautoescape %}
+								</div>
+							</div>
+							
+							{% set output = modules[category][module]().specifyOutput() %}
+							{% if output != None %}
+								{% for name, types in output.items() %}
+									{% set topDistance = 10 + loop.index0*30 %}
+									<span class="module-output no-destination" style="top: {{topDistance}}px;"  data-accept="{% for t in types %}{{t.__class__.__name__}}[{{t.restrict}}],{% endfor %}">
+										<span class="module-output-name">{{name.title()}}</span>			
+									</span>								
+								{% endfor %}
+							{% endif %}
+							
+						</div>
+					{% endfor %}
 				</div>
-			{% endfor %}
-			</div>
 			</div>
 		{% endif %}
 		{% endfor %}
@@ -66,17 +87,171 @@
 
 <script>
 $(function() {
-
+	
+	// Bereken de overlap tussen twee arrays
+	function intersect(a, b) {
+		var t;
+		if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
+		for (ai in a){
+			aa = a[ai]
+			for( bi in b){
+				bb = b[bi]
+				if (aa.length == 0 || bb.length == 0) {
+					return false
+				}				
+				if (bb.indexOf(aa) !== -1) {
+					return true
+				} else if (aa.substr(0, aa.indexOf("[")) == bb.substr(0, bb.indexOf("["))) {
+					console.log("Same class")
+					// These are at least the same class
+					if( aa[aa.indexOf("[")+1] == "]" || bb[bb.indexOf("[")+1] == "]" ) {
+						return true
+					}
+					
+				}
+			}
+		}
+	}
+	
+	function rgb2hex(rgb) {
+		rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+		function hex(x) {
+			return ("0" + parseInt(x).toString(16)).slice(-2);
+		}
+		return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+	}
+	
+	function findConnections( e , removeValid) {
+		isLastRow = $(e).parent().parent().is(".row:last")
+		if ( isLastRow ) {
+			redrawInputs(e);
+			redrawOutputs(e);
+		} else {
+			$(e).find(".module-connection").remove();
+			$(e).find(".module-output").addClass("no-destination")
+		}
+	}
+	
+	function redrawOutputs( e, removeValid ) {
+		// For every output
+		$(e).find(".module-output").each(function() {
+			output = $(this)
+			output.removeClass("no-destination destination-found");
+			outputs = $(this).data("accept").split(",");
+			connection = $("<img>");
+			connection.attr("class","module-connection");
+			
+			// Remove all the current connections, we'll redraw them later
+			$(this).find(".module-connection").remove()
+			
+			destinationFound = false;
+			
+			// Now find all the modules in the row next to this one
+			$(e).parent().next().find(".module-item").each( function() {
+				
+				// Get all the accepting ports
+				$(this).find(".module-accept").each(function() {
+					// Get all the formats the port accepts
+					inputs = $(this).data("accept").split(",");
+					intersects = intersect( inputs,outputs);
+					
+					
+					if( intersects ) {
+						// These modules can communicate with each other, draw a connection
+						y =  $(this).offset().top - output.offset().top + 10
+						if( y > 0 ) {
+							src = "/svg/connection?x1=0&y1=0&x2=55&y2="+parseInt(y)+"&fill=428bca"
+							connection.addClass("connect-top")
+						} else {
+							src = "/svg/connection?x1=0&y1="+Math.abs(parseInt(y))+"&x2=55&y2=0"
+							connection.addClass("connect-bottom")
+						}
+						
+						if( output.hasClass("connection-approved") ) {
+							src += "&fill=#dff0d8"
+						} else {
+							src += "&fill=428bca"
+						}
+						
+						// Change the source of the connection image
+						connection.attr("src",src)
+						destinationFound = true;
+						
+						console.log(y, src)
+						output.append(connection)
+						output.data("target",$(this))
+					}
+					
+				});
+			});
+			
+			if(!destinationFound) {
+				output.addClass("no-destination");
+			} else {
+				output.addClass("destination-found");
+			}
+		});
+	}
+	
+	function redrawInputs( e ) {
+		console.log($(e))
+		console.log( $(e).parent().prev().children(".module-container") )
+		redrawOutputs($(e).parent().prev().children(".module-container"))
+	}
+	
 	$(".module-container").each(function() {
 		/* Match the containers with one another */
 		sisterContainerName = "." + $(this).parent().attr("class").replace(" ",".") + " .module-container"
+		
+		// jQuery UI sortable used to allow easy drag-and-drop interaction
 		$(this).sortable({
-		  connectWith: sisterContainerName,
-		  placeholder: "panel panel-primary",
-		  axis : "y",
-		  handle : ".panel-heading"
+			connectWith: sisterContainerName,
+			placeholder: "panel panel-primary",
+			axis : "y",
+			handle : ".panel-heading",
+			receive: function( event, ui ) {
+				findConnections(this, true);
+			},
+			change: function( event, ui ) {
+				findConnections(this, false);
+			},
+			update: function( event, ui ) {
+				findConnections(this, false);
+			}
 		}).disableSelection();
 	});
+	
+	function changeConnectionColor( connection, fill ) {
+		src = connection.attr("src")
+		console.log(src)
+		src = src.split("&fill=")[0]
+		console.log(src)
+		src += "&fill=" + fill
+		console.log(src)
+		connection.attr("src", src)
+	}
+	
+	$(".module-output").click(function() {
+		if($(this).hasClass("no-destination")) {
+			return false;
+		}
+		target = $(this).data("target").parent().find(".panel")
+		current = $(this).parent().find(".panel")
+		console.log(target)
+		target.removeClass("panel-primary")
+		current.removeClass("panel-primary")
+		target.addClass("panel-success")
+		current.addClass("panel-success")
+		
+		bgcolor = current.find(".panel-heading").css("background-color")
+		color = current.find(".panel-heading").css("color")
+		
+		$(this).css({"background-color": bgcolor, "color":color});
+		changeConnectionColor( $(this).find(".module-connection"), rgb2hex(bgcolor).substr(1) );
+		
+		$(this).addClass("destination-confirmed")
+	});
+	
 
 });
 </script>

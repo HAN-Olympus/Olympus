@@ -1,4 +1,5 @@
 import InterfaceModule
+from StringContainer import StringContainer
 from html import HTML
 
 class PlainHTML(InterfaceModule.InterfaceModule):
@@ -36,7 +37,12 @@ class PlainHTML(InterfaceModule.InterfaceModule):
 			vContainer.text(v.toHTML(), escape=False)
 			
 	def specifyInput(self):
-		pass
+		html = StringContainer("HTML")
+				
+		input = {
+			"input":[html]
+		}
+		return input
 		
 	def specifyOutput(self):
 		pass
