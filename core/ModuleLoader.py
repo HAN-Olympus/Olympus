@@ -103,6 +103,10 @@ class ModuleLoader():
 		:rtype: A dictionary of all the enabled modules.
 		"""
 		c = Config()
+		if "modules" not in c.getAttributes():
+			return {}
+		if "enabled" not in c.modules:
+			return {}
 		return c.modules["enabled"]
 		
 import curses,time, json
@@ -155,6 +159,8 @@ class ModuleLoaderInterface():
 		cSelected = []
 		for category in modules:
 			for module in modules[category]:
+				if category not in selected:
+					continue
 				if unicode(module) in [str(s) for s in selected[category]]:
 					cSelected.append(i)
 				i+=1		
