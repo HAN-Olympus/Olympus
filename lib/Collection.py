@@ -7,7 +7,7 @@ class Collection(object):
 		self.__pointer = 0 # The internal pointer
 		
 	def append(self, object):
-		if self.__restrict != None and not isinstance(object, self.__restrict):
+		if self.restrict != None and not isinstance(object, self.restrict):
 			raise ValueError, "This object can not be added to this restricted Collection."
 				
 		self.__contents.append(object)
