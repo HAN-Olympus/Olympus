@@ -11,11 +11,13 @@
 		<div class="row">
 		{% for category in ["acquisition","interpretation","visualization","interface"] %}
 		{% if enabledModules[category]|length > 0 %}
+			{% set category_loop = loop %}
 			<div class="{{category}}-container col col-md-{{(12/colCount)|int}}">
 				<h2> {{category.title()}} </h2>
 				<div class="module-container">
 					{% for module in enabledModules[category] %}
-						<div class="module-item" oncontextmenu="return false;">
+						{% set zindex = 100 + category_loop.index %}
+						<div class="module-item" oncontextmenu="return false;" style="z-index: {{zindex}}">
 						
 							{% set input = modules[category][module]().specifyInput() %}
 							{% if input != None %}
@@ -71,7 +73,7 @@
 		</div>
 		
 		<hr />
-		<div class="row">
+		<div class="row destination">
 		{% for category in ["acquisition","interpretation","visualization","interface"] %}
 		{% if enabledModules[category]|length > 0 %}
 			<div class="{{category}}-container col col-md-{{(12/colCount)|int}}">
@@ -81,6 +83,14 @@
 			</div>
 			{% endif %}
 		{% endfor %}
+		</div>
+		
+		<hr />		
+		<div class="row">
+			<div class="col-md-12">
+				<div class="btn btn-lg btn-default"> Start over </div>
+				<div class="btn btn-lg btn-primary" id="btn-compile"> Compile to Procedure </div>
+			</div>
 		</div>
 </div>
 

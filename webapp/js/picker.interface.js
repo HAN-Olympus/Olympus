@@ -14,7 +14,6 @@ $(function() {
 				if (bb.indexOf(aa) !== -1) {
 					return true
 				} else if (aa.substr(0, aa.indexOf("[")) == bb.substr(0, bb.indexOf("["))) {
-					console.log("Same class")
 					// These are at least the same class
 					if( aa[aa.indexOf("[")+1] == "]" || bb[bb.indexOf("[")+1] == "]" ) {
 						return true
@@ -34,29 +33,40 @@ $(function() {
 	}
 	
 	function findConnections( e , removeValid) {
-		isLastRow = $(e).parent().parent().is(".row:last")
-		if ( isLastRow ) {
+
+		if ( $(e).parents(".row").is(".destination") ) {
 			redrawInputs(e);
 			redrawOutputs(e);
 		} else {
 			$(e).find(".module-connection").remove();
 			$(e).find(".module-output").addClass("no-destination")
 		}
+		
+		if( removeValid ) {
+			$(e).find(".module-connection").remove();
+			$(e).find(".module-output").addClass("no-destination")
+		}
+		
 	}
 	
 	function redrawOutputs( e, removeValid ) {
-		console.log("Redrawing outputs")
-		console.log(e)
 		// For every output
 		$(e).find(".module-output").each(function() {
 			output = $(this)
-			console.log(output)
 			output.removeClass("no-destination destination-found");
 			outputs = $(this).data("accept").split(",");
-			connection = $("<img>");
-			connection.attr("class","module-connection");
 			
-			// Remove all the current connections, we'll redraw them later
+			connections = $(this).find(".module-connection");
+			if ( connections.length == 0 ) {
+				connection = $("<img>");
+				var color = "428bca"
+				connection.attr("class","module-connection");
+			} else {
+				connection = connections.eq(0)
+				var color = connection.attr("src").match(/\&fill=([\da-fA-F]{3,6})$/)[1];
+				console.log( color );
+			}			
+						
 			$(this).find(".module-connection").remove()
 			
 			destinationFound = false;
@@ -70,29 +80,31 @@ $(function() {
 					inputs = $(this).data("accept").split(",");
 					intersects = intersect( inputs,outputs);
 					
-					
 					if( intersects ) {
 						// These modules can communicate with each other, draw a connection
+						
 						y =  $(this).offset().top - output.offset().top + 10
 						if( y > 0 ) {
-							src = "/svg/connection?x1=0&y1=0&x2=55&y2="+parseInt(y)+"&fill=428bca"
+							src = "/svg/connection?x1=0&y1=0&x2=55&y2="+parseInt(y)
+							connection.removeClass("connect-bottom")
 							connection.addClass("connect-top")
 						} else {
 							src = "/svg/connection?x1=0&y1="+Math.abs(parseInt(y))+"&x2=55&y2=0"
+							connection.removeClass("connect-top")
 							connection.addClass("connect-bottom")
 						}
 						
 						if( output.hasClass("connection-approved") ) {
 							src += "&fill=#dff0d8"
 						} else {
-							src += "&fill=428bca"
+							src += "&fill=" + color
 						}
 						
 						// Change the source of the connection image
 						connection.attr("src",src)
 						destinationFound = true;
 						
-						console.log(y, src)
+						console.log(src)
 						output.append(connection)
 						output.data("target",$(this))
 					}
@@ -130,7 +142,7 @@ $(function() {
 			change: function( event, ui ) {
 				findConnections(this, false);
 			},
-			update: function( event, ui ) {
+			stop: function( event, ui ) {
 				findConnections(this, false);
 			}
 		}).disableSelection();
@@ -146,62 +158,115 @@ $(function() {
 		connection.attr("src", src)
 	}
 	
-	$(".module-output").bind("click contextmenu", function(event) {
+	function changeConfirmedConnections( e, by ) {
+		if( e.data("confirmedConnections") ) {
+			cP = parseInt(e.data("confirmedConnections"))
+			e.data("confirmedConnections", cP + by)
+		} else {
+			e.data("confirmedConnections", 0 + by)
+		}
+		return e.data("confirmedConnections")
+	}
+	
+	$(".module-output").bind("click", function(event) {
 		if($(this).hasClass("no-destination")) {
 			return false;
 		}
 		target = $(this).data("target").parent().find(".panel")
 		current = $(this).parent().find(".panel")
-		console.log(target)
 		
-		if(event.which == 1) {
-			// Regular left mouse click
-			if($(this).hasClass("destination-confirmed") || $(this).hasClass("destination-removed")) {
-				// Switch to destination found - this will turn the modules blue
-				target.removeClass("panel-success");
-				target.removeClass("panel-danger");
+		currentModuleItem = current.parents(".module-item")
+		targetModuleItem = target.parents(".module-item")
+		
+		if($(this).hasClass("destination-confirmed") || $(this).hasClass("destination-removed")) {
+			// Switch to destination found - this will turn the modules blue
+			$(this).removeClass("destination-confirmed");
+			
+			console.log( currentModuleItem.find(".destination-confirmed").length )
+			
+			changeConfirmedConnections(currentModuleItem, -1);
+			if(currentModuleItem.data("confirmedConnections") == 0 ) {
 				current.removeClass("panel-success");
-				current.removeClass("panel-danger");
-				target.addClass("panel-primary");
 				current.addClass("panel-primary");
-				$(this).removeClass("destination-confirmed");
-				$(this).removeClass("destination-removed");
-			} else  {
-				// Switch to destination confirmed - this will turn the modules green
-				target.removeClass("panel-primary");
-				current.removeClass("panel-primary");
-				target.addClass("panel-success");
-				current.addClass("panel-success");
-				$(this).addClass("destination-confirmed");
 			}
-		} else if (event.which == 3) {
-			// Switch to destination removed - this will turn the modules red
+			changeConfirmedConnections(targetModuleItem, -1);
+			if( targetModuleItem.data("confirmedConnections") == 0) {
+				target.removeClass("panel-success");
+				target.addClass("panel-primary");
+			}
+			
+			bgcolor = $(".panel-primary .panel-heading").css("background-color");
+			color = $(".panel-primary .panel-heading").css("color");			
+			
+		} else  {
+			// Switch to destination confirmed - this will turn the modules green
+			changeConfirmedConnections(currentModuleItem, 1);
+			changeConfirmedConnections(targetModuleItem,  1);
 			target.removeClass("panel-primary");
 			current.removeClass("panel-primary");
-			target.removeClass("panel-success");
-			current.removeClass("panel-success");
-			target.addClass("panel-danger");
-			current.addClass("panel-danger");
-			$(this).addClass("destination-removed");
+			target.addClass("panel-success");
+			current.addClass("panel-success");
+			$(this).addClass("destination-confirmed");
+			
+			bgcolor = $(".panel-success .panel-heading").css("background-color")
+			color = $(".panel-success .panel-heading").css("color")
 		}
-		
-		bgcolor = current.find(".panel-heading").css("background-color")
-		color = current.find(".panel-heading").css("color")
 		
 		$(this).css({"background-color": bgcolor, "color":color});
 		changeConnectionColor( $(this).find(".module-connection"), rgb2hex(bgcolor).substr(1) );
 		
 	});
 	
-	
-	$(".move-module-down").click(function() {
+	// Moving the modules with the arrow
+	$("body").on("click",".move-module-down", function() {
 		// Moves the module down
 		listBelowClass = "." + $(this).parents(".col").attr("class").replace(/ /g, ".")
 		listBelow = $(listBelowClass).last().find(".module-container")
 		
-		console.log(listBelowClass)
-		console.log(listBelow)
-		$(this).parents(".module-item").appendTo(listBelow)		
-		
+		$(this).parents(".module-item").appendTo(listBelow);
+		findConnections( $(this).parents(".module-container"), false);
+		$(this).removeClass("move-module-down").addClass("move-module-up");
 	});
+	
+	$("body").on("click",".move-module-up", function() {
+		moduleItem = $(this).parents(".module-item")
+		if( moduleItem.find(".panel").hasClass("panel-success") ) {
+			alert( "This module is connected. It cannot be removed without disabling the connection." );
+			return false;
+		}
+	
+		// Moves the module back up
+		currentList = $(this).parents(".module-container")
+		listAboveClass = "." + $(this).parents(".col").attr("class").replace(/ /g, ".")
+		listAbove = $(listAboveClass).first().find(".module-container")
+		console.log(listAbove);	
+		
+		moduleItem.appendTo(listAbove);
+		findConnections( currentList, false);
+		findConnections( moduleItem, true);
+		
+		moduleItem.data("confirmedConnections",0)
+		$(this).removeClass("move-module-up").addClass("move-module-down");
+	});
+	
+	// Compiling the Procedure
+	
+	function walkProcedureBranch( moduleItem ) {		
+		var procedure = {};
+		$(moduleItem).find(".destination-confirmed").each(function() {		
+			target = $(this).data("target").parents(".module-item");
+			procedure[$(this)] = walkProcedureBranch(target);
+		});	
+		return procedure
+	}
+	
+	$("#btn-compile").click(function() {
+		var tree = [];
+		// Get destination columns
+		$(".destination .col:first .module-item").each(function() {
+			tree.push(walkProcedureBranch($(this)));
+		});
+		console.log(tree);
+	});
+	
 });
