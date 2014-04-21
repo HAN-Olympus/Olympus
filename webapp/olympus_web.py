@@ -1,7 +1,9 @@
 from flask import Flask, render_template, abort, Response, request
+from flask.ext.compress import Compress
 import os,re,sys
 import additionalImports
 from Config import Config
+from ProcedureContainer import ProcedureCollection
 import svglib
 
 app = Flask(__name__)
@@ -101,6 +103,12 @@ def connection():
 	connection = svglib.Connection(x1,y1,x2,y2, stroke, fill)
 	
 	return Response(connection.draw(), mimetype="image/svg+xml")
+
+@app.route("/svg/graph")
+def graph():
+	pc = ProcedureCollection()
+	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"))
+	return Response(pc.createGraphPreviewSVG(graph), mimetype="image/svg+xml")
 	
 # TESTING #
 
@@ -115,4 +123,8 @@ def test_loadFont():
 
 	
 if __name__ == "__main__":
-    app.run()
+	app.run()
+else:
+	Compress(app)
+	app.config['COMPRESS_MIMETYPES'] = ['text/html', 'text/css', 'text/xml', 'application/json', 'application/javascript', 'image/svg+xml']
+	app.config['COMPRESS_DEBUG'] = True

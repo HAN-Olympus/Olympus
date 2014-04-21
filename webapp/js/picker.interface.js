@@ -255,7 +255,7 @@ $(function() {
 		var nodes = [];
 		var edges = [];
 		// Get all the found destinations columns
-		$(".destination .module-output.destination-found").each(function() {
+		$(".destination .module-output.destination-confirmed").each(function() {
 			output = $(this).parents(".module-item")
 			target = $(this).data("target").parent(".module-item")
 			
@@ -268,14 +268,19 @@ $(function() {
 				nodes.push(targetName)
 			}
 			// Check if the output is in the first column
-			if(output.parents(".destination .col").is(":first")) {
+			if(output.parents(".destination .col").eq(0).index() == 0) {
 				edges.push(["start", outputName])
 			}
 			
 			edges.push([outputName,targetName])
 		});
 		
-		console.log(JSON.stringify(nodes), JSON.stringify(edges))
+		var nodes = JSON.stringify(nodes)
+		var edges = JSON.stringify(edges)
+		console.log(nodes)
+		console.log(edges)
+		graphUrl = "/svg/graph?nodes="+nodes+"&edges="+edges;
+		window.open(graphUrl)
 	});
 	
 });
