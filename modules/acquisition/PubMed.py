@@ -5,13 +5,14 @@ from Article import Article
 from Collection import Collection
 from Log import Log
 import datetime, urllib
+from Config import Config
 
 class PubMed(AcquisitionModule.AcquisitionModule):
 	""" This module allows for retrieval of medical articles from the Entrez API."""
 	
 	def __init__(self):
 		# TODO: Configuration should set this
-		Entrez.email = "Your.Name.Here@example.org"
+		Entrez.email = Config().email
 	
 	def formatTerm(self, term="", tAnd = [], tOr = [], **kwargs):
 		"""Format a term to allow direct passing to Entrez.
@@ -134,7 +135,9 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		return output
 		
 	def start(self, **kwargs):
-		pass
+		# This is currently just test data!
+		articles = self.getBySearchTerm("zinc")
+		return articles
 
 # TESTING #
 

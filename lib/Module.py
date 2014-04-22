@@ -12,11 +12,11 @@ class Module(object):
 		
 	def __repr__(self):
 		""" Returns the class name as a basic representation of the module """
-		return self.__class__.name
+		return self.__class__.__name__
 		
 	def __str__(self):
 		""" Returns the class name as a basic representation of the module """
-		return self.__class__.name
+		return self.__class__.__name__
 		
 	@abstractmethod
 	def specifyInput():

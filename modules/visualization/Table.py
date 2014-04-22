@@ -71,7 +71,8 @@ class Table(VisualizationModule.VisualizationModule):
 		collection = Collection()
 				
 		input = {
-			"input":[collection]
+			"inputOne":[collection],
+			"inputTwo":[collection]
 		}
 		return input
 		

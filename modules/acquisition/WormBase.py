@@ -29,6 +29,7 @@ class WormBase(AcquisitionModule.AcquisitionModule):
 		url = self.api_url + "field/" + type + "/" + value + "/" + field
 		r = requests.get(url, headers=headers)
 		response = r.text
+		
 		if "text/html" in r.headers.get('content-type'):
 			errorResponse = re.match("Error Message:\n(.+?)<\/textarea>", r.text)
 			
@@ -37,7 +38,8 @@ class WormBase(AcquisitionModule.AcquisitionModule):
 			if errorResponse == None:
 				raise ValueError, "The server encountered an error but did not provide a reason."
 			raise ValueError, "The server responded with an error: %s" % errorResponse.group(1)
-			
+		
+		return json.loads(response)
 		
 	def specifyInput(self):
 		return None
@@ -55,7 +57,8 @@ class WormBase(AcquisitionModule.AcquisitionModule):
 		return output
 		
 	def start(self, **kwargs):
-		pass
+		# This is currently just test data!
+		return self.findByField("gene", "WBGene00006763", "cloned_by")
 		
 # TESTING #
 
