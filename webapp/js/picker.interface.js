@@ -226,6 +226,7 @@ $(function() {
 		$(this).parents(".module-item").appendTo(listBelow);
 		findConnections( $(this).parents(".module-container"), false);
 		$(this).removeClass("move-module-down").addClass("move-module-up");
+		$(this).find(".glyphicon").removeClass("glyphicon-arrow-down").addClass("glyphicon-arrow-up")
 	});
 	
 	$("body").on("click",".move-module-up", function() {
@@ -247,6 +248,7 @@ $(function() {
 		
 		moduleItem.data("confirmedConnections",0)
 		$(this).removeClass("move-module-up").addClass("move-module-down");
+		$(this).find(".glyphicon").removeClass("glyphicon-arrow-up").addClass("glyphicon-arrow-down")
 	});
 	
 	// Compiling the Procedure
