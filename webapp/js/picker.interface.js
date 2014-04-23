@@ -256,6 +256,7 @@ $(function() {
 	$("#btn-compile").click(function() {
 		var nodes = [];
 		var edges = [];
+		var edgeAttributes = [];
 		// Get all the found destinations columns
 		$(".destination .module-output.destination-confirmed").each(function() {
 			output = $(this).parents(".module-item")
@@ -263,25 +264,33 @@ $(function() {
 			
 			outputName = output.find(".module-name").text()
 			targetName = target.find(".module-name").text()
+			
+			outputId = $(this).text();
+			
 			if($.inArray(outputName,nodes) < 0) {
-				nodes.push(outputName)
+				nodes.push(outputName);
 			}
 			if($.inArray(targetName,nodes) < 0) {
-				nodes.push(targetName)
+				nodes.push(targetName);
 			}
 			// Check if the output is in the first column
 			if(output.parents(".destination .col").eq(0).index() == 0) {
+				edgeAttributes.push({"outputId": ""});
 				edges.push(["start", outputName])
 			}
 			
+			edgeAttributes.push({"outputId": outputId.trim()});
 			edges.push([outputName,targetName])
+			
 		});
 		
 		var nodes = JSON.stringify(nodes)
 		var edges = JSON.stringify(edges)
+		var edgeAttributes = JSON.stringify(edgeAttributes)
 		console.log(nodes)
 		console.log(edges)
-		graphUrl = "/svg/graph?nodes="+nodes+"&edges="+edges;
+		console.log(edgeAttributes)
+		graphUrl = "/svg/graph?nodes="+nodes+"&edges="+edges+"&edgeAttributes="+edgeAttributes;
 		window.open(graphUrl)
 	});
 	

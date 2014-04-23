@@ -58,7 +58,7 @@ class WormBase(AcquisitionModule.AcquisitionModule):
 		
 	def start(self, **kwargs):
 		# This is currently just test data!
-		return self.findByField("gene", "WBGene00006763", "cloned_by")
+		return Gene(**self.findByField("gene", "WBGene00006763", "cloned_by"))
 		
 # TESTING #
 

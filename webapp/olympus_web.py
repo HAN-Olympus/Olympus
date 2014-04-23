@@ -107,7 +107,7 @@ def connection():
 @app.route("/svg/graph")
 def graph():
 	pc = ProcedureCollection()
-	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"))
+	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
 	return Response(pc.createGraphPreviewSVG(graph), mimetype="image/svg+xml")
 	
 # TESTING #

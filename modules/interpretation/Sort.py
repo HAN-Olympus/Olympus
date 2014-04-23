@@ -24,5 +24,5 @@ class Sort(InterpretationModule.InterpretationModule):
 		}
 		return output
 		
-	def start(self, **kwargs):
-		pass
+	def start(self, input):
+		return input

@@ -88,9 +88,56 @@ class Table(VisualizationModule.VisualizationModule):
 		}
 		return output
 		
-	def start(self, **kwargs):
-		pass
+	def determineKeyIntersect(self, inputOne, inputTwo):
+		xAxis = set()
+		xValues = {}
 		
+		yAxis = set()
+		yValues = {}
+		
+		for input in inputOne:
+			for key,value in input.__dict__.items():
+				xAxis.add(key)
+				if key in xValues:
+					xValues[key].append(value)
+				else:
+					xValues[key] = [value]
+		
+		print inputTwo
+		for input in inputTwo:
+			for key,value in input.__dict__.items():
+				yAxis.add(key)
+				if key in yValues:
+					yValues[key].append(value)
+				else:
+					yValues[key] = [value]
+					
+		return xAxis.intersection(yAxis)
+		
+	def start(self, inputOne, inputTwo):
+		print inputOne
+		print inputTwo
+		
+		if not isinstance(inputOne, list):
+			inputOne = [inputOne]
+		if not isinstance(inputTwo, list):
+			inputTwo = [inputTwo]
+			
+
+		keys = self.determineKeyIntersect(inputOne, inputTwo)
+		
+		table = {}
+		for input in inputOne:
+			table[str(input)] = {}
+			for key in keys:
+				 table[str(input)][key] = getattr(input, key)
+				 
+		for input in inputTwo:
+			table[str(input)] = {}
+			for key in keys:
+				 table[str(input)][key] = getattr(input, key)
+				 
+		return self.convertDictionaryToHTMLTable(table)	
 		
 # Testing #
 
