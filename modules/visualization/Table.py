@@ -89,6 +89,7 @@ class Table(VisualizationModule.VisualizationModule):
 		return output
 		
 	def determineKeyIntersect(self, inputOne, inputTwo):
+		""" Determines the intersection of the keys in two (lists of) objects and returns them. """
 		xAxis = set()
 		xValues = {}
 		
@@ -103,7 +104,6 @@ class Table(VisualizationModule.VisualizationModule):
 				else:
 					xValues[key] = [value]
 		
-		print inputTwo
 		for input in inputTwo:
 			for key,value in input.__dict__.items():
 				yAxis.add(key)
@@ -114,18 +114,17 @@ class Table(VisualizationModule.VisualizationModule):
 					
 		return xAxis.intersection(yAxis)
 		
-	def start(self, inputOne, inputTwo):
-		print inputOne
-		print inputTwo
+	def toHhtml(self):
+		inputOne = self.inputOne
+		inputTwo = self.inputTwo
 		
 		if not isinstance(inputOne, list):
 			inputOne = [inputOne]
 		if not isinstance(inputTwo, list):
 			inputTwo = [inputTwo]
-			
-
-		keys = self.determineKeyIntersect(inputOne, inputTwo)
 		
+		keys = self.determineKeyIntersect(inputOne, inputTwo)
+
 		table = {}
 		for input in inputOne:
 			table[str(input)] = {}
@@ -138,6 +137,12 @@ class Table(VisualizationModule.VisualizationModule):
 				 table[str(input)][key] = getattr(input, key)
 				 
 		return self.convertDictionaryToHTMLTable(table)	
+		
+	def start(self, inputOne, inputTwo):
+		self.inputOne = inputOne
+		self.inputTwo = inputTwo
+		
+		return self
 		
 # Testing #
 

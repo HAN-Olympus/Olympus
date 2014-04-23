@@ -114,15 +114,16 @@ class ProcedureCollection(Collection.Collection):
 				
 				if argcount == 2:
 					if child in output and isinstance(output[child], list):
-						output[child].append([child.start(c) for c in output[parent]])
+						for c in output[parent]:
+							output[child].append(child.start(c))
 					else:
 						output[child] = [child.start(c) for c in output[parent]]
+						
 				elif argcount > 2:
 					if len(output[parent]) == argcount -1:
-						print output[parent]
-						print output[parent][0]
-						print output[parent][1]
 						output[child] = [child.start(*output[parent])]
+						
+					"""
 					else:
 						if child in storedOutput and isinstance(storedOutput[child], list):
 							storedOutput[child].append(output)
@@ -133,11 +134,11 @@ class ProcedureCollection(Collection.Collection):
 						
 						if len(storedOutput[child]) == argcount-1:
 							output[child] = [child.start(*storedOutput[child])]
+					"""
 				else:
 					output[child] = None
 					
-		print pf(output)
-					
+		return output
 			
 		
 	def createGraphPreviewSVG(self, graph):

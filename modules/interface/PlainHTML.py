@@ -47,8 +47,13 @@ class PlainHTML(InterfaceModule.InterfaceModule):
 	def specifyOutput(self):
 		pass
 		
-	def start(self, **kwargs):
-		pass
+	def start(self, input):
+		if isinstance(input, list):
+			self.addVisualizations(input)
+		else:
+			self.addVisualizations([input])
+		
+		return str(self.html)
 
 # TESTING #
 import difflib
