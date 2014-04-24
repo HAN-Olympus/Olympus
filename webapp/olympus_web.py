@@ -110,6 +110,21 @@ def graph():
 	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
 	return Response(pc.createGraphPreviewSVG(graph), mimetype="image/svg+xml")
 	
+@app.route("/execute/<viewType>")
+def execute(viewType):
+	pc = ProcedureCollection()
+	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
+	
+	viewTypes = { "html":"PlainHTML", "latex":"LaTeX", "csv":"CSV"}
+	output = pc.traverseGraph(graph)
+	vt = viewTypes[viewType]
+	
+	names = [ str(key) for key in output.keys() ]
+	i = names.index(vt)
+	result = output[output.keys()[i]]
+	
+	return Response(result)
+	
 # TESTING #
 
 def test_loadJs():

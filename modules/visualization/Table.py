@@ -53,6 +53,7 @@ class Table(VisualizationModule.VisualizationModule):
 		
 		html+= ["</tr>", "</thead>", "<tbody>"]
 		for subject, variables in dictionary.items():
+			html+= ["<tr>"]
 			for key in keys:
 				if key in variables.keys():
 					html.append("<td>%s</td>" % variables[key])
@@ -61,6 +62,7 @@ class Table(VisualizationModule.VisualizationModule):
 						raise KeyError, "Mismatch between the dictionaries' keys. (%s)" % key
 					else:
 						html.append("<td>%s</td>" % empty)
+			html+= ["</tr>"]
 					
 		
 		
@@ -114,7 +116,7 @@ class Table(VisualizationModule.VisualizationModule):
 					
 		return xAxis.intersection(yAxis)
 		
-	def toHhtml(self):
+	def toHTML(self):
 		inputOne = self.inputOne
 		inputTwo = self.inputTwo
 		
