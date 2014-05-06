@@ -5,6 +5,7 @@ import additionalImports
 from Config import Config
 from ProcedureContainer import ProcedureCollection
 import svglib
+import gearman
 
 app = Flask(__name__)
 
@@ -111,9 +112,10 @@ def graph():
 	return Response(pc.createGraphPreviewSVG(graph), mimetype="image/svg+xml")
 	
 @app.route("/execute/<viewType>")
-def execute(viewType):
+def execute(viewType):	
+	""" Executes the given procedure as a Gearman job. """
 	pc = ProcedureCollection()
-	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
+	pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
 	
 	viewTypes = { "html":"PlainHTML", "latex":"LaTeX", "csv":"CSV"}
 	output = pc.traverseGraph(graph)

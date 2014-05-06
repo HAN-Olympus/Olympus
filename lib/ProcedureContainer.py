@@ -11,6 +11,23 @@ from pprint import pformat as pf
 class ProcedureCollection(Collection.Collection):
 	""" A container for a set of Olympus Procedure. It uses `NetworkX` to create the Procedure Graphs """
 	
+	def importModules(self, nodes):
+		""" Imports all the given modules, instantiates the containing class and returns the collective result as a list.
+			
+			:param nodes: A list of module names. The names of the classes that should be imported should match the module names.
+			:returns: A list of freshly imported and instantiated objects.
+		"""
+		instantiatedNodes = []
+		
+		for module in nodes:
+			if module == "start":
+				continue
+			importedModule = __import__(module)
+			if module in importedModule.__dict__.keys():
+				instantiatedNodes.append(__import__(module).__dict__[module]())
+				
+		return instantiatedNodes
+	
 	def createFromJSON(self, nodes, edges, edgeAttributes):
 		""" Creates a Procedure from two JSON lists and formats them so they can be used directly in the `createProcedureGraph` function. 
 		
@@ -35,14 +52,8 @@ class ProcedureCollection(Collection.Collection):
 		:param edgeAttributes: A dictionary of attributes for each edge, should correspond in order with the edges list.
 		:returns: A networkx (Di)Graph object
 		"""		
-		instantiatedNodes = []
 		
-		for module in nodes:
-			if module == "start":
-				continue
-			importedModule = __import__(module)
-			if module in importedModule.__dict__.keys():
-				instantiatedNodes.append(__import__(module).__dict__[module]())
+		instantiatedNodes = self.importModules(nodes)
 				
 		instantiatedNodes.append("start")
 		

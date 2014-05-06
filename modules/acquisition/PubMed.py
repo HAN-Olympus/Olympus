@@ -85,7 +85,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		medlineCitation = article["MedlineCitation"]
 		for attr in medlineCitation:
 			if attr == "PMID":
-				articleObject.addAttribute("id","pubmed",str( medlineCitation["PMID"] ))
+				articleObject.addAttribute("id","pubmed",unicode( medlineCitation["PMID"] ))
 				
 			if attr == "DateCreated":
 				day = medlineCitation["DateCreated"]["Day"]
@@ -110,7 +110,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 					authors.append( "%s %s" % (author["ForeName"], author["LastName"]))
 				articleObject.addAttribute("authors", "pubmed", authors)
 
-				articleObject.addAttribute("source","pubmed",str(medlineCitation["Article"]["Journal"]["Title"]))
+				articleObject.addAttribute("source","pubmed",unicode(medlineCitation["Article"]["Journal"]["Title"]))
 
 		# Loop over all the aspects of the pubmed data
 		for attr in article["PubmedData"]:
