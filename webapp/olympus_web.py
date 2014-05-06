@@ -115,7 +115,7 @@ def graph():
 def execute(viewType):	
 	""" Executes the given procedure as a Gearman job. """
 	pc = ProcedureCollection()
-	pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
+	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
 	
 	viewTypes = { "html":"PlainHTML", "latex":"LaTeX", "csv":"CSV"}
 	output = pc.traverseGraph(graph)

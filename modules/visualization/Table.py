@@ -56,7 +56,10 @@ class Table(VisualizationModule.VisualizationModule):
 			html+= ["<tr>"]
 			for key in keys:
 				if key in variables.keys():
-					html.append("<td>%s</td>" % variables[key])
+					if variables[key] != None:
+						html.append("<td>%s</td>" % variables[key])
+					else:
+						html.append("<td>%s</td>" % empty)
 				else:
 					if empty == None:
 						raise KeyError, "Mismatch between the dictionaries' keys. (%s)" % key
@@ -91,7 +94,12 @@ class Table(VisualizationModule.VisualizationModule):
 		return output
 		
 	def determineKeyIntersect(self, inputOne, inputTwo):
-		""" Determines the intersection of the keys in two (lists of) objects and returns them. """
+		""" Determines the intersection of the keys in two (lists of) objects and returns them. 
+		
+		:param inputOne:  A list of collections provided by another module.
+		:param inputTwo:  A list of collections provided by another module.
+		:returns: The overlap in keys from all the given collections
+		"""
 		xAxis = set()
 		xValues = {}
 		
@@ -116,6 +124,25 @@ class Table(VisualizationModule.VisualizationModule):
 					
 		return xAxis.intersection(yAxis)
 		
+	def getCumulativeKeys(self, inputOne, inputTwo):
+		""" Retreives all the keys and sticks them together. 
+		
+		:param inputOne:  A list of collections provided by another module.
+		:param inputTwo:  A list of collections provided by another module.
+		:returns: All the keys in all the collections
+		"""
+		
+		xAxis = []
+		
+		for input in inputOne:
+			xAxis += input.__dict__.keys()
+		
+		for input in inputTwo:
+			xAxis += input.__dict__.keys()
+			
+		return list(set(xAxis))
+		
+		
 	def toHTML(self):
 		inputOne = self.inputOne
 		inputTwo = self.inputTwo
@@ -125,18 +152,25 @@ class Table(VisualizationModule.VisualizationModule):
 		if not isinstance(inputTwo, list):
 			inputTwo = [inputTwo]
 		
-		keys = self.determineKeyIntersect(inputOne, inputTwo)
+		#keys = self.determineKeyIntersect(inputOne, inputTwo)
+		keys = self.getCumulativeKeys(inputOne, inputTwo)
 
 		table = {}
 		for input in inputOne:
 			table[str(input)] = {}
 			for key in keys:
-				 table[str(input)][key] = getattr(input, key)
+				if hasattr(input,key):
+					table[str(input)][key] = getattr(input, key)
+				else:
+					table[str(input)][key] = None
 				 
 		for input in inputTwo:
 			table[str(input)] = {}
 			for key in keys:
-				 table[str(input)][key] = getattr(input, key)
+				if hasattr(input,key):
+					table[str(input)][key] = getattr(input, key)
+				else:
+					table[str(input)][key] = None
 				 
 		return self.convertDictionaryToHTMLTable(table)	
 		
