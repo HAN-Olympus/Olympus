@@ -2,6 +2,10 @@ import Collection
 import json
 import networkx as nx
 import matplotlib.pyplot as plt
+
+""" Tell matplotlib not to try to output to the screen. We will only use it to generate images. """
+matplotlib.use('Agg')
+
 import additionalImports
 import cStringIO
 from Module import Module
@@ -153,12 +157,12 @@ class ProcedureCollection(Collection.Collection):
 			
 		
 	def createGraphPreviewSVG(self, graph):
-		""" Uses matplotlib to create an image of the created graph and serves it as an SVG. 
+		""" Uses matplotlib to create an image of the created graph and serves it as an SVG. Uses a spring layout to deliver better visuals.
 		
 		:param graph: A networkx graph object.
 		:returns: An SVG of the graph.
 		"""
-		nx.draw(graph)
+		nx.draw(graph,pos=nx.spring_layout(graph))
 		fakeFile = cStringIO.StringIO()
 		plt.savefig(fakeFile, format="svg")
 		plt.clf()
@@ -166,10 +170,6 @@ class ProcedureCollection(Collection.Collection):
 		return fakeFile.read()
 		
 # TESTING #
-
-def test_drawing():
-	nx.draw(nx.Graph())
-
 def test_createFromJSON():
 	PC = ProcedureCollection()
 	nodes = '["start","PubMed","Tail","Sort","WormBase","Table","LaTeX","PlainHTML"]'
