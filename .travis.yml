@@ -2,13 +2,12 @@ language: python
 python: 
   - "2.6"
   - "2.7"
+  - "2.7_with_system_site_packages"
   - "3.3"
   - "pypy"
 services:
   - mongodb
-virtualenv:
-  system_site_packages: true
-before_instal:
+before_install:
   - apt-get install python-sphinx
   - apt-get install libfreetype6-dev
 install: "pip install -r requirements.txt"
