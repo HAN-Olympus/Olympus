@@ -8,8 +8,8 @@ python:
 services:
   - mongodb
 before_install:
-  - apt-get install python-sphinx
-  - apt-get install libfreetype6-dev
+  - sudo apt-get install python-sphinx
+  - sudo 	apt-get install libfreetype6-dev
 install: "pip install -r requirements.txt"
 script:
   - nosetests -v --nocapture webapp/start.py lib/*.py modules/*/*.py core/*.py
