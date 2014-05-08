@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block index %}
+    <div class="container">
+	<p></p>
+	  	<ol class="breadcrumb">
+		  <li><a href="/">Olympus</a></li>
+		  <li class="active">Submitted</li>
+		</ol>
+	  
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Submitted</h2>
+          <p>Your job was submitted to the queue. Click <a href="/results/{{id}}/PlainHTML">here</a> to see the results.</p>
+        </div>
+      </div>
+	  </div>
+{% endblock %}
