@@ -6,6 +6,8 @@ from Config import Config
 from ProcedureContainer import ProcedureCollection
 import svglib
 import gearman
+import json
+from Output import Output
 
 app = Flask(__name__)
 
@@ -110,10 +112,32 @@ def graph():
 	pc = ProcedureCollection()
 	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
 	return Response(pc.createGraphPreviewSVG(graph), mimetype="image/svg+xml")
-	
+
 @app.route("/execute/<viewType>")
 def execute(viewType):	
-	""" Executes the given procedure as a Gearman job. """
+	""" Puts the Procedure in the Gearman Queue. """
+	data = json.dumps({"nodes":request.args.get("nodes"), "edges":request.args.get("edges"), "edgeAttributes":request.args.get("edgeAttributes")})
+	
+	gm_client = gearman.GearmanClient(['localhost:4730'])
+	job = gm_client.submit_job("runProcedure", data, background=True)
+	
+	return render_template("submitted.html", config=Config(), id=job.gearman_job.unique )
+	
+@app.route("/results/<job>/<output>")
+def results(job, output):
+	""" Show the output of a job in a given format. """
+	
+	out = Output().getByJobId(str(job))
+	if len(out) > 0:
+		#return Response(str(out))
+		return Response(out[0].getAttribute("output",output))
+	else:
+		return render_template("results.html", config=Config())
+	
+	
+@app.route("/executeDirect/<viewType>")
+def executeDirect(viewType):	
+	""" Executes the given procedure directly. """
 	pc = ProcedureCollection()
 	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
 	
@@ -128,7 +152,6 @@ def execute(viewType):
 	return Response(result)
 	
 # TESTING #
-
 def test_loadJs():
 	assert loadJs("bootstrap.min.js"), "Could not load necessary JS file."
 	

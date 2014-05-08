@@ -52,8 +52,12 @@ class StoredObject():
 		storage = Storage()
 		storage.getDatabase(self._database)
 		storage.getCollection(self._collection)
-		storage.insertDocuments(document)
-		self._id = document["_id"]
+		
+		if hasattr(self, "_id"):
+			storage.saveDocument(document)
+		else:
+			storage.insertDocuments(document)
+			self._id = document["_id"]
 	
 	def loadFromRawData(self, data):
 		""" This will create an object of the given class from a raw dictionary. Typically this would be what comes out of a the database, but it can also be used to initiate a whole new object from scratch.
@@ -61,7 +65,7 @@ class StoredObject():
 		:param data: A dictionary containing the data to be set for this new object.
 		:rtype: A new instance of this class with all the data specified pre set.
 		"""
-		newObject = self.__class__
+		newObject = self.__class__()
 		for key, value in data.items():
 			setattr(newObject, key, value)
 			
@@ -85,7 +89,7 @@ class StoredObject():
 		storage.getDatabase(database)
 		storage.getCollection(collection)
 		documents = storage.getDocuments({key:value}, limit)
-		
+				
 		objects = [ self.loadFromRawData( data ) for data in documents ]
 		return objects
 		

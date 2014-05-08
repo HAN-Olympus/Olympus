@@ -1,11 +1,12 @@
 import Collection
 import json
 import networkx as nx
-import matplotlib.pyplot as plt
+import matplotlib
 
 """ Tell matplotlib not to try to output to the screen. We will only use it to generate images. """
 matplotlib.use('Agg')
 
+import matplotlib.pyplot as plt
 import additionalImports
 import cStringIO
 from Module import Module
@@ -170,6 +171,9 @@ class ProcedureCollection(Collection.Collection):
 		return fakeFile.read()
 		
 # TESTING #
+def test_drawing():
+	nx.draw(nx.Graph())
+
 def test_createFromJSON():
 	PC = ProcedureCollection()
 	nodes = '["start","PubMed","Tail","Sort","WormBase","Table","LaTeX","PlainHTML"]'

@@ -136,7 +136,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		
 	def start(self, **kwargs):
 		# This is currently just test data!
-		articles = self.getBySearchTerm("zinc")
+		articles = self.getBySearchTerm("zinc",limit=10)
 		return articles
 
 # TESTING #

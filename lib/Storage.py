@@ -86,6 +86,24 @@ class Storage(Singleton.Singleton):
 			
 		self.__currentCollection.insert( document )
 		
+	def saveDocument(self, document):
+		""" Inserts a document into the currently selected collection in the currently selected database.
+		Will throw a ValueError if no database or collection has been selected.
+		
+		:param document: A dictionary that will be stored as a document. Its contents can include strings, numbers and several types of native objects, like `datetime`.
+		"""
+		
+		if not hasattr(document, "_id") and "_id" not in document.keys():
+			raise ValueError, "This document does not have a Mongo ID"
+		
+		if self.__currentDatabase == None:
+			raise ValueError, "There was no database selected"
+			
+		if self.__currentCollection == None:
+			raise ValueError, "There was no collection selected"
+			
+		self.__currentCollection.save( document )
+		
 	def removeDocuments(self, match):
 		""" Removes all documents that match the give query. 
 		Refer to the [MongoDB documentation](http://docs.mongodb.org/manual/tutorial/query-documents) on this subject for more information on queries.
@@ -160,11 +178,25 @@ def test_getDocuments():
 	storage.getCollection("test_collection")
 	assert storage.getDocuments({"name":"test_document"}).count() > 0, "Document was not inserted."
 	
+def test_saveDocument():
+	storage = Storage()
+	storage.getDatabase("test_database")
+	storage.getCollection("test_collection")
+	
+	doc = {"name":"test_document_save", "version":1}
+	storage.insertDocuments(doc)
+	ndoc = storage.getDocuments({"name":"test_document_save"})[0]
+	ndoc["version"] = 2
+	storage.saveDocument(ndoc)
+	assert storage.getDocuments({"name":"test_document_save"}).count() == 1, "Document was duplicated."
+	assert storage.getDocuments({"name":"test_document_save"})[0]["version"] == 2, "Document was not saved properly"
+	
 def test_removeDocuments():
 	storage = Storage()
 	storage.getDatabase("test_database")
 	storage.getCollection("test_collection")
 	storage.removeDocuments({"name":"test_document"})
+	storage.removeDocuments({"name":"test_document_save"})
 	
 def test_dropCollection():
 	storage = Storage()
