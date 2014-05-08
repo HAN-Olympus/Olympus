@@ -9,7 +9,8 @@ services:
   - mongodb
 before_install:
   - sudo apt-get install python-sphinx
-  - sudo 	apt-get install libfreetype6-dev
+  - sudo apt-get install libfreetype6-dev
+  - gearman -d
 install: "pip install -r requirements.txt"
 script:
   - nosetests -v --nocapture webapp/start.py lib/*.py modules/*/*.py core/*.py

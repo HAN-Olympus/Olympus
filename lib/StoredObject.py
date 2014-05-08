@@ -240,7 +240,10 @@ def test_findTestObject():
 	
 def test_removeObject():
 	t = TestObject().getObjectsByKey("random",r)
-	t[0]().remove()
+	if isinstance(t[0], TestObject):
+		t[0].remove()
+	else:
+		t[0]().remove()
 	
 def test_loadFromRawData():
 	t = TestObject().loadFromRawData({"r":r})
