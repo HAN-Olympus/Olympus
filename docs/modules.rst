@@ -5,6 +5,7 @@ Olympus Modules
    :maxdepth: 2
    
    acquisition
+   interpretation
    visualization
    interface
    
@@ -29,9 +30,21 @@ AcquisitionModule
 .. automodule:: AcquisitionModule
 	:members:
 	
+InterpretationModule
+--------------------
+
+.. automodule:: InterpretationModule
+	:members:
+	
 VisualizationModule
 -------------------
 
 .. automodule:: VisualizationModule
+	:members:
+	
+InterfaceModule
+---------------
+
+.. automodule:: InterfaceModule
 	:members:
 	

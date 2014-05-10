@@ -1,4 +1,5 @@
-""" Acquisition base class 
+""" Acquisition base class.
+
 Abstract class that provides base classes and access to classes in the ../lib directory
 Uses part of the additionalImport script to allow access to the lib classes.
 Refer to the page on Acquisition modules for a list of modules distributed with this version of Olympus.

@@ -2,6 +2,13 @@ Olympus Interface Modules
 =========================
 .. toctree::
    :maxdepth: 2
+	
+Latex
+-----
+.. automodule:: Latex
+	:members:
+	:private-members:
+	:special-members:
   
 PlainHTML
 ---------

@@ -24,3 +24,9 @@ ModuleLoader
 
 .. automodule:: ModuleLoader
 	:members:
+	
+Worker
+------
+
+.. automodule:: Worker
+	:members:

@@ -15,7 +15,7 @@ The majority of this documentation was written by `Stephan Heijl
 distribution will have documentation written by their respective authors. If you are a module author it is your sole responsibility to include any attributions in your
 own documentation, if you would like them.
 
-As of version 0.1 most source files contain Nose unittests. They are generally simple simple and as such not documented. These methods can be identified by their name, which starts with *test_*. 
+As of version 0.1 most source files contain Nose unittests. They are generally very simple and as such not documented. These methods can be identified by their name, which starts with *test_*. 
 
 This documentation is still a work in progress.
 
