@@ -1,0 +1,21 @@
+{% extends "main.html" %}
+{% block index %}
+    <div class="container">
+	<p></p>
+	  	<ol class="breadcrumb">
+		  <li><a href="/">Olympus</a></li>
+		  <li class="active">Result</li>
+		</ol>
+	  
+      <div class="row">
+        <div class="col-md-12">
+          <h2>The results of this job can be retreived in the following formats:</h2>
+          <ul>
+			{% for output in outputs %}
+				<li> <a href="{{output}}">{{output}}</a> </li>
+			{% endfor %}
+		  </ul>
+        </div>
+      </div>
+	  </div>
+{% endblock %}

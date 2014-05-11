@@ -1,0 +1,21 @@
+{% extends "main.html" %}
+{% block index %}
+    <div class="container">
+	<p></p>
+	  	<ol class="breadcrumb">
+		  <li><a href="/">Olympus</a></li>
+		  <li><a href="/interface">Results</a></li>
+		  <li><a href="/results/{{id}}">{{id}}</a></li>
+		  <li class="active">StyleHTML</li>
+		</ol>
+	  
+      <div class="row">
+        <div class="col-md-12">
+          <h2>These are the results:</h2>
+          {% for v in visualizations %}
+			{{v}}
+		  {% endfor %}
+        </div>
+      </div>
+	  </div>
+{% endblock %}
