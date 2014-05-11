@@ -4,12 +4,20 @@ import os,re,sys
 import additionalImports
 from Config import Config
 from ProcedureContainer import ProcedureCollection
+from TemplateTools import TemplateTools
 import svglib
 import gearman
 import json
 from Output import Output
 
 app = Flask(__name__)
+
+# LOAD TEMPLATE TOOLS #
+tools = TemplateTools()
+for attribute in dir(tools):
+	if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
+		print attribute
+		app.jinja_env.globals[attribute] = getattr(tools, attribute)
 
 # ROUTES #
 
@@ -72,7 +80,7 @@ def loadFont(filename):
 @app.route("/<filename>")
 def loadPage(filename):
 	if os.path.isfile("templates/%s" % filename):
-		return render_template(filename, name=filename)
+		return render_template(filename, name=filename, tools=TemplateTools())
 	else:
 		abort(404)
 		return False;

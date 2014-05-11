@@ -20,7 +20,7 @@ class ProcedureCollection(Collection.Collection):
 		""" Imports all the given modules, instantiates the containing class and returns the collective result as a list.
 			
 			:param nodes: A list of module names. The names of the classes that should be imported should match the module names.
-			:returns: A list of freshly imported and instantiated objects.
+			:rtype: A list of freshly imported and instantiated objects.
 		"""
 		instantiatedNodes = []
 		
@@ -39,7 +39,7 @@ class ProcedureCollection(Collection.Collection):
 		:param nodes: A JSON encoded list of nodes.
 		:param edges: A JSON encoded list of lists containing the connections between the nodes. If a node is mentioned here but not in `nodes` it will be created.
 		:param edgeAttributes: A JSON encoded list of attributes for each edge, should correspond in order with the edges list.
-		':returns: A networkx (Di)Graph object
+		:rtype: A networkx (Di)Graph object
 		"""
 		nodes = json.loads(nodes)
 		edges = json.loads(edges)
@@ -55,7 +55,7 @@ class ProcedureCollection(Collection.Collection):
 		:param nodes: A list of nodes.
 		:param edges: A list of 2-tuples containing the edges. If a node is mentioned here but not in `nodes` it will be created.
 		:param edgeAttributes: A dictionary of attributes for each edge, should correspond in order with the edges list.
-		:returns: A networkx (Di)Graph object
+		:rtype: A networkx (Di)Graph object
 		"""		
 		
 		instantiatedNodes = self.importModules(nodes)
@@ -161,7 +161,7 @@ class ProcedureCollection(Collection.Collection):
 		""" Uses matplotlib to create an image of the created graph and serves it as an SVG. Uses a spring layout to deliver better visuals.
 		
 		:param graph: A networkx graph object.
-		:returns: An SVG of the graph.
+		:rtype: An SVG of the graph.
 		"""
 		nx.draw(graph,pos=nx.spring_layout(graph))
 		fakeFile = cStringIO.StringIO()

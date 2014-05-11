@@ -22,12 +22,12 @@ class StyledHTML(PlainHTML.PlainHTML):
 import difflib
 		
 def test_init():
-	ph = PlainHTML()
+	ph = StyledHTML()
 	testString = "<html><head><title>PlainHTML Generated Page</title></head><body></html>"	
 	assert str(ph.html) == testString
 	
 def test_appendToBody():
-	ph = PlainHTML()
+	ph = StyledHTML()
 	appendText = "Hello world <br/>"
 	testString = "<html><head><title>PlainHTML Generated Page</title></head><body>%s</body></html>" % appendText
 	ph.appendToBody(appendText)

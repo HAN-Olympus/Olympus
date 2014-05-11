@@ -53,3 +53,9 @@ ProcedureContainer
 
 .. automodule:: ProcedureContainer
 	:members:
+	
+TemplateTools
+-------------
+
+.. automodule:: TemplateTools
+	:members:

@@ -1,5 +1,8 @@
-class TemplateTools():
-	""" This class contains a variety of functions that are useful when rendering templates. """
+import Singleton
+
+class TemplateTools(Singleton.Singleton):
+	""" This class contains a variety of functions that are useful when rendering templates.
+		Olympus loads all these methods into the Jinja2 template environment by default. """
 	
 	def __init__(self):
 		self.deferredJavascript = []
@@ -9,25 +12,47 @@ class TemplateTools():
 		
 		:param url: The URL of the script.
 		:param position: The position in the order of scripts to load. Use this to make sure libraries load later than scripts using them.
+		:rtype: An empty string.
 		"""
 		self.deferredJavascript.append( ( url, position ) )
+		return ""
 		
-	def renderJS(self):
-		""" Renders all the deferred Javascript scripts that were added by deferJS. 
+	def renderJS(self, clearDeferred=True):
+		""" Renders all the deferred Javascript scripts that were added by deferJS. They will be rendered in the order of their position, or when their positions are the same, based on the order they were inserted in.
 		
+		:param clearDeferred: By default, this methods clears all the deferred scripts that have been added. You can retain them by setting this to False. Please note that not clearing them will result in the deferred scripts persisting throughout the life of the server process, possibly accumulating a large amount of memory space.
 		:rtype: A string of <script> tags in their defined order.
-		"""
-		html = []
+		"""		
+
 		seen = set()
 		dJS = []		
 		for url, position in self.deferredJavascript:
 			if url not in seen:
 				dJS.append((url,position))
-				seen.add(position)
+				seen.add(url)
 		
 		dJS.sort(key=lambda s: s[1])		
 		
-		for script in dJS:
-			html.append( "<script src='%s' defer></script>" )
+		html = []
+		for script, pos in dJS:
+			html.append( "<script src='%s' defer></script>" % (script) )
+			
+		if clearDeferred:
+			self.deferredJavascript = []
 			
 		return "\n".join(html)
+		
+		
+# TESTING #
+
+def test_deferJS():
+	tt = TemplateTools()
+	tt.deferJS("test.js")
+	assert len(tt.deferredJavascript) == 1
+	
+def test_renderJS():
+	tt = TemplateTools()
+	tt.deferJS("test.js")
+	assert tt.renderJS(False) == "<script src='test.js' defer></script>"
+	assert tt.renderJS(True) == "<script src='test.js' defer></script>"
+	

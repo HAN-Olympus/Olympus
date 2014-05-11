@@ -12,4 +12,3 @@ Table
 -----
 .. automodule:: Table
 	:members:
-	

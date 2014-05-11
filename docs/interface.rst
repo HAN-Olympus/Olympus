@@ -5,7 +5,7 @@ Olympus Interface Modules
 	
 Latex
 -----
-.. automodule:: Latex
+.. automodule:: LaTeX
 	:members:
 	:private-members:
 	:special-members:
@@ -16,4 +16,3 @@ PlainHTML
 	:members:
 	:private-members:
 	:special-members:
-	
