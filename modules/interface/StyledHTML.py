@@ -16,6 +16,8 @@ class StyledHTML(PlainHTML.PlainHTML):
 		
 		:param title: The title of the document under construction.
 		"""
+		
+		self.html = ""
 				
 
 # TESTING #
