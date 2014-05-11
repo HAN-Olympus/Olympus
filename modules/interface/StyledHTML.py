@@ -19,17 +19,4 @@ class StyledHTML(PlainHTML.PlainHTML):
 				
 
 # TESTING #
-import difflib
-		
-def test_init():
-	ph = StyledHTML()
-	testString = "<html><head><title>PlainHTML Generated Page</title></head><body></html>"	
-	assert str(ph.html) == testString
-	
-def test_appendToBody():
-	ph = StyledHTML()
-	appendText = "Hello world <br/>"
-	testString = "<html><head><title>PlainHTML Generated Page</title></head><body>%s</body></html>" % appendText
-	ph.appendToBody(appendText)
-	assert str(ph.html) == testString
 	
