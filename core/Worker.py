@@ -1,6 +1,8 @@
 import gearman
 import subprocess
 import json
+import sys
+import traceback
 import additionalImports
 from Output import Output
 from ProcedureContainer import ProcedureCollection
@@ -22,13 +24,13 @@ class Worker():
 		try:
 			graph = pc.createFromJSON(data["nodes"], data["edges"], data["edgeAttributes"]) # Create the graph
 		except Exception, e:
-			print e
+			traceback.print_exc(file=sys.stdout)
 		
 		print "Start traversing"
 		try:
 			output = pc.traverseGraph(graph)
 		except Exception, e:
-			print e
+			traceback.print_exc(file=sys.stdout)
 		print "Done traversing"
 		
 		try:

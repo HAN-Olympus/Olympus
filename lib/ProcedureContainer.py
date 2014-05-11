@@ -117,6 +117,8 @@ class ProcedureCollection(Collection.Collection):
 		for edge in self.bfs_edges(graph, "start"):
 			parent = edge[0]
 			child = edge[1]
+			
+			print "%s -> %s" % (parent, child)
 			# Should contain an outputId, determining what exactly should be retrieved from the function call.
 			attributes = edge[2]
 			# Only start the node if it's actually a module...
@@ -139,18 +141,6 @@ class ProcedureCollection(Collection.Collection):
 					if len(output[parent]) == argcount -1:
 						output[child] = [child.start(*output[parent])]
 						
-					"""
-					else:
-						if child in storedOutput and isinstance(storedOutput[child], list):
-							storedOutput[child].append(output)
-						else:
-							storedOutput[child] = [output]
-						
-						print len(storedOutput[child]), argcount
-						
-						if len(storedOutput[child]) == argcount-1:
-							output[child] = [child.start(*storedOutput[child])]
-					"""
 				else:
 					output[child] = None
 					
@@ -163,10 +153,16 @@ class ProcedureCollection(Collection.Collection):
 		:param graph: A networkx graph object.
 		:rtype: An SVG of the graph.
 		"""
-		nx.draw(graph,pos=nx.spring_layout(graph))
+		nx.draw_spring(graph)
 		fakeFile = cStringIO.StringIO()
 		plt.savefig(fakeFile, format="svg")
 		plt.clf()
+		fakeFile.seek(0)
+		return fakeFile.read()
+		
+	def createGefxPreview(self, graph):
+		fakeFile = cStringIO.StringIO()
+		nx.write_gexf(graph,fakeFile)
 		fakeFile.seek(0)
 		return fakeFile.read()
 		

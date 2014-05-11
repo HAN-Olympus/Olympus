@@ -14,7 +14,10 @@ sys.path.insert(0, absLibDir)
 
 # Library classes are now accessible
 import Module
-import datetime
+from Config import Config
+from jinja2 import Environment, FileSystemLoader
+from TemplateTools import TemplateTools
+
 
 class InterfaceModule(Module.Module):
 	""" Base class for all interface modules. Provides some generic methods. """
@@ -22,3 +25,29 @@ class InterfaceModule(Module.Module):
 	def __init__(self):
 		""" Does nothing. """
 		pass
+		
+	def getJinjaEnvironment(self, templates=None):
+		""" Allows a module to make use of a Jinja2 environment for template rendering. 
+			
+			:param templates: The relative directory where the templates are situated in. Will default to the webapp's templates directory, if it is defined.
+			:rtype: A Jinja2 Environment object.
+		"""
+		
+		if templates == None:
+			try:
+				templates = Config().TemplatesDirectory
+			except:
+				templates = ""
+		
+		print "Templates: ", templates
+		env = Environment(loader=FileSystemLoader(templates))
+		return env
+	
+	def loadTemplateTools(self, env):
+		tools = TemplateTools()
+		for attribute in dir(tools):
+			if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
+				print attribute
+				env.globals[attribute] = getattr(tools, attribute)
+		
+		return env

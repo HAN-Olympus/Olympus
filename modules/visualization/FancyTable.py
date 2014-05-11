@@ -56,9 +56,8 @@ class FancyTable(Table.Table):
 		
 		# Javascript required for dataTables
 		html += [	
-					"<script src='https://code.jquery.com/jquery-1.10.2.min.js'></script>",
-					"<script src='http://cdn.datatables.net/1.10.0/js/jquery.dataTables.min.js'></script>",
-					"<script src='http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js'></script>",
+					"{{ deferJS('http://cdn.datatables.net/1.10.0/js/jquery.dataTables.min.js',3) }}",
+					"{{ deferJS('http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js,3') }}",
 					"<script>$(document).ready(function() { $('#fancytable').dataTable();} );</script>"
 				]
 		return "\n".join(html)		

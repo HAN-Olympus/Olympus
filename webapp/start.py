@@ -1,7 +1,6 @@
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from olympus_web import *
 import os
 
 def checkWorkingDirectory():
@@ -16,6 +15,8 @@ def start():
 	print ("Starting Olympus Tornado HTTP Server")
 	print ("------------------------------------")
 	checkWorkingDirectory()
+	
+	from olympus_web import *
 
 	PORT = 5000
 	print ("Starting on port %s..." % PORT)

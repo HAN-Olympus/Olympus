@@ -290,8 +290,6 @@ $(function() {
 		console.log(nodes)
 		console.log(edges)
 		console.log(edgeAttributes)
-		graphUrl = "/svg/graph?nodes="+nodes+"&edges="+edges+"&edgeAttributes="+edgeAttributes;
-		window.open(graphUrl)
 		
 		executeUrl = "/execute/html?nodes="+nodes+"&edges="+edges+"&edgeAttributes="+edgeAttributes;
 		window.open(executeUrl)

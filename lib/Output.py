@@ -8,5 +8,4 @@ class Output(StoredObject.StoredObject):
 	def getByJobId(self, id):
 		print id
 		results = self.getObjectsByKey("job_id", id)
-		print results
 		return results

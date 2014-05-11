@@ -18,6 +18,12 @@ for attribute in dir(tools):
 	if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
 		print attribute
 		app.jinja_env.globals[attribute] = getattr(tools, attribute)
+		
+# STORE THE WEBAPP DIRECTORIES IN THE CONFIG #
+
+Config().WebAppDirectory = os.path.join(os.getcwd())
+Config().TemplatesDirectory = os.path.join(os.getcwd(), "templates") 
+Config().save()
 
 # ROUTES #
 
@@ -80,7 +86,7 @@ def loadFont(filename):
 @app.route("/<filename>")
 def loadPage(filename):
 	if os.path.isfile("templates/%s" % filename):
-		return render_template(filename, name=filename, tools=TemplateTools())
+		return render_template(filename, name=filename)
 	else:
 		abort(404)
 		return False;
@@ -120,6 +126,12 @@ def graph():
 	pc = ProcedureCollection()
 	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
 	return Response(pc.createGraphPreviewSVG(graph), mimetype="image/svg+xml")
+	
+@app.route("/gefx/graph")
+def graphGefx():
+	pc = ProcedureCollection()
+	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
+	return Response(pc.createGefxPreview(graph), mimetype="image/svg+xml")
 
 @app.route("/execute/<viewType>")
 def execute(viewType):	
@@ -129,7 +141,19 @@ def execute(viewType):
 	gm_client = gearman.GearmanClient(['localhost:4730'])
 	job = gm_client.submit_job("runProcedure", data, background=True)
 	
-	return render_template("submitted.html", config=Config(), id=job.gearman_job.unique )
+	svgUrl = "/svg/graph?nodes="+request.args.get("nodes")+"&edges="+request.args.get("edges")+"&edgeAttributes="+request.args.get("edgeAttributes")
+	return render_template("submitted.html", config=Config(), id=job.gearman_job.unique, svgUrl=svgUrl )
+
+	
+@app.route("/results/<job>/")
+def resultsOverview(job):
+	""" Shows a list of all the available outputs of this job. """
+	
+	out = Output().getByJobId(str(job))
+	if len(out) > 0:
+		return render_template("results.list.html", config=Config(), outputs=out[0].output.keys())
+	else:
+		return render_template("results.notfound.html", config=Config())
 	
 @app.route("/results/<job>/<output>")
 def results(job, output):
@@ -140,7 +164,7 @@ def results(job, output):
 		#return Response(str(out))
 		return Response(out[0].getAttribute("output",output))
 	else:
-		return render_template("results.html", config=Config())
+		return render_template("results.notfound.html", config=Config())
 	
 	
 @app.route("/executeDirect/<viewType>")
