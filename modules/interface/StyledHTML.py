@@ -18,6 +18,7 @@ class StyledHTML(PlainHTML.PlainHTML):
 		"""
 		
 		self.html = ""
+		self.body = ""
 				
 
 # TESTING #
