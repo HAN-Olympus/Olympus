@@ -38,6 +38,7 @@ class StyledHTML(PlainHTML.PlainHTML):
 		self.visualizations.append(html)
 		
 	def start(self, input):
+		""" Renders all visualizations with Jinja2 instead of just using their normal toHTML functions. """
 		if isinstance(input, list):
 			self.addVisualizations(input)
 		else:

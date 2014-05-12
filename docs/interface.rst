@@ -16,3 +16,10 @@ PlainHTML
 	:members:
 	:private-members:
 	:special-members:
+	
+StyledHTML
+---------
+.. automodule:: PlainHTML
+	:members:
+	:private-members:
+	:special-members:
