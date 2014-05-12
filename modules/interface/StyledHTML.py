@@ -47,7 +47,10 @@ class StyledHTML(PlainHTML.PlainHTML):
 		env = self.loadTemplateTools(env)
 		
 		template = env.get_template("StyledHTML.html")
-		return template.render(visualizations=self.visualizations, id="Job")
+		visualizations = env.from_string("\n".join(self.visualizations)).render()
+		page = template.render()		
+		
+		return page.format(visualizations=visualizations)
 
 # TESTING #
 	

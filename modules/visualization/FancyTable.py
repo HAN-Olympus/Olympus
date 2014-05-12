@@ -23,8 +23,8 @@ class FancyTable(Table.Table):
 		:param empty: The filler for cells in rows where a key has been ommitted. Use `None` to throw an exception when this occurs.
 		:rtype: The dictionary formatted as a table
 		"""
-				
-		html = [ "<style> @import url('http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css'); </style>", "<table class='table' id='fancytable'>", "<thead>","<tr>"]
+		html = [ "<style> @import url('/css/dataTables.bootstrap.css');</style>" ]
+		html += [ "<table class='table' id='fancytable'>", "<thead>","<tr>"]
 		
 		keys = []
 		for subject, variables in dictionary.items():
@@ -56,9 +56,9 @@ class FancyTable(Table.Table):
 		
 		# Javascript required for dataTables
 		html += [	
-					"{{ deferJS('http://cdn.datatables.net/1.10.0/js/jquery.dataTables.min.js',3) }}",
-					"{{ deferJS('http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js,3') }}",
-					"<script>$(document).ready(function() { $('#fancytable').dataTable();} );</script>"
+					"{{ deferJS('http://cdn.datatables.net/1.10.0/js/jquery.dataTables.min.js',4) }}",
+					"{{ deferJS('http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js',4 ) }}",
+					"{{ deferInlineJS('$(document).ready(function() {{ $(\"#fancytable\").dataTable({{ \"sScrollX\": \"100%\", \"bScrollCollapse\": true}}); }} );',4) }}"
 				]
 		return "\n".join(html)		
 		

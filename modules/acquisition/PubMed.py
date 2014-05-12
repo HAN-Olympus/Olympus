@@ -103,8 +103,12 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 
 			if attr == "Article":
 				articleObject.addAttribute("title","pubmed", medlineCitation["Article"]["ArticleTitle"].encode('utf8') )
-				articleObject.addAttribute("abstract","pubmed", medlineCitation["Article"]["Abstract"]["AbstractText"][0].encode('utf8') )
-
+				
+				try:
+					articleObject.addAttribute("abstract","pubmed", medlineCitation["Article"]["Abstract"]["AbstractText"][0].encode('utf8') )
+				except:
+					articleObject.addAttribute("abstract","pubmed", "" )
+					
 				authors = []
 				for author in medlineCitation["Article"]["AuthorList"]:
 					authors.append( "%s %s" % (author["ForeName"], author["LastName"]))
@@ -136,7 +140,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		
 	def start(self, **kwargs):
 		# This is currently just test data!
-		articles = self.getBySearchTerm("zinc",limit=10)
+		articles = self.getBySearchTerm("zinc",limit=100)
 		return articles
 
 # TESTING #

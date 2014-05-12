@@ -15,7 +15,7 @@ sys.path.insert(0, absLibDir)
 # Library classes are now accessible
 import Module
 from Config import Config
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, Template
 from TemplateTools import TemplateTools
 
 
@@ -44,6 +44,10 @@ class InterfaceModule(Module.Module):
 		return env
 	
 	def loadTemplateTools(self, env):
+		""" Loads all the Template tools into the given environment.
+
+		
+		"""
 		tools = TemplateTools()
 		for attribute in dir(tools):
 			if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
