@@ -43,12 +43,8 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		ids = Entrez.read(search)["IdList"]
 		if len(ids) == 0:
 			return []
-		
-		handle = Entrez.efetch("pubmed", id=",".join(ids), retmode="xml", retmax=limit)
-		records = Entrez.parse(handle)
-		articles = []
-		for record in records:
-			articles.append( self.convertToArticle(record) )
+					
+		articles = self.getById(list(ids), limit=limit)
 			
 		return articles
 		
@@ -60,14 +56,31 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		:param limit: The maximum amount of pubmed articles to be retreived
 		:rtype: A list of articles, defaults to 1
 		"""
+		
+		articles = []
+		
 		if isinstance(id, list):
-			id = id.join(",")
+			# Check if these ids already exist in the database.
+			for i in id:
+				results = Article().getObjectsByKey("id.pubmed", i )
+				if len(results) > 0:
+					articles.append( results[0] )
+					id.remove(i)			
+		
+			id = ",".join(id)			
+		else:
+			# Check if this article already exists in the database.
+			results = Article().getObjectsByKey("id.pubmed", id )
+			if len(results) > 0:
+				return results[0]
 		
 		handle = Entrez.efetch("pubmed", id=id, retmode="xml", retmax=limit)
 		records = Entrez.parse(handle)
-		articles = []
+		
 		for record in records:
-			articles.append( self.convertToArticle(record) )
+			article = self.convertToArticle(record)
+			articles.append( article )
+			article.save()
 			
 		return articles
 		
@@ -79,6 +92,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		:param article: A parsed Pubmed article
 		:rtype: A properly formatted Article Object ( Stored Object )
 		"""
+		
 		articleObject = Article()
 		
 		# Loop over all the citation data
@@ -110,8 +124,11 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 					articleObject.addAttribute("abstract","pubmed", "" )
 					
 				authors = []
-				for author in medlineCitation["Article"]["AuthorList"]:
-					authors.append( "%s %s" % (author["ForeName"], author["LastName"]))
+				try:
+					for author in medlineCitation["Article"]["AuthorList"]:
+						authors.append( "%s %s" % (author["ForeName"], author["LastName"]))
+				except:
+					authors = ["Unknown"]
 				articleObject.addAttribute("authors", "pubmed", authors)
 
 				articleObject.addAttribute("source","pubmed",unicode(medlineCitation["Article"]["Journal"]["Title"]))
@@ -121,7 +138,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 			if attr == "ArticleIdList":
 				for id in article["PubmedData"]["ArticleIdList"]:
 					articleObject.addAttribute("id",id.attributes["IdType"],str(id))
-
+		
 		return articleObject
 	
 	def specifyInput(self):
@@ -140,7 +157,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 		
 	def start(self, **kwargs):
 		# This is currently just test data!
-		articles = self.getBySearchTerm("zinc",limit=100)
+		articles = self.getBySearchTerm("zinc",limit=1000)
 		return articles
 
 # TESTING #
