@@ -72,7 +72,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 			# Check if this article already exists in the database.
 			results = Article().getObjectsByKey("id.pubmed", id )
 			if len(results) > 0:
-				return [results[0]]
+				return results[0]
 		
 		handle = Entrez.efetch("pubmed", id=id, retmode="xml", retmax=limit)
 		records = Entrez.parse(handle)
@@ -81,8 +81,11 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 			article = self.convertToArticle(record)
 			articles.append( article )
 			article.save()
-			
-		return articles
+		
+		if len(articles) > 0:
+			return articles
+		else:
+			return None
 		
 		
 	
@@ -183,16 +186,14 @@ def test_convertDateToNative():
 def test_getById():
 	pm = PubMed()
 	id = "17284678"
-	articles = pm.getById(id)
-	assert articles is not None
-	assert len(articles) == 1
-	assert articles[0] is not None
-	assert articles[0].id["pubmed"] == id
+	article = pm.getById(id)
+	assert article is not None
+	assert article.id["pubmed"] == id
 
 def test_saveArticle():
 	pm = PubMed()
 	id = "17284678"
-	article = pm.getById(id)[0]
+	article = pm.getById(id)
 	article._database = "test_database"
 	article._collection = "test_collection"
 	article.setDatabase("test_database")
