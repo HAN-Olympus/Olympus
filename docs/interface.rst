@@ -19,7 +19,7 @@ PlainHTML
 	
 StyledHTML
 ----------
-.. automodule:: PlainHTML
+.. automodule:: StyledHTML
 	:members:
 	:private-members:
 	:special-members:
