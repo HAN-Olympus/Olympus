@@ -72,7 +72,7 @@ class PubMed(AcquisitionModule.AcquisitionModule):
 			# Check if this article already exists in the database.
 			results = Article().getObjectsByKey("id.pubmed", id )
 			if len(results) > 0:
-				return results[0]
+				return [results[0]]
 		
 		handle = Entrez.efetch("pubmed", id=id, retmode="xml", retmax=limit)
 		records = Entrez.parse(handle)
