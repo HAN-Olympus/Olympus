@@ -1,26 +1,24 @@
-{% extends "main.html" %}
-{% block index %}
-	 <!-- Carousel
-    ================================================== -->
-    {% include 'banner.html' %}
+{% extends "main.html" %} {% block index %}
+<!-- Banner -->
+{% include 'banner.html' %}
 
-    <div class="container">
-      <!-- Example row of columns -->
-	  	<ol class="breadcrumb">
-		  <li><a href="/">Olympus</a></li>
-		  <li class="active">Homepage</li>
-		</ol>
-	  
-      <div class="row">
-        <div class="col-md-9">
-          <h2>Data visualization</h2>
-          <p>Using Olympus you can visualize your research subject. Using GLMol you can display 3D versions of chemicals right in your browser.
-			We use OpenBabel to translate between a variety of filetypes. </p>
-        </div>
-        <div class="col-md-3">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-        </div>
-      </div>
-	  </div>
+<div class="container">
+	<ol class="breadcrumb">
+		<li>
+			<a href="/">Olympus</a>
+		</li>
+		<li class="active">Homepage</li>
+	</ol>
+
+	<div class="row">
+		<div class="col-md-9">
+			<h2>Data visualization</h2>
+			<p>Using Olympus you can visualize your research subject. Using GLMol you can display 3D versions of chemicals right in your browser. We use OpenBabel to translate between a variety of filetypes.</p>
+		</div>
+		<div class="col-md-3">
+			<h2>Heading</h2>
+			<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+		</div>
+	</div>
+</div>
 {% endblock %}

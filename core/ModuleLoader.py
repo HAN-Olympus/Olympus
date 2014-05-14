@@ -109,7 +109,7 @@ class ModuleLoader():
 			return {}
 		return c.modules["enabled"]
 		
-import curses,time, json
+import curses,time,json
 		
 class ModuleLoaderInterface():
 	""" The curses interface for the ModuleLoader. This is the default way of setting the available modules."""

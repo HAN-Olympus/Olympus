@@ -1,227 +1,206 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
+
 body {
-  padding-top: 50px;
-  padding-bottom: 20px;
+	padding-top: 50px;
+	padding-bottom: 20px;
 }
-
-
 /* CUSTOMIZE THE CAROUSEL
     -------------------------------------------------- */
 
-    /* Carousel base class */
-    .carousel {
-      margin-bottom: 60px;
-    }
+/* Carousel base class */
 
-    .carousel .container {
-      position: relative;
-      z-index: 9;
-    }
-
-    .carousel-control {
-      height: 80px;
-      margin-top: 0;
-      font-size: 120px;
-      text-shadow: 0 1px 1px rgba(0,0,0,.4);
-      background-color: transparent;
-      border: 0;
-      z-index: 10;
-    }
-
-    .carousel .item {
-      height: 500px;
-    }
-    .carousel img {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .carousel-caption {
-      background-color: transparent;
-      position: static;
-      max-width: 550px;
-      padding: 0 20px;
-      margin-top: 200px;
-    }
-    .carousel-caption h1,
-    .carousel-caption .lead {
-      margin: 0;
-      line-height: 1.25;
-      color: #fff;
-      text-shadow: 0 1px 1px rgba(0,0,0,.4);
-    }
-    .carousel-caption .btn {
-      margin-top: 10px;
-    }
-
-
-
-    /* MARKETING CONTENT
+.carousel {
+	margin-bottom: 60px;
+}
+.carousel .container {
+	position: relative;
+	z-index: 9;
+}
+.carousel-control {
+	height: 80px;
+	margin-top: 0;
+	font-size: 120px;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .9);
+	background-color: transparent;
+	border: 0;
+	z-index: 10;
+}
+.carousel .item {
+	height: 500px;
+}
+.carousel img {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.carousel-caption {
+	background-color: rgba(0, 0, 0, 0.5);
+	border-radius: 4px;
+	position: static;
+	max-width: 550px;
+	padding: 0 20px;
+	margin-top: 200px;
+	padding: 1em;
+}
+.carousel-caption h1,
+.carousel-caption .lead {
+	margin: 0;
+	line-height: 1.25;
+	color: #fff;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .4);
+}
+.carousel-caption .btn {
+	margin-top: 10px;
+}
+/* MARKETING CONTENT
     -------------------------------------------------- */
 
-    /* Center align the text within the three columns below the carousel */
-    .marketing .span4 {
-      text-align: center;
-    }
-    .marketing h2 {
-      font-weight: normal;
-    }
-    .marketing .span4 p {
-      margin-left: 10px;
-      margin-right: 10px;
-    }
+/* Center align the text within the three columns below the carousel */
 
-
-    /* Featurettes
+.marketing .span4 {
+	text-align: center;
+}
+.marketing h2 {
+	font-weight: normal;
+}
+.marketing .span4 p {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+/* Featurettes
     ------------------------- */
 
-    .featurette-divider {
-      margin: 80px 0; /* Space out the Bootstrap <hr> more */
-    }
-    .featurette {
-      padding-top: 120px; /* Vertically center images part 1: add padding above and below text. */
-      overflow: hidden; /* Vertically center images part 2: clear their floats. */
-    }
-    .featurette-image {
-      margin-top: -120px; /* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */
-    }
+.featurette-divider {
+	margin: 80px 0;
+	/* Space out the Bootstrap <hr> more */
+}
+.featurette {
+	padding-top: 120px;
+	/* Vertically center images part 1: add padding above and below text. */
+	overflow: hidden;
+	/* Vertically center images part 2: clear their floats. */
+}
+.featurette-image {
+	margin-top: -120px;
+	/* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */
+}
+/* Give some space on the sides of the floated elements so text doesn't run right into it. */
 
-    /* Give some space on the sides of the floated elements so text doesn't run right into it. */
-    .featurette-image.pull-left {
-      margin-right: 40px;
-    }
-    .featurette-image.pull-right {
-      margin-left: 40px;
-    }
+.featurette-image.pull-left {
+	margin-right: 40px;
+}
+.featurette-image.pull-right {
+	margin-left: 40px;
+}
+/* Thin out the marketing headings */
 
-    /* Thin out the marketing headings */
-    .featurette-heading {
-      font-size: 50px;
-      font-weight: 300;
-      line-height: 1;
-      letter-spacing: -1px;
-    }
-
-
-
-    /* RESPONSIVE CSS
+.featurette-heading {
+	font-size: 50px;
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -1px;
+}
+/* RESPONSIVE CSS
     -------------------------------------------------- */
 
-    @media (max-width: 979px) {
+@media (max-width: 979px) {
+	.container.navbar-wrapper {
+		margin-bottom: 0;
+		width: auto;
+	}
+	.navbar-inner {
+		border-radius: 0;
+		margin: -20px 0;
+	}
+	.carousel .item {
+		height: 500px;
+	}
+	.carousel img {
+		width: auto;
+		height: 500px;
+	}
+	.featurette {
+		height: auto;
+		padding: 0;
+	}
+	.featurette-image.pull-left,
+	.featurette-image.pull-right {
+		display: block;
+		float: none;
+		max-width: 40%;
+		margin: 0 auto 20px;
+	}
+}
+/* Modules */
 
-      .container.navbar-wrapper {
-        margin-bottom: 0;
-        width: auto;
-      }
-      .navbar-inner {
-        border-radius: 0;
-        margin: -20px 0;
-      }
-
-      .carousel .item {
-        height: 500px;
-      }
-      .carousel img {
-        width: auto;
-        height: 500px;
-      }
-
-      .featurette {
-        height: auto;
-        padding: 0;
-      }
-      .featurette-image.pull-left,
-      .featurette-image.pull-right {
-        display: block;
-        float: none;
-        max-width: 40%;
-        margin: 0 auto 20px;
-      }
-    }
-	
-	/* Modules */
-	
-	.module-container {
-		background:  #eee;
-		border-radius: 5px;
-		min-height: 80px;
-		padding: 0px;
-		border: 1px solid #ddd;
-		z-index: 60;
-	}
-	
-	.module-item {
-		margin: 10px;
-		position:relative;
-		width: 75%;
-	}
-	
-	.panel-heading {
-		cursor: move;
-	}
-	
-	.module-buttons {
-		float:right;
-		opacity:0;
-		transition: 0.5s all;
-	}
-	
-	.module-item:hover .module-buttons {
-		opacity: 1;
-		transition: 0.5s all;
-	}
-	
-	.panel-body {
-		max-height: 45px;
-		overflow-y: hidden;
-		padding:0;
-		margin: 15px;
-		transition: all 0.35s linear;
-		position: relative;
-	}
-	
-	.ui-sortable-helper {
-		opacity: 0.8;
-		cursor: move;
-	}
-	
-	.module-output {
-		position: absolute;
-		left: 100%;
-		background: #428bca;
-		padding: 0px 5px 2px 10px;
-		width: 25%;
-		color: white;
-	}
-	
-	.module-output.destination-found {
-		cursor: pointer;
-	}
-	
-	.module-output-name {
-		font-size: 10px;
-	}	
-	
-	.module-connection {
-		 display:inline;
-		 position: absolute;
-		 z-index: 50;
-		 bottom: 0px;
-		 left: 100%;
-		 background-repeat: no-repeat;
-	}
-	
-	.module-connection.connect-top {
-		top:0px;
-	}
-	.module-connection.connect-bottom {
-		bottom:0px;
-	}
-	
-	.module-output.no-destination {
-		background-color: #ccc;
-		border-radius: 0px 3px 3px 0px;
-		border: 1px solid #428bca;
-		border-left: 0px;
-	}
+.module-container {
+	background: #eee;
+	border-radius: 5px;
+	min-height: 80px;
+	padding: 0px;
+	border: 1px solid #ddd;
+	z-index: 60;
+}
+.module-item {
+	margin: 10px;
+	position: relative;
+	width: 75%;
+}
+.panel-heading {
+	cursor: move;
+}
+.module-buttons {
+	float: right;
+	opacity: 0;
+	transition: 0.5s all;
+}
+.module-item:hover .module-buttons {
+	opacity: 1;
+	transition: 0.5s all;
+}
+.panel-body {
+	max-height: 45px;
+	overflow-y: hidden;
+	padding: 0;
+	margin: 15px;
+	transition: all 0.35s linear;
+	position: relative;
+}
+.ui-sortable-helper {
+	opacity: 0.8;
+	cursor: move;
+}
+.module-output {
+	position: absolute;
+	left: 100%;
+	background: #428bca;
+	padding: 0px 5px 2px 10px;
+	width: 25%;
+	color: white;
+}
+.module-output.destination-found {
+	cursor: pointer;
+}
+.module-output-name {
+	font-size: 10px;
+}
+.module-connection {
+	display: inline;
+	position: absolute;
+	z-index: 50;
+	bottom: 0px;
+	left: 100%;
+	background-repeat: no-repeat;
+}
+.module-connection.connect-top {
+	top: 0px;
+}
+.module-connection.connect-bottom {
+	bottom: 0px;
+}
+.module-output.no-destination {
+	background-color: #ccc;
+	border-radius: 0px 3px 3px 0px;
+	border: 1px solid #428bca;
+	border-left: 0px;
+}
