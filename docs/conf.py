@@ -16,29 +16,7 @@ import sys
 import os
 
 # Allow importing modules from the lib and modules directories
-currentDir = os.path.dirname(__file__)
-relCoreDir = currentDir + "/../core"
-absCoreDir = os.path.abspath(relCoreDir)
-sys.path.insert(0, absCoreDir)
-
-relLibDir = currentDir + "/../lib"
-absLibDir = os.path.abspath(relLibDir)
-sys.path.insert(0, absLibDir)
-
-relWebDir = currentDir + "/../webapp"
-absWebDir = os.path.abspath(relWebDir)
-sys.path.insert(0, absWebDir)
-
-# Get all the modules directories
-relModuleDir = currentDir + "/../modules"
-absModuleDir = os.path.abspath(relModuleDir)
-for moduleType in os.listdir(absModuleDir):
-	sys.path.insert(0, absModuleDir+"/"+moduleType)
-
-def test_Import():
-	for file in os.listdir(absLibDir):
-		if file[-3:] == ".py":
-			__import__(file[:-3])		
+sys.path.insert(0, os.path.abspath('../..'))
 
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -100,7 +78,7 @@ release = '0.2.1'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ['_build','docs.old']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.

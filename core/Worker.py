@@ -59,7 +59,7 @@ class Worker():
 		return ""
 		
 def registerFunctions(workerClass, worker):
-	"""  Assigns all functions starting with 'job_' to the gearman worker, similar to how `nosetests` uses all methods starting with 'test'.
+	"""  Assigns all functions starting with 'job\_' to the gearman worker, similar to how `nosetests` uses all methods starting with 'test'.
 	
 	:param workerClass: The instance containing the functions that need to be registered. The class should already be instantiated!
 	:param worker: The GearmanWorker instance these functions need to be assigned to.
@@ -67,12 +67,12 @@ def registerFunctions(workerClass, worker):
 	for attribute in dir(workerClass):
 		if attribute.startswith("job_") :
 			method = getattr(workerClass,attribute)
-			print method
 			if hasattr(method, '__call__'): # Check if the attribute is a function
 				worker.register_task(attribute[4:], method.__func__)
 				print attribute, "registered as", attribute[4:]
 			
 def welcome():
+	""" Displays a welcome message on screen. """
 	msg = "Welcome to the Olympus Gearman Worker."
 	print
 	print msg
@@ -101,4 +101,4 @@ if __name__ == "__main__":
 # TESTING #
 def test_registerFunctions():
 	gm_worker = gearman.GearmanWorker(['localhost:4730']) # Creates the worker on the default port. TODO: retrieve these from the configuration.
-	registerFunctions(Worker(), gm_worker)
+	registerFunctions(Worker(), gm_worker) 
