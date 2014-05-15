@@ -1,6 +1,6 @@
 import InterpretationModule
-from Log import Log
-from StringContainer import StringContainer
+from Olympus.lib.Log import Log
+from Olympus.lib.StringContainer import StringContainer
 
 class Tail(InterpretationModule.InterpretationModule):
 	""" This module sorts only shows the latest 50 lines of a Log."""

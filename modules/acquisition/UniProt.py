@@ -1,5 +1,5 @@
 import AcquisitionModule
-from Protein import Protein
+from Olympus.lib.Protein import Protein
 try:
 	from collections import OrderedDict
 except ImportError:

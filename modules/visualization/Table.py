@@ -1,6 +1,6 @@
 import VisualizationModule
-from Collection import Collection
-from StringContainer import StringContainer
+from Olympus.lib.Collection import Collection
+from Olympus.lib.StringContainer import StringContainer
 import json
 
 

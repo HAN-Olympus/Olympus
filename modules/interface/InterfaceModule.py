@@ -5,21 +5,14 @@ Uses part of the additionalImport script to allow access to the lib classes.
 This type of module allows for "interfacing", that is, making the connection between the generated data and humans, through a unified format.
 Refer to the page on Interface modules for a list of modules distributed with this version of Olympus.
 """
-# Add the ../lib directory to the system path
-import os, sys
-currentDir = os.path.dirname(__file__)
-relLibDir = currentDir + "/../../lib"
-absLibDir = os.path.abspath(relLibDir)
-sys.path.insert(0, absLibDir)
 
-# Library classes are now accessible
-import Module
-from Config import Config
+from Olympus.lib.Module import Module
+from Olympus.lib.Config import Config
 from jinja2 import Environment, FileSystemLoader, Template
-from TemplateTools import TemplateTools
+from Olympus.lib.TemplateTools import TemplateTools
 
 
-class InterfaceModule(Module.Module):
+class InterfaceModule(Module):
 	""" Base class for all interface modules. Provides some generic methods. """
 	
 	def __init__(self):

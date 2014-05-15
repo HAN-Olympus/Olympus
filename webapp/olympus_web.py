@@ -1,14 +1,13 @@
 from flask import Flask, render_template, abort, Response, request
 from flask.ext.compress import Compress
 import os,re,sys
-import additionalImports
-from Config import Config
-from ProcedureContainer import ProcedureCollection
-from TemplateTools import TemplateTools
+from Olympus.lib.Config import Config
+from Olympus.lib.ProcedureContainer import ProcedureCollection
+from Olympus.lib.TemplateTools import TemplateTools
+from Olympus.lib.Output import Output
 import svglib
 import gearman
 import json
-from Output import Output
 
 app = Flask(__name__)
 

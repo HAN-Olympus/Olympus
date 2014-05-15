@@ -1,5 +1,5 @@
 import InterpretationModule
-from Collection import Collection
+from Olympus.lib.Collection import Collection
 
 class Sort(InterpretationModule.InterpretationModule):
 	""" This module sorts a collection on a given attribute."""

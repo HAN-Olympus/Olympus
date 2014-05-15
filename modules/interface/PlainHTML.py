@@ -1,5 +1,5 @@
 import InterfaceModule
-from StringContainer import StringContainer
+from Olympus.lib.StringContainer import StringContainer
 from html import HTML
 
 class PlainHTML(InterfaceModule.InterfaceModule):

@@ -5,8 +5,7 @@ not available on Microsoft Windows.
 """
 
 # ModuleLoader
-import additionalImports
-from Config import Config
+from Olympus.lib.Config import Config
 import os
 
 class ModuleLoader():
@@ -22,6 +21,8 @@ class ModuleLoader():
 		
 		for category in os.listdir(modulesFolderPath):
 			modules[category] = []
+			if "." in category:
+				continue
 			for file in os.listdir(modulesFolderPath + "/" + category):
 				if file[-3:] != ".py":
 					continue

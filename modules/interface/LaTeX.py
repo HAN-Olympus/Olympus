@@ -1,5 +1,5 @@
 import InterfaceModule
-from StringContainer import StringContainer
+from Olympus.lib.StringContainer import StringContainer
 
 class LaTeX(InterfaceModule.InterfaceModule):
 	""" This module generates a LaTeX document.	"""

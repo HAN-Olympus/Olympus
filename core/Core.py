@@ -1,8 +1,7 @@
 """Core"""
 
 # Olympus Core
-import additionalImports
-import Config
+from Olympus.lib.Config import Config
 
 class Core:
 	""" The Olympus Core. This performs any and all backend tasks. 

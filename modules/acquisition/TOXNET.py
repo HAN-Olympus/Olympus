@@ -1,5 +1,5 @@
 import AcquisitionModule
-from Chemical import Chemical
+from Olympus.lib.Chemical import Chemical
 try:
 	from collections import OrderedDict
 except ImportError:

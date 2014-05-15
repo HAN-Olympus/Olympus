@@ -1,8 +1,8 @@
 import AcquisitionModule
-from Collection import Collection
-from Log import Log
-from Gene import Gene
-from Protein import Protein
+from Olympus.lib.Collection import Collection
+from Olympus.lib.Log import Log
+from Olympus.lib.Gene import Gene
+from Olympus.lib.Protein import Protein
 import requests, urllib
 import json,re
 

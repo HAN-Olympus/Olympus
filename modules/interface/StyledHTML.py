@@ -1,5 +1,5 @@
 import PlainHTML
-from Config import Config
+from Olympus.lib.Config import Config
 import os
 
 class StyledHTML(PlainHTML.PlainHTML):

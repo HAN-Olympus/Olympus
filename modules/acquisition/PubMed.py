@@ -1,11 +1,13 @@
 import AcquisitionModule
 from Bio import Entrez
 from Bio import Medline
-from Article import Article
-from Collection import Collection
-from Log import Log
+
+from Olympus.lib.Article import Article
+from Olympus.lib.Collection import Collection
+from Olympus.lib.Log import Log
+from Olympus.lib.Config import Config
+
 import datetime, urllib
-from Config import Config
 
 class PubMed(AcquisitionModule.AcquisitionModule):
 	""" This module allows for retrieval of medical articles from the Entrez API."""
