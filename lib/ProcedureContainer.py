@@ -7,7 +7,6 @@ import matplotlib
 matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
-import additionalImports
 import cStringIO
 from Module import Module
 from networkx.algorithms import traversal
