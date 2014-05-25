@@ -1,6 +1,7 @@
 from flask import Flask, render_template, abort, Response, request
 from flask.ext.compress import Compress
 import os,re,sys
+
 from Olympus.lib.Config import Config
 from Olympus.lib.ProcedureContainer import ProcedureCollection
 from Olympus.lib.TemplateTools import TemplateTools
@@ -15,7 +16,6 @@ app = Flask(__name__)
 tools = TemplateTools()
 for attribute in dir(tools):
 	if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
-		print attribute
 		app.jinja_env.globals[attribute] = getattr(tools, attribute)
 		
 # STORE THE WEBAPP DIRECTORIES IN THE CONFIG #

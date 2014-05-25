@@ -1,98 +1,84 @@
-{% extends "main.html" %}
-{% block index %}
- <div class="container">
- <p></p>
-			<ol class="breadcrumb">
-			<li><a href="/">Olympus</a></li>
-			<li class="active">Interface</li>
-		</ol>
-		{% set enabledModules = config.modules["enabled"] %}
-		
-		<div class="row">
-		{% for category in ["acquisition","interpretation","visualization","interface"] %}
-		{% if enabledModules[category]|length > 0 %}
-			{% set category_loop = loop %}
-			<div class="{{category}}-container col col-md-{{(12/colCount)|int}}">
-				<h2> {{category.title()}} </h2>
-				<div class="module-container">
-					{% for module in enabledModules[category] %}
-						{% set zindex = 100 + category_loop.index %}
-						<div class="module-item" oncontextmenu="return false;" style="z-index: {{zindex}}">
-						
-							{% set input = modules[category][module]().specifyInput() %}
-							{% if input != None %}
-								{% for name, types in input.items() %}
-									<span class="module-accept" data-accept="{% for t in types %}{{t.__class__.__name__}}[{{t.restrict if t.restrict!=None else ""}}],{% endfor %}"></span>
-								{% endfor %}
-							{% endif %}
-							
-							<div class="panel panel-primary">
-								<div class="panel-heading">
-									<span class="module-name">{{module}}</span>
-									<span class="module-buttons btn-group">
-										<button type="button" class="btn btn-default btn-xs move-module-down">
-											<span class="glyphicon glyphicon-arrow-down"></span>
-										</button>
-										<button type="button" class="btn btn-default btn-xs">
-											<span class="glyphicon glyphicon-th-large"></span>
-										</button>
-										<button type="button" class="btn btn-default btn-xs">
-											<span class="glyphicon glyphicon-align-left"></span>
-										</button>
-									</span>
-									
-								</div>
-								<div class="panel-body">					
-									{% autoescape false %}
-									{% set doc = modules[category][module].__doc__ %}
-									{% if doc != None %}
-										<span class="module-description">{{doc.strip()|replace("\n","<br/>")}}</span>
-									{% else %}
-										<span class="module-description">This module does not have any documentation.</span>
-									{% endif %}									
-									{% endautoescape %}
-								</div>
-							</div>
-							
-							{% set output = modules[category][module]().specifyOutput() %}
-							{% if output != None %}
-								{% for name, types in output.items() %}
-									{% set topDistance = 10 + loop.index0*30 %}
-									<span class="module-output no-destination" style="top: {{topDistance}}px;"  data-accept="{% for t in types %}{{t.__class__.__name__}}[{{t.restrict}}],{% endfor %}">
-										<span class="module-output-name">{{name.title()}}</span>			
-									</span>								
-								{% endfor %}
-							{% endif %}
-							
+{% extends "main.html" %} {% block index %}
+<div class="container">
+	<p></p>
+	<ol class="breadcrumb">
+		<li>
+			<a href="/">Olympus</a>
+		</li>
+		<li class="active">Interface</li>
+	</ol>
+	{% set enabledModules = config.modules["enabled"] %}
+
+	<div class="row">
+		{% for category in ["acquisition","interpretation","visualization","interface"] %} {% if enabledModules[category]|length > 0 %} {% set category_loop = loop %}
+		<div class="{{category}}-container col col-md-{{(12/colCount)|int}}">
+			<h2>{{category.title()}}</h2>
+			<div class="module-container">
+				{% for module in enabledModules[category] %} {% set zindex = 100 + category_loop.index %}
+				<div class="module-item" style="z-index: {{zindex}}">
+
+					{% set input = modules[category][module]().specifyInput() %} {% if input != None %} {% for name, types in input.items() %}
+					<span class="module-accept" data-accept="{% for t in types %}{{t.__class__.__name__}}[{{t.restrict if t.restrict!=None else " "}}],{% endfor %}"></span>
+					{% endfor %} {% endif %}
+
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<span class="module-name">
+								<span style="display:none;">{{category}}</span>{{module}}</span>
+							<span class="module-buttons btn-group">
+								<button type="button" class="btn btn-default btn-xs move-module-down">
+									<span class="glyphicon glyphicon-arrow-down"></span>
+								</button>
+								<button type="button" class="btn btn-default btn-xs">
+									<span class="glyphicon glyphicon-th-large"></span>
+								</button>
+								<button type="button" class="btn btn-default btn-xs">
+									<span class="glyphicon glyphicon-align-left"></span>
+								</button>
+							</span>
+
 						</div>
-					{% endfor %}
+						<div class="panel-body">
+							{% autoescape false %} {% set doc = modules[category][module].__doc__ %} {% if doc != None %}
+							<span class="module-description">{{doc.strip()|replace("\n","
+								<br/>")}}</span>
+							{% else %}
+							<span class="module-description">This module does not have any documentation.</span>
+							{% endif %} {% endautoescape %}
+						</div>
+					</div>
+
+					{% set output = modules[category][module]().specifyOutput() %} {% if output != None %} {% for name, types in output.items() %} {% set topDistance = 10 + loop.index0*30 %}
+					<span class="module-output no-destination" style="top: {{topDistance}}px;" data-accept="{% for t in types %}{{t.__class__.__name__}}[{{t.restrict}}],{% endfor %}">
+						<span class="module-output-name">{{name.title()}}</span>
+					</span>
+					{% endfor %} {% endif %}
+
 				</div>
-			</div>
-		{% endif %}
-		{% endfor %}
-		</div>
-		
-		<hr />
-		<div class="row destination">
-		{% for category in ["acquisition","interpretation","visualization","interface"] %}
-		{% if enabledModules[category]|length > 0 %}
-			<div class="{{category}}-container col col-md-{{(12/colCount)|int}}">
-				<h2> {{category.title()}} </h2>
-				<div class="module-container">
-				</div>
-			</div>
-			{% endif %}
-		{% endfor %}
-		</div>
-		
-		<hr />		
-		<div class="row">
-			<div class="col-md-12">
-				<div class="btn btn-lg btn-default"> Start over </div>
-				<div class="btn btn-lg btn-primary" id="btn-compile"> Compile to Procedure </div>
+				{% endfor %}
 			</div>
 		</div>
+		{% endif %} {% endfor %}
+	</div>
+
+	<hr />
+	<div class="row destination">
+		{% for category in ["acquisition","interpretation","visualization","interface"] %} {% if enabledModules[category]|length > 0 %}
+		<div class="{{category}}-container col col-md-{{(12/colCount)|int}}">
+			<h2>{{category.title()}}</h2>
+			<div class="module-container">
+			</div>
+		</div>
+		{% endif %} {% endfor %}
+	</div>
+
+	<hr />
+	<div class="row">
+		<div class="col-md-12">
+			<div class="btn btn-lg btn-default">Start over</div>
+			<div class="btn btn-lg btn-primary" id="btn-compile">Compile to Procedure</div>
+		</div>
+	</div>
 </div>
 
-{{ deferJS("/js/picker.interface.js", 3) }}
-{% endblock %}
+{{ deferJS("/js/picker.interface.js", 3) }} {% endblock %}

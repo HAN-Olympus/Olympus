@@ -20,11 +20,13 @@ class ModuleLoader():
 		modules = {}
 		
 		for category in os.listdir(modulesFolderPath):
-			modules[category] = []
 			if "." in category:
 				continue
+			modules[category] = []
 			for file in os.listdir(modulesFolderPath + "/" + category):
 				if file[-3:] != ".py":
+					continue
+				if file.startswith("__init__"):
 					continue
 				if file[:-3].lower().replace("module","") == category:
 					continue

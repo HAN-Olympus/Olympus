@@ -16,7 +16,11 @@ def start():
 	print ("------------------------------------")
 	checkWorkingDirectory()
 	
-	from olympus_web import *
+	from Olympus.lib.Config import Config
+	from Olympus.webapp import svglib
+	
+	print globals()
+	
 
 	PORT = 5000
 	print ("Starting on port %s..." % PORT)

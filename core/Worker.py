@@ -3,8 +3,9 @@ import subprocess
 import json
 import sys
 import traceback
-from Olympus.lib.Config import Config
-from Olympus.lib.Output import Output
+
+from Olympus.lib import Config
+from Olympus.lib import Output
 from Olympus.lib.ProcedureContainer import ProcedureCollection
 
 class WorkerStatus():
