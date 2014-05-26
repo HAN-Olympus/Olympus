@@ -1,7 +1,7 @@
 from Olympus.lib.Singleton import Singleton
 import json, os, sys
 
-class Config(Singleton.Singleton):
+class Config(Singleton):
 	""" Config is a Singleton that persistently stores settings and configurations for Olympus. 
 	When called upon, it will export these to the configuration file for later retrieval.
 	Among other things, it stores your username, your email for Entrez notifications and the enabled Olympus modules.
