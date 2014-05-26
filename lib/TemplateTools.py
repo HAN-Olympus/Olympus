@@ -1,6 +1,6 @@
-import Olympus.lib.Singleton
+from Olympus.lib.Singleton import Singleton
 
-class TemplateTools(Singleton.Singleton):
+class TemplateTools(Singleton):
 	""" This class contains a variety of functions that are useful when rendering templates.
 		Olympus loads all these methods into the Jinja2 template environment by default. """
 	
