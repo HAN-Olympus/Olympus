@@ -1,4 +1,4 @@
-import Olympus.modules.acquisition.AcquisitionModule
+from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 from Olympus.lib.Collection import Collection
 from Olympus.lib.Log import Log
 from Olympus.lib.Gene import Gene
@@ -6,7 +6,7 @@ from Olympus.lib.Protein import Protein
 import requests, urllib
 import json,re
 
-class WormBase(AcquisitionModule.AcquisitionModule):
+class WormBase(AcquisitionModule):
 	""" This module allows for retrieval of chemicals from the WormBase REST API.
 	
 	WormBase provides a RESTful API via their webservers. All content can be accessed on three levels:

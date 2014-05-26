@@ -1,6 +1,6 @@
-import Olympus.modules.acquisition.AcquisitionModule
+from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 
-class GeneOntology(AcquisitionModule.AcquisitionModule):
+class GeneOntology(AcquisitionModule):
 	def __init__(self):
 		pass
 		

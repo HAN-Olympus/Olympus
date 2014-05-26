@@ -1,4 +1,4 @@
-import Olympus.modules.acquisition.AcquisitionModule
+from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 from Olympus.lib.Chemical import Chemical
 try:
 	from collections import OrderedDict
@@ -8,7 +8,7 @@ import requests, urllib
 import xmltodict
 import json
 
-class TOXNET(AcquisitionModule.AcquisitionModule):
+class TOXNET(AcquisitionModule):
 	""" This module allows for retrieval of chemicals from the TOXNET API.
 	
 	The TOXNET API envelops many toxicology databases, but does not not provide a lot of easily parsed information. Most of it is enclosed in text-heavy HTML documents. This module has a lot of potential for future development when large slabs of text are required for analysis. As of now, however, it will only provide a dictionary containing the query results.

@@ -1,4 +1,4 @@
-import Olympus.modules.acquisition.AcquisitionModule
+from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 from Olympus.lib.Protein import Protein
 try:
 	from collections import OrderedDict
@@ -8,7 +8,7 @@ import requests, urllib
 import xmltodict
 import json
 
-class UniProt(AcquisitionModule.AcquisitionModule):
+class UniProt(AcquisitionModule):
 	""" This module allows for retrieval of protein information from the Uniprot API."""
 	
 	def __init__(self):

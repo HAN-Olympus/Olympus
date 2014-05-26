@@ -1,4 +1,4 @@
-import Olympus.modules.acquisition.AcquisitionModule
+from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 from Bio import Entrez
 from Bio import Medline
 
@@ -9,7 +9,7 @@ from Olympus.lib.Config import Config
 
 import datetime, urllib
 
-class PubMed(AcquisitionModule.AcquisitionModule):
+class PubMed(AcquisitionModule):
 	""" This module allows for retrieval of medical articles from the Entrez API."""
 	
 	def __init__(self):
