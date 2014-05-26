@@ -1,6 +1,6 @@
-import Olympus.lib.StoredObject
+from Olympus.lib.StoredObject import StoredObject
 
-class Protein(StoredObject.StoredObject):
+class Protein(StoredObject):
 	def __init__(self):
 		self.id = {}
 		self.name = {}
