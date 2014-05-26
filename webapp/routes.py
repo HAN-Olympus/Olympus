@@ -87,7 +87,7 @@ def loadPage(filename):
 		return False;
 	
 @app.route("/interface")
-def interface():
+def interface():	
 	# Get all the enabled modules
 	enabledModules = Config().modules["enabled"]
 	# The amount of modules category columns

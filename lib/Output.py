@@ -1,4 +1,4 @@
-import StoredObject
+import Olympus.lib.StoredObject
 
 class Output(StoredObject.StoredObject):
 	def __init__(self):

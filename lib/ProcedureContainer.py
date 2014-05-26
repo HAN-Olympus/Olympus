@@ -1,4 +1,4 @@
-import Collection
+from Olympus.lib.Collection import Collection
 import json
 import networkx as nx
 import matplotlib
@@ -12,35 +12,6 @@ from Module import Module
 from networkx.algorithms import traversal
 from pprint import pformat as pf
 
-class Compiler():
-	""" This class compiles the given modules and their dependencies into a single Python file. 
-		The trick here is to insert them into their own classes to "fake" namespaces and retain the proper naming scheme in the modules.
-		This will leave a single Python file with all the modules compiled into it without comments.
-	"""
-	
-	def __init__(self):
-		self.modules = {}
-		self.externalDependencies = []
-		
-	
-	def retrieveModule(moduleName):
-		pass
-	
-	def scanDependencies(module):
-		pass
-	
-	def openFile(filename):
-		pass
-	
-	def writeFile(filename):
-		pass
-	
-	def addToCompiledFile(module, namespace):
-		pass
-	
-	def compile():
-		pass
-
 class ProcedureCollection(Collection.Collection):
 	""" A container for a set of Olympus Procedure. It uses `NetworkX` to create the Procedure Graphs """
 	
@@ -53,15 +24,16 @@ class ProcedureCollection(Collection.Collection):
 		instantiatedNodes = []
 		
 		for module in nodes:
-			module,category = tuple(module.split(":"))
-			print module, category
+			category,module = tuple(module.split(":"))
+			print category, module
+			
 			if module == "start":
 				continue
 			moduleName = "Olympus.modules.%s.%s" % (category,module)
 			importedModule = __import__(moduleName, fromlist=["Olympus.modules.%s" % category])
 			if module in importedModule.__dict__.keys():
-				modules[category][module] = importedModule.__dict__[module]
-				
+				instantiatedNodes[module] = importedModule.__dict__[module]
+		
 		return instantiatedNodes
 	
 	def createFromJSON(self, nodes, edges, edgeAttributes):

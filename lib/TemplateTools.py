@@ -1,4 +1,4 @@
-import Singleton
+import Olympus.lib.Singleton
 
 class TemplateTools(Singleton.Singleton):
 	""" This class contains a variety of functions that are useful when rendering templates.

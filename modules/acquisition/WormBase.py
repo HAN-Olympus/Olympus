@@ -1,4 +1,4 @@
-import AcquisitionModule
+import Olympus.modules.acquisition.AcquisitionModule
 from Olympus.lib.Collection import Collection
 from Olympus.lib.Log import Log
 from Olympus.lib.Gene import Gene

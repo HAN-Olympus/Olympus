@@ -1,4 +1,4 @@
-import AcquisitionModule
+import Olympus.modules.acquisition.AcquisitionModule
 from Bio import Entrez
 from Bio import Medline
 

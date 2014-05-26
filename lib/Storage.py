@@ -1,4 +1,4 @@
-import Singleton
+import Olympus.lib.Singleton
 from pymongo import MongoClient
 
 class Storage(Singleton.Singleton):

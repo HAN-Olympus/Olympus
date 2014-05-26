@@ -1,4 +1,4 @@
-import AcquisitionModule
+import Olympus.modules.acquisition.AcquisitionModule
 from Olympus.lib.Protein import Protein
 try:
 	from collections import OrderedDict

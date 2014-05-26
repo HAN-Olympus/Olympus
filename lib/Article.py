@@ -1,4 +1,4 @@
-import StoredObject
+import Olympus.lib.StoredObject
 
 class Article(StoredObject.StoredObject):
 	def __init__(self):

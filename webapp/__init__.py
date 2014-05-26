@@ -1,6 +1,5 @@
 from flask import Flask
 from Olympus.lib.Config import Config
-import importlib
 
 app = Flask(__name__)
 
@@ -8,6 +7,8 @@ app = Flask(__name__)
 enabledModules = Config().modules["enabled"]
 
 # Load all the enabled modules into a dictionary
+
+
 modules = {}
 for category in enabledModules:	
 	modules[category] = {}
@@ -16,5 +17,5 @@ for category in enabledModules:
 		importedModule = __import__(moduleName, fromlist=["Olympus.modules.%s" % category])
 		if module in importedModule.__dict__.keys():
 			modules[category][module] = importedModule.__dict__[module]
-			
+
 import Olympus.webapp.routes

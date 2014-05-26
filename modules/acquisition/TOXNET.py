@@ -1,4 +1,4 @@
-import AcquisitionModule
+import Olympus.modules.acquisition.AcquisitionModule
 from Olympus.lib.Chemical import Chemical
 try:
 	from collections import OrderedDict
