@@ -1,4 +1,4 @@
-import Olympus.lib.Singleton
+from Olympus.lib.Singleton import Singleton
 import json, os, sys
 
 class Config(Singleton.Singleton):
