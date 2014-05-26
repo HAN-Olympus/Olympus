@@ -1,7 +1,7 @@
-import Olympus.lib.Singleton
+from Olympus.lib.Singleton import Singleton
 from pymongo import MongoClient
 
-class Storage(Singleton.Singleton):
+class Storage(Singleton):
 	""" The storage module provides a layer of abstraction over PyMongo. 
 		This will allow us to, if needed, exchange the databases without breaking countless modules 
 		that are dependent on database access.
