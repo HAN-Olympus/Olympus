@@ -1,28 +1,24 @@
 from flask import Flask, render_template, abort, Response, request
-from flask.ext.compress import Compress
 import os,re,sys
+import pkgutil
 
 from Olympus.lib.Config import Config
 from Olympus.lib.ProcedureContainer import ProcedureCollection
 from Olympus.lib.TemplateTools import TemplateTools
 from Olympus.lib.Output import Output
+
 import svglib
 import gearman
 import json
 
-app = Flask(__name__)
+from Olympus.webapp import app, modules
 
 # LOAD TEMPLATE TOOLS #
 tools = TemplateTools()
 for attribute in dir(tools):
 	if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
+		print attribute
 		app.jinja_env.globals[attribute] = getattr(tools, attribute)
-		
-# STORE THE WEBAPP DIRECTORIES IN THE CONFIG #
-
-Config().WebAppDirectory = os.path.join(os.getcwd())
-Config().TemplatesDirectory = os.path.join(os.getcwd(), "templates") 
-Config().save()
 
 # ROUTES #
 
@@ -89,22 +85,15 @@ def loadPage(filename):
 	else:
 		abort(404)
 		return False;
-		
+	
 @app.route("/interface")
 def interface():
 	# Get all the enabled modules
 	enabledModules = Config().modules["enabled"]
 	# The amount of modules category columns
 	colCount = len([ 1 for c in enabledModules if len(enabledModules[c]) > 0])
-	# Load all the enabled modules into a dictionary
-	modules = {}
-	for category in enabledModules:	
-		modules[category] = {}
-		for module in enabledModules[category]:
-			importedModule = __import__(module)
-			if module in importedModule.__dict__.keys():
-				modules[category][module] = __import__(module).__dict__[module]
-		
+	
+	print modules
 	return render_template("picker.html", config=Config(), name="picker", colCount=colCount, modules=modules )	
 	
 @app.route("/svg/connection")
@@ -193,9 +182,3 @@ def test_loadFont():
 	assert loadFont("glyphicons-halflings-regular.woff"), "Could not load necessary Font file."
 
 	
-if __name__ == "__main__":
-	app.run()
-else:
-	Compress(app)
-	app.config['COMPRESS_MIMETYPES'] = ['text/html', 'text/css', 'text/xml', 'application/json', 'application/javascript', 'image/svg+xml']
-	app.config['COMPRESS_DEBUG'] = True

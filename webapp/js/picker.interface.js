@@ -292,9 +292,9 @@ $(function () {
 
 		});
 
-		var nodes = JSON.stringify(nodes)
-		var edges = JSON.stringify(edges)
-		var edgeAttributes = JSON.stringify(edgeAttributes)
+		var nodes = JSON.stringify(nodes, null, "").replace(/(\\n|\\t| )/g,'')
+		var edges = JSON.stringify(edges, null, "").replace(/(\\n|\\t| )/g,'')
+		var edgeAttributes = JSON.stringify(edgeAttributes, null, "")
 		console.log(nodes)
 		console.log(edges)
 		console.log(edgeAttributes)
