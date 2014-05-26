@@ -1,6 +1,6 @@
-import Olympus.lib.StoredObject
+from Olympus.lib.StoredObject import StoredObject
 
-class Article(StoredObject.StoredObject):
+class Article(StoredObject):
 	def __init__(self):
 		self.id = {}
 		self.title = {}

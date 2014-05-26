@@ -1,6 +1,6 @@
-import Olympus.lib.StoredObject
+from Olympus.lib.StoredObject import StoredObject
 
-class Gene(StoredObject.StoredObject):
+class Gene(StoredObject):
 	def __init__(self, **kwargs):
 		for key, value in kwargs.items():
 			setattr(self, key, value)

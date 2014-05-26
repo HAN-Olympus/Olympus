@@ -1,6 +1,6 @@
-import Olympus.lib.StoredObject
+from Olympus.lib.StoredObject import StoredObject
 
-class TOXNETResult(StoredObject.StoredObject):
+class TOXNETResult(StoredObject):
 	def __init__(self):
 		self.id = {}
 		self.name = {}

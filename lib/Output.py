@@ -1,6 +1,6 @@
-import Olympus.lib.StoredObject
+from Olympus.lib.StoredObject import StoredObject
 
-class Output(StoredObject.StoredObject):
+class Output(StoredObject):
 	def __init__(self):
 		self.job_id = 0
 		super(Output, self).__init__(database = "olympus", collection = "output")
