@@ -12,7 +12,7 @@ from Module import Module
 from networkx.algorithms import traversal
 from pprint import pformat as pf
 
-class ProcedureCollection(Collection.Collection):
+class ProcedureCollection(Collection):
 	""" A container for a set of Olympus Procedure. It uses `NetworkX` to create the Procedure Graphs """
 	
 	def importModules(self, nodes):
