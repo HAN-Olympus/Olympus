@@ -13,7 +13,9 @@ from networkx.algorithms import traversal
 from pprint import pformat as pf
 
 class ProcedureCollection(Collection):
-	""" A container for a set of Olympus Procedure. It uses `NetworkX` to create the Procedure Graphs """
+	""" DEPRECATED : This is a deprecated module that is being restructured in favour of the Compilation method. Therefore, Unit testing has been disabled.
+	
+	A container for a set of Olympus Procedure. It uses `NetworkX` to create the Procedure Graphs """
 	
 	def importModules(self, nodes):
 		""" Imports all the given modules, instantiates the containing class and returns the collective result as a list.
@@ -170,6 +172,9 @@ class ProcedureCollection(Collection):
 		return fakeFile.read()
 		
 # TESTING #
+
+"""
+
 def test_drawing():
 	nx.draw(nx.Graph())
 
@@ -207,3 +212,4 @@ def test_traverseGraph():
 	graph = PC.createProcedureGraph(nodes,edges,edgeAttributes)
 	PC.traverseGraph(graph)
 	
+"""
