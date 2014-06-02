@@ -351,7 +351,7 @@ def test_downloadCurrentRelease():
 	wb = WormBase()
 	wb.connect()
 	wb.dryrun = True
-	wb.downloadCurrentRelease()
+	#wb.downloadCurrentRelease()
 	
 def test_unpackFiles():
 	wb = WormBase()
@@ -359,4 +359,13 @@ def test_unpackFiles():
 	
 def test_parseFiles():
 	wb = WormBase()
-	wb.parseFiles()
+	#wb.parseFiles()
+	
+def test_saveProtein():
+	wb = WormBase()
+	annotation = ">2L52.1	CE32090	WBGene00007063	status:Partially_confirmed	UniProt:A4F336	protein_id:CCD61130.1"
+	assert wb.saveProtein(annotation, "ACTG", "Sample")
+	assert len(Protein().getObjectsByKey("id.UniProt", "A4F336", limit=10)) == 1
+	# Test if doubles are merged
+	assert wb.saveProtein(annotation, "ACTG", "Sample")
+	assert len(Protein().getObjectsByKey("id.UniProt", "A4F336", limit=10)) == 1
