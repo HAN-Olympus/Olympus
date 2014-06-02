@@ -1,7 +1,11 @@
 from Olympus.lib.StoredObject import StoredObject
+from Olympus.lib.Protein import Protein
 import ftputil
 import os
 import hashlib
+import zlib
+import re
+import time
 
 class WormBase(object):
 	""" A mass acquisition class for WormBase. """
@@ -20,6 +24,8 @@ class WormBase(object):
 		self.dryrun = False
 		self.checksums = None
 		
+		self.verbose = True
+		
 	def checkConnection(self):
 		if self.connection != None:
 			return True
@@ -30,12 +36,12 @@ class WormBase(object):
 		connection = ftputil.FTPHost(self.url, "anonymous", "")
 		self.connection = connection
 	
-	def createChunkyHash(self, f, blockSize=2**20):
+	def createChunkyHash(self, f, blockSize=128**4):
 		""" Returns the MD5 checksum of the given file, created by feeding the file in chunks to the hashlib module. 
 			This reduces memory usage at the cost of some speed. blockSize can be increased to speed up this process. 
 			
 			:param f: A filelike object
-			:param blockSize: The size of the chunks in which the file needs to be read. Defaults to 1MB chunks.
+			:param blockSize: The size of the chunks in which the file needs to be read. Defaults to 128MB chunks.
 			:rtype: An MD5 checksum.
 			"""
 		md5 = hashlib.md5()
@@ -122,11 +128,175 @@ class WormBase(object):
 					
 	# UNPACKING #
 	
-	def unpackFiles(self):
-		pass
+	def unpackFiles(self, chunkSize=128**4):
+		""" Ungzips all files that have not already been ungzipped in chunks, by default in 1MB pieces. 
+		
+		:param chunkSize: The size of the chunks in which the file needs to be read. Defaults to 128MB chunks.
+		"""
+		tmpPath = os.path.join(self.tmpPath, "WormBaseCurrentRelease")
+		for root, path, files in os.walk(tmpPath):
+			for file in files:
+				filePath = os.path.join(tmpPath, root, file)
+				normalPath = re.sub("\.gz$", "", filePath)
+
+				if not os.path.exists(normalPath) or os.path.getsize(normalPath) == 0:
+					# Ungzip files in 1MB chunks
+					gz = open(filePath, "rb")
+					dc = zlib.decompressobj(16+zlib.MAX_WBITS)
+					uz = open(normalPath, "wb")
+										
+					buffer=gz.read(chunkSize)
+
+					while buffer:
+						data = dc.decompress(buffer)
+						uz.write(data)
+						buffer=gz.read(chunkSize)
+						
+					data = dc.flush()
+					uz.write(data)
+					
+					gz.close()
+					uz.close()
+				else:
+					print "Skipping %s" % file
 	
 	# PARSING TO STOREDOBJECTS #
+	def parseFiles(self):
+		tmpPath = os.path.join(self.tmpPath, "WormBaseCurrentRelease")
+		
+		proteinMatch = re.compile("protein\.fa$")
+		codingMatch = re.compile("coding_transcripts\.fa$")
+		
+		organismMatch = re.compile("^[\w_]+?\.")
+		
+		for root, path, files in os.walk(tmpPath):
+			for file in files:
+				organism = organismMatch.search(file).group(0)
+				if proteinMatch.search(file) != None:
+					self.parseProtein(os.path.join(tmpPath, root, file), organism)
+				if codingMatch.search(file) != None:
+					self.parseCodingSequence(os.path.join(tmpPath, root, file), organism)
+					
+	def saveProtein(self, annotation, sequence, organism):
+		""" Takes the annotation and the sequence and converts them into a Protein StoredObject.
+		Will check in the existing collection for proteins with the same ID from different sources (UniProt, YCR and ENA, in that order).
+		
+		:param annotation: The annotation from the proteins.fa (The line starting with ">" )
+		:param sequence: The sequence of the protein
+		:param organism: The organism this protein belongs to.
+		:rtype: True if the Protein was saved succesfully
+		"""
+		seq = "".join(sequence)
+		annotation = annotation.split("\t")
+		if len(annotation) < 4:
+			return None
+		
+		try:
+			gene = annotation[0][1:]
+			YCRID = annotation[1]
+			WormBaseID = annotation[2]
+			ENAID = annotation[-1].split(":")[1]
+			UniProtID = annotation[-2].split(":")[1]
+		except IndexError:
+			print "Incomplete annotation."
+			return False
+		
+		details = annotation[3:-2]
+		
+		p = Protein()
+		p.addAttribute("gene", "WormBase", gene)
+		p.addAttribute("organism", "WormBase", organism)
+		p.addAttribute("id", "YCR", YCRID)
+		p.addAttribute("id", "WormBase", WormBaseID)
+		p.addAttribute("id", "ENA", ENAID)
+		p.addAttribute("id", "UniProt", UniProtID)
+		p.addAttribute("sequence", "WormBase", seq)
+		p.addAttribute("sequencelength", "WormBase", len(seq))
+		
+		for detail in details:
+			
+			if ":" in detail:
+				key, value = detail.split(":")
+				p.addAttribute(key, "WormBase", value)
+			else:
+				if p.getAttribute("name") == "":
+					p.setAttribute("name", "WormBase", detail)
+				else:
+					p.addAttribute("name", "WormBase", detail)
+		
+		# Check for existing matches
+		UniProtMatch = p.getObjectsByKey("id.UniProt", UniProtID, limit=1)
+		if len(UniProtMatch) > 0:
+			mergedObject = UniProtMatch[0] + p
+			mergedObject.save()
+			return True
+		
+		YCRMatch = p.getObjectsByKey("id.YCR", YCRID, limit=1)
+		if len(YCRMatch) > 0:
+			mergedObject = YCRMatch[0] + p
+			mergedObject.save()
+			return True
+		
+		ENAMatch = p.getObjectsByKey("id.ENA", ENAID, limit=1)
+		if len(ENAMatch) > 0:
+			mergedObject = ENAMatch[0] + p
+			mergedObject.save()
+			return True
+				
+		p.save()
+		return True
+		
 	
+	def parseProtein(self, file, organism):
+		""" Parses a proteins.fa file from Wormbase. Reports progress and approximate time left (estimated by a moving average of delta t within between percentage). """
+		print "Parsing (Protein) %s " % file
+		f = open(file, "r")
+		size = os.path.getsize(file)
+		
+		annotation = ""
+		sequence = []
+		
+		counter = 0
+		lastPercentage = 0
+		
+		start = time.time()
+		times = []
+		
+		for line in f:		
+			if line.startswith(">"):			
+				if len(annotation) > 0:
+					saved = self.saveProtein(annotation, sequence, organism)
+					if saved and self.verbose:
+						# This block is for timekeeping and reporting only.
+						
+						counter += 1
+						current = f.tell()
+						percentage = (float(current)/float(size))*100
+						
+						if int(percentage) > lastPercentage:
+							lastPercentage = int(percentage)
+							deltat = time.time() - start
+							start = time.time()
+							
+							timeleft = deltat * (100-lastPercentage)
+							
+							times.append(timeleft)
+							if len(times) > 5:
+								times.pop(0)
+							
+							avgTimeLeft = sum(times)/len(times)
+							
+							print "%s proteins saved. - %s %% done. Approx. %s seconds left until completion." % (counter, lastPercentage, int(avgTimeLeft))
+				
+				annotation = line.strip()				
+				sequence = []
+			else:
+				sequence.append(line.strip())
+		
+	def parseCodingSequence(self, file, organism):
+		print "Parsing (Coding) %s " % file
+		
+			
 	
 		
 		
@@ -181,4 +351,12 @@ def test_downloadCurrentRelease():
 	wb = WormBase()
 	wb.connect()
 	wb.dryrun = True
-	#wb.downloadCurrentRelease()
+	wb.downloadCurrentRelease()
+	
+def test_unpackFiles():
+	wb = WormBase()
+	wb.unpackFiles()
+	
+def test_parseFiles():
+	wb = WormBase()
+	wb.parseFiles()

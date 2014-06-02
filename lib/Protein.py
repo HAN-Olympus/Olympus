@@ -7,7 +7,7 @@ class Protein(StoredObject):
 		self.existence = {}
 		self.creationDate = {}
 		self.modifiedDate = {}
-		self.geneName = {}
+		self.gene = {}
 		self.organism = {}
 		self.sequence = {}
 		self.sequencelength = {}

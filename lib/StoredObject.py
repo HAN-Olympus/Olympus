@@ -128,16 +128,18 @@ class StoredObject():
 		attribute[source] = value
 		setattr(self,attr,attribute)
 
-	def getAttribute(self, attr, source):
+	def getAttribute(self, attr, source=None):
 		""" Will return the data stored in this attribute from the given source.
 		
 		:param attr: The name of the attribute.
-		:param source: The source of data to be set.
+		:param source: The source of data to be set. (Optional)
 		:rtype: The data stored in this attribute from this source.
 		"""
 		if not hasattr(self, attr):
 			return None			
 		attribute = getattr(self, attr, {})
+		if source == None:
+			return attribute
 		return attribute.get(source, None)
 		
 	def __add__(self, other):
