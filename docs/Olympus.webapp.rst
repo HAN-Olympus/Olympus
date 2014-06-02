@@ -4,10 +4,10 @@ Olympus.webapp package
 Submodules
 ----------
 
-Olympus.webapp.olympus_web module
----------------------------------
+Olympus.webapp.routes module
+----------------------------
 
-.. automodule:: Olympus.webapp.olympus_web
+.. automodule:: Olympus.webapp.routes
     :members:
     :undoc-members:
     :show-inheritance:

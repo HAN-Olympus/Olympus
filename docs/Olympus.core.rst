@@ -1,11 +1,23 @@
 Olympus.core package
 ====================
 
-The Olympus Core is consists of all the components of Olympus that are not part of any module.
-These are required to run the most basic, minimal version of Olympus.
+Subpackages
+-----------
+
+.. toctree::
+
+    Olympus.core.massacquisition
 
 Submodules
 ----------
+
+Olympus.core.Compiler module
+----------------------------
+
+.. automodule:: Olympus.core.Compiler
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Olympus.core.Core module
 ------------------------
