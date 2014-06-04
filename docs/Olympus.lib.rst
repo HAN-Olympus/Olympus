@@ -20,6 +20,14 @@ Olympus.lib.Chemical module
     :undoc-members:
     :show-inheritance:
 
+Olympus.lib.CodingSequence module
+---------------------------------
+
+.. automodule:: Olympus.lib.CodingSequence
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Olympus.lib.Collection module
 -----------------------------
 

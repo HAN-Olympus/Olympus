@@ -496,8 +496,8 @@ def test_saveProtein():
 def test_saveCodingSequence():
 	wb = WormBase()
 	annotation = ">2L52.1 WormBase:12345"
-	assert wb.codingSequence(annotation, "ACTG", "Sample")
+	assert wb.saveCodingSequence(annotation, "ACTG", "Sample")
 	assert len(CodingSequence().getObjectsByKey("id.WormBase", "2L52.1", limit=10)) == 1
 	# Test if doubles are merged
-	assert wb.saveProtein(annotation, "ACTG", "Sample")
+	assert wb.saveCodingSequence(annotation, "ACTG", "Sample")
 	assert len(CodingSequence().getObjectsByKey("id.WormBase", "2L52.1", limit=10)) == 1
