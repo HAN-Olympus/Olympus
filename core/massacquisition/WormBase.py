@@ -344,7 +344,7 @@ class WormBase(object):
 		# Check for existing matches
 		idMatch = cds.getObjectsByKey("id.WormBase", id, limit=1)
 		if len(idMatch) > 0:
-			mergedObject = idMatch[0] + p
+			mergedObject = idMatch[0] + cds
 			mergedObject.save()
 			return True
 				
