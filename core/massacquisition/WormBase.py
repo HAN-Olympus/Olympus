@@ -1,6 +1,7 @@
 from Olympus.lib.StoredObject import StoredObject
 from Olympus.lib.Protein import Protein
 from Olympus.lib.CodingSequence import CodingSequence
+from Olympus.lib.Gene import Gene
 import ftputil
 import os
 import hashlib
@@ -8,6 +9,7 @@ import zlib
 import re
 import time
 import datetime
+import pprint
 
 class WormBase(object):
 	""" A mass acquisition class for WormBase. """
@@ -169,6 +171,7 @@ class WormBase(object):
 		
 		proteinMatch = re.compile("protein\.fa$")
 		codingMatch = re.compile("coding_transcripts\.fa$")
+		annotationMatch = re.compile("annotations\.gff3$")
 		
 		organismMatch = re.compile("^[\w_]+?\.")
 		
@@ -180,6 +183,9 @@ class WormBase(object):
 				
 				#if codingMatch.search(file) != None:
 				#	self.parseCodingSequence(os.path.join(tmpPath, root, file), organism)
+				
+				if annotationMatch.search(file) != None:
+					self.parseAnnotations(os.path.join(tmpPath, root, file), organism)
 					
 	def saveProtein(self, annotation, sequence, organism):
 		""" Takes the annotation and the sequence and converts them into a Protein StoredObject.
@@ -262,9 +268,9 @@ class WormBase(object):
 		annotation = ""
 		sequence = []
 		
+		# Variables for timekeeping and reporting
 		counter = 0
-		lastPercentage = 0
-		
+		lastPercentage = -1
 		start = time.time()
 		times = []
 		counts = []
@@ -362,9 +368,9 @@ class WormBase(object):
 		annotation = ""
 		sequence = []
 		
+		# Variables for timekeeping and reporting
 		counter = 0
-		lastPercentage = 0
-		
+		lastPercentage = -1
 		start = time.time()
 		times = []
 		counts = []
@@ -409,7 +415,104 @@ class WormBase(object):
 			else:
 				sequence.append(line.strip())
 		
+	def saveAnnotation(self, annotation, organism):
+		""" Parses the data derived from a GFF3 file. Expects the keys as specified therein. Will also save any attributes (column 9)"""
+		if annotation["type"] == "gene":
+			# Basic information
+			g = Gene()
+			g.addAttribute("position",annotation["source"], (annotation["start"],annotation["end"]))
+			g.addAttribute("strand",annotation["source"], annotation["strand"])
+			g.addAttribute("phase",annotation["source"], annotation["phase"])
+			g.addAttribute("score",annotation["source"], annotation["score"])
+			g.addAttribute("organism",annotation["source"], organism)
+			
+			# Extra attributes annotation
+			for key, attr in annotation["attributes"].items():
+				g.addAttribute(key,annotation["source"], attr)
+				
+			# Add a sequence if available.
+			if "Name" in annotation["attributes"]:
+				cds = CodingSequence().getObjectsByKey("gene.WormBase", annotation["attributes"]["Name"], limit=1)
+				if len(cds) > 0:
+					g.addAttribute("sequence","WormBase",cds[0].sequence)
+				
+			#pprint.pprint(g.__dict__)
+			g.save()
 		
+			return True
+		
+	def parseAnnotations(self, file, organism):
+		""" Parses the GFF3 file provided, with keys from 'http://gmod.org/wiki/GFF3'. """
+		print "Parsing (Annotation) %s " % file
+		
+		f = open(file, "r")
+		size = os.path.getsize(file)
+		
+		
+		# Variables for timekeeping and reporting
+		counter = 0
+		lastPercentage = -1
+		
+		start = time.time()
+		times = []
+		counts = []
+		
+		# Keys retrieved from http://gmod.org/wiki/GFF3
+		keys = ["seqname","source","type","start","end","score","strand","phase"]
+		attrtags = ["ID","Name","Alias","Parent","Target","Gap","Derives_from","Note","Dbxref","Ontology_term"]
+		
+		for line in f:
+			if line[0] == "#":
+				continue
+			data = line.strip().split("\t")
+			annotation = dict(zip(keys,data[:-1]))
+			
+			if len(data) > 0:
+				attributes = data[-1].split(";")
+				pattributes = {}
+				for attr in attributes:
+					try:
+						key,value=attr.split("=")
+					except ValueError:
+						continue
+					pattributes[key] = value
+		
+				annotation["attributes"] = pattributes
+			
+			saved = self.saveAnnotation(annotation, organism)
+			if saved and self.verbose:
+				# This block is for timekeeping and reporting only.
+
+				counter += 1
+				current = f.tell()
+
+				percentage = (float(current)/float(size))*100
+
+				if round(percentage*2)/2 > lastPercentage:
+					lastPercentage = round(percentage*2)/2
+					deltat = time.time() - start
+					start = time.time()
+
+					timeleft = deltat * (100-lastPercentage)
+
+					times.append(timeleft)
+					counts.append(counter)
+					if len(times) > 5:
+						times.pop(0)
+						counts.pop(0)
+
+					avgTimeLeft = sum(times)/len(times)
+					# Calculate the differences between the different counts
+					countsDiff = ([ abs(counts[i] - counts[i-1]) for i in reversed(range(len(counts)-1))])
+					# Calculate the approximate counts per second.
+					if len(countsDiff) > 0 and deltat > 0:
+						avgAnnotationsS = sum(countsDiff)/len(countsDiff)/deltat
+					else:
+						avgAnnotationsS = 0
+
+					print "%s annotations saved. - %s %% done. Approx. %s seconds left until completion. ~%s annotations per second." % (counter, lastPercentage, int(avgTimeLeft), int(avgAnnotationsS))
+				
+			
 			
 	
 
@@ -418,7 +521,7 @@ if __name__ == "__main__":
 	print "Welcome to the WormBase Mass Acquisition module."
 	wb = WormBase()
 	wb.connect()
-	wb.downloadCurrentRelease()
+	#wb.downloadCurrentRelease()
 	wb.unpackFiles()
 	wb.parseFiles()
 	
