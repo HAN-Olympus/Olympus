@@ -167,6 +167,13 @@ class WormBase(object):
 	# PARSING TO STOREDOBJECTS #
 	
 	def parseFiles(self):
+		""" This method will look through all the files in the WormBaseCurrentRelease directory and will start the parsing procedure for every file that can be matched to one of the patterns. Currently this includes:
+
+		* Any FASTA file ending in 'protein.fa'
+		* Any FASTA file ending in 'coding_transcripts.fa'
+		* Any GFF3 file ending in 'annotations.fa'
+
+		"""
 		tmpPath = os.path.join(self.tmpPath, "WormBaseCurrentRelease")
 		
 		proteinMatch = re.compile("protein\.fa$")
@@ -178,11 +185,11 @@ class WormBase(object):
 		for root, path, files in os.walk(tmpPath):
 			for file in files:
 				organism = organismMatch.search(file).group(0)
-				#if proteinMatch.search(file) != None:
-				#	self.parseProtein(os.path.join(tmpPath, root, file), organism)
+				if proteinMatch.search(file) != None:
+					self.parseProtein(os.path.join(tmpPath, root, file), organism)
 				
-				#if codingMatch.search(file) != None:
-				#	self.parseCodingSequence(os.path.join(tmpPath, root, file), organism)
+				if codingMatch.search(file) != None:
+					self.parseCodingSequence(os.path.join(tmpPath, root, file), organism)
 				
 				if annotationMatch.search(file) != None:
 					self.parseAnnotations(os.path.join(tmpPath, root, file), organism)
@@ -527,7 +534,7 @@ if __name__ == "__main__":
 	print "Welcome to the WormBase Mass Acquisition module."
 	wb = WormBase()
 	wb.connect()
-	#wb.downloadCurrentRelease()
+	wb.downloadCurrentRelease()
 	wb.unpackFiles()
 	wb.parseFiles()
 	
