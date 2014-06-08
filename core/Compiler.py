@@ -1,5 +1,5 @@
 import cStringIO
-import os,re
+import os,re, inspect
 import Olympus.lib.ProcedureContainer
 
 class Compiler():
@@ -14,21 +14,52 @@ class Compiler():
 		self.externalDependencies = set()
 		self.addedModules = set()
 		
+		# Gets the name of the current package.
+		self.currentPackage = inspect.getmodule(inspect.stack()[1][0]).__name__.split(".")[0]
+
 		self.script = ""
 		
 	def convertModulesToHierarchy(self):
+		""" To properly add all the modules they need to be represented as a hierarchy. This method will do so for all sources in the modules list dicationary.
+
+		It yields a dictionary like this one:
+
+		    {'Olympus': {'lib': {'Article': 'Article',
+                         'Collection': 'Collection',
+						 ...
+                         'Singleton': 'Singleton',
+                         'StoredObject': 'StoredObject'},
+                 'modules': {'acquisition': {'AcquisitionModule': 'AcquisitionModule'}}}}
+
+		"""
 		hierarchy = {}
 		
+		# This could also be represented recursively, but in order to consolidate all this behaviour into one function I chose to represent it as a loop. Please enjoy these extra comments, as this might not be the most straightforward method.
 		for source in self.modules.keys():
-			print source
-			
+			names = source.split(".") # Split the module in its constituent parts
+			for n in range(len(names)):
+				currentLevel = hierarchy # Restart the hierachy at the root level for every module.
+				for name in names[:n+1]: # Go through every submodule
+					if name not in currentLevel.keys():
+						# If this is the last module in the name, it follows that it will be the module name. Otherwise it will have children.
+						if len(names) == n+1:
+							currentLevel[name] = name
+						else:
+							currentLevel[name] = {}
+					# Set the currentLevel to the new sublevel before restarting the loop.
+					currentLevel = currentLevel[name]
+
 		return hierarchy
 	
 	def retrieveModule(self,moduleName):
-		""" Opens a module for reading from its proper path. """
+		""" Opens a module for reading from its proper path.
+
+		:param moduleName: The name of the module as though it were written in an import statement. Not a filename.
+		:rtype: The contents of the module file.
+		"""
 		self.addedModules.add(moduleName)
-		if moduleName.startswith("Olympus"):
-			moduleName = re.sub("^Olympus\.", "",moduleName)		
+		if moduleName.startswith(self.currentPackage):
+			moduleName = re.sub("^"+self.currentPackage+"\.", "",moduleName)
 		
 		path = moduleName.replace(".",os.sep) + ".py"
 		currentDir = os.sep.join(__file__.split(os.sep)[:-2])
@@ -41,12 +72,23 @@ class Compiler():
 			return ""
 		
 	def minimizeModule(self, moduleCode):
-		""" Removes all the unnecessary fluff from the Python scripts. """
+		""" Removes all the unnecessary fluff from the Python scripts. This includes:
+
+		* Unnessecary whitespace (insofar as this is possible with Python.
+		* All regular comments starting with a hash. (#) Will not remove multiline comments (triple quotes) as these might represent actual pieces of code.
+
+		:param moduleCode: The code contained in a python script.
+		:rtype: The minimized code.
+		"""
 		# Remove comments
 		moduleCode = re.sub("#.+", "", moduleCode)
+
+		"""
 		# Remove test methods
 		testPattern = re.compile("def test_.+?:\n(\t+.+\n)+", re.MULTILINE)
 		moduleCode = re.sub(testPattern, "", moduleCode)
+		"""
+
 		# Remove whitespace
 		emptyPattern = re.compile("^[\t\n ]+$", re.MULTILINE)
 		moduleCode = re.sub(emptyPattern, "", moduleCode)
@@ -54,12 +96,17 @@ class Compiler():
 		return moduleCode
 	
 	def scanDependencies(self,moduleCode):
-		""" Scans a Python script for dependencies and records them for later import. """
-		imports = re.findall("(?:\t?from )?(.+)? ?import (.+)?", moduleCode)	
+		""" Scans a Python script for dependencies and records them for later import. Will reserve a special case for the current package.
+
+		:param moduleCode: The code contained in a Python script.
+		:rtype: All the imports contained within the code.
+		"""
+		imports = re.findall("(?:\t?from )?(.+)? ?import (.+)?", moduleCode)
+
 		for source, modules in imports:
 			if source == "":
 				for module in re.split(", ?", modules):
-					if module.startswith("Olympus."):				
+					if module.startswith(self.currentPackage + "."):
 						if "" in self.modules:
 							self.modules[""].add(module.strip())
 						else:
@@ -68,7 +115,7 @@ class Compiler():
 						self.externalDependencies.add(module.strip())
 			else:
 				source = source.strip()
-				if source.startswith("Olympus."):
+				if source.startswith(self.currentPackage + "."):
 					for module in re.split(", ?", modules):
 						if source in self.modules:
 							self.modules[source].add(module.strip())
@@ -90,23 +137,35 @@ class Compiler():
 				self.processDependencies()
 		
 	def printImports(self):
-		print
+		""" Prints the current list of imports as valid import statements. """
+
 		print "import %s " % ", ".join(self.externalDependencies)
 		for source, modules in self.externalModules.items():
 			if source == "":
 				print "import %s" % ", ".join(modules)
 			else:
 				print "from %s import %s" % (source, ", ".join(modules))
-				
+	
+	def walkHierarchy(self, parents, node):
+		tabs = "\t" * len(parents)
+		for k, v in node.items():
+			if isinstance(v, dict):
+				classLine = "%sclass %s():" % (tabs, k)
+				self.nameSpacedCode.append(classLine)
+				self.walkHierarchy(parents+[k], v)
+			else:
+				code = self.retrieveModule(".".join(parents+[v]))
+				code = self.minimizeModule(code)
 
-	def openFile(self,filename):
-		pass
+				for line in code.split("\n"):
+					self.nameSpacedCode.append(tabs+line)
 	
-	def writeFile(self,filename):
-		pass
-	
-	def addToCompiledFile(self,module, namespace):
-		pass
+	def createNameSpaces(self, hierarchy):
+		self.nameSpacedCode = []
+		self.walkHierarchy([], hierarchy)
+		print "\n".join(self.nameSpacedCode)
+
+
 	
 	def compile(self):
 		pass
@@ -132,21 +191,32 @@ def test_scanDependencies():
 	C.scanDependencies(module)
 	module = C.retrieveModule("modules.acquisition.GeneOntology")
 	C.scanDependencies(module)
-	C.printImports()
+	#C.printImports()
 	
 def test_processDependencies():
 	C = Compiler()
 	module = C.retrieveModule("modules.acquisition.PubMed")
 	C.scanDependencies(module)
 	C.processDependencies()
-	C.printImports()
+	#C.printImports()
 	
 def test_convertModulesToHierarchy():
 	C = Compiler()
 	module = C.retrieveModule("modules.acquisition.PubMed")
 	C.scanDependencies(module)
 	C.processDependencies()
-	print C.convertModulesToHierarchy()
+	import pprint
+	pprint.pprint( C.convertModulesToHierarchy() )
+
+def test_createNameSpaces():
+	C = Compiler()
+	C = Compiler()
+	module = C.retrieveModule("modules.acquisition.PubMed")
+	C.scanDependencies(module)
+	C.processDependencies()
+	hierarchy = C.convertModulesToHierarchy()
+
+	print C.createNameSpaces(hierarchy)
+
 	
-	
-	
+
