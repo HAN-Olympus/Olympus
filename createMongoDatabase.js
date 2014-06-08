@@ -15,4 +15,7 @@ print("* Selected Olympus Database.");
 db.output.ensureIndex( { "_created" : 1 }, { expireAfterSeconds : 3600 } ); // Remove all output after an hour to avoid congestion
 print("* Ensured index on Output.");
 
+db.pubmedindexes.ensureIndex( { "gene" : 1 } ); // Only unique genes in pubmedindexes
+print("* Ensured index on pubmedindexes.");
+
 print("\nAll done.\n");

@@ -59,6 +59,9 @@ class PubMed(AcquisitionModule):
 		:rtype: A list of articles, defaults to 1
 		"""
 		
+		if len(id) == 0 or id==None:
+			return []
+		
 		articles = []
 		
 		if isinstance(id, list):
@@ -69,20 +72,26 @@ class PubMed(AcquisitionModule):
 					articles.append( results[0] )
 					id.remove(i)			
 		
-			id = ",".join(id)			
+			id = ",".join(id)
+			
 		else:
 			# Check if this article already exists in the database.
 			results = Article().getObjectsByKey("id.pubmed", id )
 			if len(results) > 0:
 				return [results[0]]
+			
+		# Check if there are still articles to save.
+		if id == "":
+			return articles
 		
 		handle = Entrez.efetch("pubmed", id=id, retmode="xml", retmax=limit)
 		records = Entrez.parse(handle)
 		
 		for record in records:
 			article = self.convertToArticle(record)
-			articles.append( article )
-			article.save()
+			if article != None:
+				articles.append( article )
+				article.save()
 			
 		return articles
 		
@@ -92,12 +101,15 @@ class PubMed(AcquisitionModule):
 		"""Takes the parsed Pubmed article and converts it to our lightweight format.
 		
 		:param article: A parsed Pubmed article
-		:rtype: A properly formatted Article Object ( Stored Object )
+		:rtype: A properly formatted Article Object ( Stored Object ) or None if a parsing error occurred.
 		"""
 		
 		articleObject = Article()
 		
 		# Loop over all the citation data
+		if "MedlineCitation" not in article:
+			return None
+			
 		medlineCitation = article["MedlineCitation"]
 		for attr in medlineCitation:
 			if attr == "PMID":

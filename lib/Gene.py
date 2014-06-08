@@ -14,4 +14,4 @@ class Gene(StoredObject):
 		for key, value in kwargs.items():
 			setattr(self, key, value)
 			
-		super(Gene, self).__init__(database = "olympus", collection = "genes")
+		super(Gene, self).__init__(database = "olympus", collection = "genes", name = self.name)

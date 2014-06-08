@@ -428,14 +428,20 @@ class WormBase(object):
 			
 			# Extra attributes annotation
 			for key, attr in annotation["attributes"].items():
-				g.addAttribute(key,annotation["source"], attr)
+				g.addAttribute(key.lower(),annotation["source"], attr)
 				
 			# Add a sequence if available.
 			if "Name" in annotation["attributes"]:
 				cds = CodingSequence().getObjectsByKey("gene.WormBase", annotation["attributes"]["Name"], limit=1)
 				if len(cds) > 0:
-					g.addAttribute("sequence","WormBase",cds[0].sequence)
-				
+					g.addAttribute("sequence","WormBase",cds[0].sequence["WormBase"])
+			
+			idMatch = g.getObjectsByKey("seqname."+annotation["source"], annotation["seqname"], limit=1)
+			if len(idMatch) > 0:
+				mergedObject = idMatch[0] + g
+				mergedObject.save()
+				return True
+			
 			#pprint.pprint(g.__dict__)
 			g.save()
 		
