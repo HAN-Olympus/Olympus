@@ -2,7 +2,7 @@
 # This is a stored object, the base form of an object that can be stored in our database
 
 from abc import ABCMeta, abstractmethod
-from Storage import Storage
+from Olympus.lib.Storage import Storage
 import random, time, datetime, copy
 
 class StoredObject():
@@ -271,4 +271,3 @@ def test_mergeByAddOperator():
 	t3 = t1+t2
 	assert t3.getAttribute("rand", "python") == r
 	assert t3.getAttribute("rand", "lua") == r+1
-	

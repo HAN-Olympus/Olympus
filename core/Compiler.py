@@ -218,5 +218,3 @@ def test_createNameSpaces():
 
 	print C.createNameSpaces(hierarchy)
 
-	
-
