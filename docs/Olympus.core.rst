@@ -43,6 +43,14 @@ Olympus.core.Worker module
     :undoc-members:
     :show-inheritance:
 
+Olympus.core.code module
+------------------------
+
+.. automodule:: Olympus.core.code
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

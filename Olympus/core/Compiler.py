@@ -193,5 +193,5 @@ def test_convertModulesToHierarchy():
 	pprint.pprint( C.convertModulesToHierarchy() )
 
 def test_checkRequirements():
-	
+	pass
 

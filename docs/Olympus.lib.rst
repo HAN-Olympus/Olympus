@@ -1,6 +1,13 @@
 Olympus.lib package
 ===================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    Olympus.lib.Controls
+
 Submodules
 ----------
 
@@ -44,10 +51,10 @@ Olympus.lib.Config module
     :undoc-members:
     :show-inheritance:
 
-Olympus.lib.Controls module
----------------------------
+Olympus.lib.Control module
+--------------------------
 
-.. automodule:: Olympus.lib.Controls
+.. automodule:: Olympus.lib.Control
     :members:
     :undoc-members:
     :show-inheritance:
@@ -96,6 +103,14 @@ Olympus.lib.Protein module
 --------------------------
 
 .. automodule:: Olympus.lib.Protein
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Olympus.lib.PubMedIndex module
+------------------------------
+
+.. automodule:: Olympus.lib.PubMedIndex
     :members:
     :undoc-members:
     :show-inheritance:

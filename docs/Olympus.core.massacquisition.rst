@@ -12,6 +12,14 @@ Olympus.core.massacquisition.PFAM module
     :undoc-members:
     :show-inheritance:
 
+Olympus.core.massacquisition.PubMedConnections module
+-----------------------------------------------------
+
+.. automodule:: Olympus.core.massacquisition.PubMedConnections
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Olympus.core.massacquisition.WormBase module
 --------------------------------------------
 
