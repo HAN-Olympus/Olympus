@@ -148,9 +148,11 @@ class Compiler():
 	
 	def walkHierarchy(self, parents, node):
 		tabs = "\t" * len(parents)
+		decoratorLine = "%s@matryoshka" % (tabs)
 		for k, v in node.items():
 			if isinstance(v, dict):
 				classLine = "%sclass %s():" % (tabs, k)
+				self.nameSpacedCode.append(decoratorLine)
 				self.nameSpacedCode.append(classLine)
 				self.walkHierarchy(parents+[k], v)
 			else:
@@ -158,15 +160,42 @@ class Compiler():
 				code = self.minimizeModule(code)
 
 				for line in code.split("\n"):
+					if line.strip().startswith("class"):
+						self.nameSpacedCode.append(decoratorLine)
 					self.nameSpacedCode.append(tabs+line)
 	
 	def createNameSpaces(self, hierarchy):
 		self.nameSpacedCode = []
+		matryoshkaDecorator = """
+def matryoshka(cls):
+
+	# get types of classes
+	class classtypes:
+		pass
+	classtypes = (type, type(classtypes))
+
+	# get names of all public names in outer class
+	directory = [n for n in dir(cls) if not n.startswith("_")]
+
+	# get names of all non-callable attributes of outer class
+	attributes = [n for n in directory if not callable(getattr(cls, n))]
+
+	# get names of all inner classes
+	innerclasses = [n for n in directory if isinstance(getattr(cls, n), classtypes)]
+
+	# copy attributes from outer to inner classes (don't overwrite)
+	for c in innerclasses:
+		c = getattr(cls, c)
+		setattr(c, cls.__name__, cls)
+		for a in attributes:
+			if not hasattr(c, a):
+				setattr(c, a, getattr(cls, a))
+	return cls
+		"""
+		self.nameSpacedCode.append(matryoshkaDecorator)
 		self.walkHierarchy([], hierarchy)
 		print "\n".join(self.nameSpacedCode)
 
-
-	
 	def compile(self):
 		pass
 
