@@ -16,4 +16,7 @@ pip-delete-this-directory.txt
 # Sphinx documentation
 _build/
 
-
+# Build areas
+*egg-info
+build/
+dist/
