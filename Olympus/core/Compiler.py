@@ -147,6 +147,7 @@ class Compiler():
 				print "from %s import %s" % (source, ", ".join(modules))
 				
 	def getRequirements(self):
+		pass
 		# Get requirements file
 		
 		# Loop through file
