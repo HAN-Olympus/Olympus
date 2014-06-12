@@ -1,6 +1,6 @@
 from Olympus.lib.Control import Control
 
-class Number(Control):
+class Float(Control):
 	""" Float input control. HTML defaults to 0.1 steps. """
 	def setValue(self, v):
 		self.value = float(v)

@@ -5,9 +5,9 @@ class Control(object):
 	""" The abstract base class for all controls """
 	__metaclass__ = ABCMeta
 
-	def __init__(self):
-		self.name = None
-		self.value = None
+	def __init__(self, name=None, value=None):
+		self.name = name
+		self.value = value
 		self.html = HTML()
 		self.attributes = {}
 		self.data = {}

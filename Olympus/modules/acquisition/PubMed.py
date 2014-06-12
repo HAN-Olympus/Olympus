@@ -7,6 +7,10 @@ from Olympus.lib.Collection import Collection
 from Olympus.lib.Log import Log
 from Olympus.lib.Config import Config
 
+from Olympus.lib.controls.Float import Float
+from Olympus.lib.controls.Integer import Integer
+from Olympus.lib.controls.Text import Text
+
 import datetime, urllib
 
 class PubMed(AcquisitionModule):
@@ -155,6 +159,9 @@ class PubMed(AcquisitionModule):
 		
 		return articleObject
 	
+	def specifyControls(self):
+		
+	
 	def specifyInput(self):
 		return None
 		
@@ -175,6 +182,12 @@ class PubMed(AcquisitionModule):
 		return articles
 
 # TESTING #
+
+def test_specifyControls():
+	pm = PubMed()
+	pm.specifyControls()
+
+"""
 
 def test_formatTerm():
 	pm = PubMed()
@@ -213,4 +226,6 @@ def test_saveArticle():
 	article.setCollection("test_collection")
 	article.save()
 	article.remove()
+	
+"""
 	

@@ -19,7 +19,7 @@ class Module(object):
 		return self.__class__.__name__
 		
 	@abstractmethod
-	def specifyInput():
+	def specifyControls():
 		""" In order to determine what a module needs it needs to show the inputs it requires.
 		Should return a dictionary with controls. The keys correspond to the keys that will passed into the start method.
 		A dictionary like this: ::
@@ -35,10 +35,36 @@ class Module(object):
 		 start(accessioncode="ABCDEF123", limit=20, maxsize=1.234)
 		"""
 		pass
+	
+	@abstractmethod
+	def specifyInput():
+		""" This method should return a dictionary of classes of the type that should be inserted. 
+		For example, if a module requires two inputs of any type, use:
 		
+		    collection = Collection()
+		    
+		    input = {
+		    	"inputOne":[collection],
+		    	"inputTwo":[collection]
+		    }
+		"""		
+		pass
+	
 	@abstractmethod
 	def specifyOutput():
-		""" This method should return a class (not an instance) of the type that should be returned. """
+		""" This method should return a dictionary of classes of the type that should be inserted. 
+		For example, if a module outputs data in several formats, use:
+		
+		    html = StringContainer("HTML")
+		    latex = StringContainer("LaTeX")
+		    csv = StringContainer("CSV")
+		    
+		    output = {
+		    	"HTML": [html],
+		    	"LaTeX": [latex],
+		    	"CSV": [csv]
+		    }
+		"""		
 		pass
 	
 	@abstractmethod
