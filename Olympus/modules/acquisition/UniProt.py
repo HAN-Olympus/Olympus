@@ -105,6 +105,9 @@ class UniProt(AcquisitionModule):
 
 
 		return proteinObject
+	
+	def specifyControls(self):
+		pass
 		
 	def specifyInput(self):
 		pass

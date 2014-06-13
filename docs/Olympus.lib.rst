@@ -6,7 +6,7 @@ Subpackages
 
 .. toctree::
 
-    Olympus.lib.Controls
+    Olympus.lib.controls
 
 Submodules
 ----------

@@ -36,6 +36,9 @@ class VisualizationModule(Module):
 class TestModule(VisualizationModule):
 	def toString(self):
 		return "test"
+	
+	def specifyControls(self):
+		pass
 		
 	def specifyInput(self):
 		pass

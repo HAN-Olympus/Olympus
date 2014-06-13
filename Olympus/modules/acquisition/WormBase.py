@@ -40,6 +40,9 @@ class WormBase(AcquisitionModule):
 			raise ValueError, "The server responded with an error: %s" % errorResponse.group(1)
 		
 		return json.loads(response)
+	
+	def specifyControls(self):
+		pass
 		
 	def specifyInput(self):
 		return None

@@ -35,6 +35,9 @@ class PlainHTML(InterfaceModule.InterfaceModule):
 			vContainer = self.body.div(klass="visualization")
 			vContainer.text(v.toHTML(), escape=False)
 			
+	def specifyControls(self):
+		pass
+			
 	def specifyInput(self):
 		html = StringContainer("HTML")
 				

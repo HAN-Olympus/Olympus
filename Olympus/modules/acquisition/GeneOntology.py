@@ -3,7 +3,10 @@ from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 class GeneOntology(AcquisitionModule):
 	def __init__(self):
 		pass
-		
+	
+	def specifyControls(self):
+		pass
+	
 	def specifyInput(self):
 		pass
 		

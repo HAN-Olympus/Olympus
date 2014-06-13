@@ -62,6 +62,9 @@ class TOXNET(AcquisitionModule):
 		print json.dumps(root, sort_keys=True, indent=4, separators=(',', ': '))
 		return root
 	
+	def specifyControls(self):
+		pass
+	
 	def specifyInput(self):
 		pass
 		

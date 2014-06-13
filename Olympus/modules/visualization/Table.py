@@ -71,6 +71,9 @@ class Table(VisualizationModule.VisualizationModule):
 		
 		html += [ "</tbody>", "</table>"]
 		return "\n".join(html)
+	
+	def specifyControls(self):
+		pass
 		
 	def specifyInput(self):
 		collection = Collection()

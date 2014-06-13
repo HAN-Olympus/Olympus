@@ -160,7 +160,10 @@ class PubMed(AcquisitionModule):
 		return articleObject
 	
 	def specifyControls(self):
-		
+		controls = {
+			"searchterm" : Text()
+		}
+		return controls
 	
 	def specifyInput(self):
 		return None

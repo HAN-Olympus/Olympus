@@ -7,6 +7,9 @@ class Sort(InterpretationModule.InterpretationModule):
 	def __init__(self):
 		# TODO: Configuration 
 		pass
+	
+	def specifyControls(self):
+		pass
 		
 	def specifyInput(self):
 		collection = Collection()

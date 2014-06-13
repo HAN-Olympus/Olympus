@@ -10,6 +10,9 @@ class LaTeX(InterfaceModule.InterfaceModule):
 		:param title: The title of the document under construction.
 		"""
 		contents = ""
+		
+	def specifyControls(self):
+		pass
 			
 	def specifyInput(self):
 		latex = StringContainer("LaTeX")
