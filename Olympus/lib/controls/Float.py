@@ -12,6 +12,6 @@ class Float(Control):
 
 # TESTING #
 
-def test_controlNumber():
-	cn = Number()
-	print(cn.wrapHTML())
+def test_controlFloat():
+	cf = Float()
+	print(cf.wrapHTML())
