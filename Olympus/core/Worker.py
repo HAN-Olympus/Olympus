@@ -6,7 +6,6 @@ import traceback
 
 from Olympus.lib import Config
 from Olympus.lib import Output
-from Olympus.lib.ProcedureContainer import ProcedureCollection
 
 class WorkerStatus():
 	"""  """
