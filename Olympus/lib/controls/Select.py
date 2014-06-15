@@ -33,5 +33,5 @@ class Select(Control):
 # TESTING #
 
 def test_controlText():
-	ct = Text()
-	print(ct.wrapHTML())
+	ct = Select()
+	print(ct.Select())

@@ -20,6 +20,14 @@ Olympus.lib.controls.Integer module
     :undoc-members:
     :show-inheritance:
 
+Olympus.lib.controls.Select module
+----------------------------------
+
+.. automodule:: Olympus.lib.controls.Select
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Olympus.lib.controls.Text module
 --------------------------------
 

@@ -91,10 +91,10 @@ Olympus.lib.Output module
     :undoc-members:
     :show-inheritance:
 
-Olympus.lib.ProcedureContainer module
--------------------------------------
+Olympus.lib.Procedure module
+----------------------------
 
-.. automodule:: Olympus.lib.ProcedureContainer
+.. automodule:: Olympus.lib.Procedure
     :members:
     :undoc-members:
     :show-inheritance:
