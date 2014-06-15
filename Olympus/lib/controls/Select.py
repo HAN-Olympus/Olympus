@@ -34,4 +34,4 @@ class Select(Control):
 
 def test_controlText():
 	ct = Select()
-	print(ct.Select())
+	print(ct)

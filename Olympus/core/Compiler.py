@@ -1,6 +1,5 @@
 import cStringIO
 import os,re, inspect
-import Olympus.lib.ProcedureContainer
 
 class Compiler():
 	""" This class compiles the given modules and their dependencies into a single Python file. 
