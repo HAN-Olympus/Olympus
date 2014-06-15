@@ -161,7 +161,8 @@ class PubMed(AcquisitionModule):
 	
 	def specifyControls(self):
 		controls = {
-			"searchterm" : Text()
+			"searchterm" : Text("searchterm", value="", label="Search term"),
+			"limit" : Integer("limit", value=0, label="Limit")
 		}
 		return controls
 	
@@ -190,7 +191,6 @@ def test_specifyControls():
 	pm = PubMed()
 	pm.specifyControls()
 
-"""
 
 def test_formatTerm():
 	pm = PubMed()
@@ -229,6 +229,3 @@ def test_saveArticle():
 	article.setCollection("test_collection")
 	article.save()
 	article.remove()
-	
-"""
-	

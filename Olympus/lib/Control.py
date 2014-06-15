@@ -1,17 +1,22 @@
 from abc import ABCMeta, abstractmethod
-from html import HTML
+from html import XHTML
 
 class Control(object):
 	""" The abstract base class for all controls """
 	__metaclass__ = ABCMeta
 
-	def __init__(self, name=None, value=None):
+	def __init__(self, name=None, value=None, **kwargs):
 		self.name = name
 		self.value = value
-		self.html = HTML()
+		self.html = XHTML()
 		self.attributes = {}
 		self.data = {}
 		self.allowedAttributes = None
+		self.label = ""
+		
+		for k,v in kwargs.items():
+			setattr(self, k, v)
+		
 		self.__disabledAttributes = ["value","name"]
 		pass
 
@@ -73,14 +78,14 @@ class Control(object):
 		control = self.html.div(klass="control-wrapper")
 		control.text(self.toHTML(), escape=False)
 		return str(control)
-
+	
+	@classmethod
 	def toHTML(self):
 		""" Representing the control as an HTML element. Take care to only define generic classes,
 		preferably in line with the standing conventions.
 		No inline styles or other properties should be added here.
 		Javascript etc. will be accepted, but is not recommended.
 		It is recommended that you use the `html` module wherever possible, to avoid mismatched tags, among others. An instance is provided by default: `self.html`. """
-		return "This control cannot be represented as HTML"
 
 
 # TESTING #

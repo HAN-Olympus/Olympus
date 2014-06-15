@@ -108,10 +108,14 @@ $(function () {
 						console.log(src)
 						output.append(connection)
 						output.data("target", $(this))
+						
+						connection = connection.clone().appendTo(connection.parent())
 					}
 
 				});
 			});
+			
+			connection.parent().find(".module-connection").last().remove()
 
 			if (!destinationFound) {
 				output.addClass("no-destination");
@@ -299,8 +303,8 @@ $(function () {
 		console.log(edges)
 		console.log(edgeAttributes)
 
-		executeUrl = "/execute/html?nodes=" + nodes + "&edges=" + edges + "&edgeAttributes=" + edgeAttributes;
-		window.open(executeUrl)
+		compileUrl = "/compile/?nodes=" + nodes + "&edges=" + edges + "&edgeAttributes=" + edgeAttributes;
+		window.open(compileUrl)
 	});
 
 });

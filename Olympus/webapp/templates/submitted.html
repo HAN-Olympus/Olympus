@@ -11,9 +11,9 @@
 	<div class="row">
 		<div class="col-md-12">
 			<h2>Submitted</h2>
-			<p>Your job was submitted to the queue. Click
-				<a href="/results/{{id}}/">here</a>to see the results.</p>
-			<img src="{{svgUrl}}" />{{ deferJS("/js/sigma.min.js",4) }} {{ deferJS("/js/sigma.parsers.gexf.min.js",5) }}
+			<p>Your job was submitted to the queue. Click <a href="/results/{{id}}/">here</a> to see the results.</p>
+			{{ deferJS("/js/sigma.min.js",4) }}
+			{{ deferJS("/js/sigma.parsers.gexf.min.js",5) }}
 		</div>
 	</div>
 </div>

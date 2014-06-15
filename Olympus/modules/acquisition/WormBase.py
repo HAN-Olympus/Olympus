@@ -3,6 +3,10 @@ from Olympus.lib.Collection import Collection
 from Olympus.lib.Log import Log
 from Olympus.lib.Gene import Gene
 from Olympus.lib.Protein import Protein
+
+from Olympus.lib.controls.Text import Text
+from Olympus.lib.controls.Select import Select
+
 import requests, urllib
 import json,re
 
@@ -42,7 +46,13 @@ class WormBase(AcquisitionModule):
 		return json.loads(response)
 	
 	def specifyControls(self):
-		pass
+		controls = {
+			"searchterm" : Text("searchterm", value="", label="Search term"),
+			"type" : Select(label="Search type")
+		}
+		
+		controls["type"].addOption("gene","Gene")
+		return controls
 		
 	def specifyInput(self):
 		return None

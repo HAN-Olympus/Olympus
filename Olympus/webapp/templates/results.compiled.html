@@ -1,0 +1,24 @@
+{% extends "main.html" %} {% block index %}
+<div class="container">
+	<p></p>
+	<ol class="breadcrumb">
+		<li>
+			<a href="/">Olympus</a>
+		</li>
+		<li class="active">Compiling</li>
+	</ol>
+
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Compiling</h2>
+			<p> We are compiling your job. </p>
+			{{ deferJS("/js/sigma.min.js",4) }}
+			{{ deferJS("/js/sigma.parseGexf.js",5) }}
+			{{ deferJS("/js/sigma.forceatlas2.js",7) }}
+			{{ deferJS("/js/compiling.js",7) }}
+			<div id="sigma-container"></div>
+			{{procedure.generateInterface()|safe}}
+		</div>
+	</div>
+</div>
+{% endblock %}

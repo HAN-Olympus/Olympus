@@ -3,9 +3,9 @@ import os,re,sys
 import pkgutil
 
 from Olympus.lib.Config import Config
-from Olympus.lib.ProcedureContainer import ProcedureCollection
 from Olympus.lib.TemplateTools import TemplateTools
 from Olympus.lib.Output import Output
+from Olympus.lib.Procedure import Procedure
 
 import svglib
 import gearman
@@ -108,30 +108,29 @@ def connection():
 	connection = svglib.Connection(x1,y1,x2,y2, stroke, fill)
 	
 	return Response(connection.draw(), mimetype="image/svg+xml")
-
-@app.route("/svg/graph")
-def graph():
-	pc = ProcedureCollection()
-	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
-	return Response(pc.createGraphPreviewSVG(graph), mimetype="image/svg+xml")
 	
-@app.route("/gefx/graph")
+@app.route("/gexf/")
 def graphGefx():
-	pc = ProcedureCollection()
-	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
-	return Response(pc.createGefxPreview(graph), mimetype="image/svg+xml")
-
-@app.route("/execute/<viewType>")
-def execute(viewType):	
-	""" Puts the Procedure in the Gearman Queue. """
-	data = json.dumps({"nodes":request.args.get("nodes"), "edges":request.args.get("edges"), "edgeAttributes":request.args.get("edgeAttributes")})
+	p = Procedure()
+	nodes = json.loads( request.args.get("nodes") )
+	edges = json.loads( request.args.get("edges") )
+	attributes = json.loads( request.args.get("edgeAttributes") )
 	
-	gm_client = gearman.GearmanClient(['localhost:4730'])
-	job = gm_client.submit_job("runProcedure", data, background=True)
-	
-	svgUrl = "/svg/graph?nodes="+request.args.get("nodes")+"&edges="+request.args.get("edges")+"&edgeAttributes="+request.args.get("edgeAttributes")
-	return render_template("submitted.html", config=Config(), id=job.gearman_job.unique, svgUrl=svgUrl )
+	p.generateProcedure( nodes, edges, attributes )
+	return Response(p.toGexf())
 
+@app.route("/compile/")
+def compile():
+	""" Compiles the given modules into a Procedure. """
+	p = Procedure()
+	
+	nodes = json.loads( request.args.get("nodes") )
+	edges = json.loads( request.args.get("edges") )
+	attributes = json.loads( request.args.get("edgeAttributes") )
+	
+	p.generateProcedure( nodes, edges, attributes )
+	
+	return render_template("results.compiled.html", procedure=p)
 	
 @app.route("/results/<job>/")
 def resultsOverview(job):

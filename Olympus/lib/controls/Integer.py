@@ -4,10 +4,21 @@ class Integer(Control):
 	""" Integer input control. """
 	def setValue(self,v):
 		self.value = int(v)
-
+	
 	def toHTML(self):
 		value = self.value if self.value != None else ""
-		input = self.html.input(klass="int-control", type="number", step="1", value=str(value), escape=False)
+		
+		name = self.name
+		if self.name == None:
+			name = "undefined"
+		
+		input = self.html.input(klass="form-control int-control", 
+								type="number",
+								value=str(value),
+								escape=False,
+								name=name,
+								step=str(1),
+								id="control-"+name)
 		return input
 
 # TESTING #
