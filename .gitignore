@@ -17,6 +17,8 @@ pip-delete-this-directory.txt
 _build/
 
 # Build areas
-*egg-info
+*egg-info/
 build/
 dist/
+tmp/
+*.egg
