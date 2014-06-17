@@ -16,6 +16,7 @@ def checkWorkingDirectory():
 		
 # STORE THE WEBAPP DIRECTORIES IN THE CONFIG #
 def storeWebAppDirectories():
+	Config().RootDirectory = os.path.abspath(os.getcwd())
 	Config().WebAppDirectory = os.path.join(os.getcwd())
 	Config().TemplatesDirectory = os.path.join(os.getcwd(), "templates") 
 	Config().save()
@@ -24,7 +25,7 @@ def start():
 	print ("Starting Olympus Tornado HTTP Server")
 	print ("------------------------------------")
 	Config() # Initialize the Config before switching to the webapp directory to make sure it gets loaded correctly.
-	Config().RootDirectory = os.path.abspath(os.getcwd())
+	
 	Config().save()
 	
 	checkWorkingDirectory()	
