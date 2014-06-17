@@ -25,9 +25,7 @@ def start():
 	print ("Starting Olympus Tornado HTTP Server")
 	print ("------------------------------------")
 	Config() # Initialize the Config before switching to the webapp directory to make sure it gets loaded correctly.
-	
-	Config().save()
-	
+		
 	checkWorkingDirectory()	
 	storeWebAppDirectories()	
 
@@ -52,3 +50,7 @@ def test_checkWorkingDirectory():
 	checkWorkingDirectory()
 	startScriptDir = os.path.dirname(os.path.realpath(__file__))
 	assert startScriptDir == os.getcwd() , "Something went wrong whilst changing working directories."
+	
+def test_storeWebAppDirectories():
+	storeWebAppDirectories()
+	assert hasattr(Config(), "RootDirectory")
