@@ -6,7 +6,6 @@ requests==2.2.1
 tornado==3.2
 virtualenv==1.11.4
 sphinx==1.2.2
-numpy>=1.7
 biopython>=1.6
 pymongo>=2.6.3
 xmltodict>=0.8.6
