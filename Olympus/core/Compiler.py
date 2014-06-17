@@ -174,18 +174,13 @@ setup(
 
 
 # TESTING #
-"""
+
 def test_retrieveModule():
-	C = Compiler()
+	C = Compiler(Procedure([],[],[]))
 	C.retrieveModule("modules.acquisition.PubMed")
 	
-def test_minimizeModule():
-	C = Compiler()
-	module = C.retrieveModule("modules.acquisition.PubMed")
-	C.minimizeModule(module)
-	
 def test_scanDependencies():
-	C = Compiler()
+	C = Compiler(Procedure([],[],[]))
 	module = C.retrieveModule("modules.acquisition.PubMed")
 	C.scanDependencies(module)
 	module = C.retrieveModule("modules.acquisition.WormBase")
@@ -197,23 +192,22 @@ def test_scanDependencies():
 	#C.printImports()
 	
 def test_processDependencies():
-	C = Compiler()
+	C = Compiler(Procedure([],[],[]))
 	module = C.retrieveModule("modules.acquisition.PubMed")
 	C.scanDependencies(module)
 	C.processDependencies()
 	#C.printImports()
 	
 def test_convertModulesToHierarchy():
-	C = Compiler()
+	C = Compiler(Procedure([],[],[]))
 	module = C.retrieveModule("modules.acquisition.PubMed")
 	C.scanDependencies(module)
 	C.processDependencies()
 	import pprint
 	pprint.pprint( C.convertModulesToHierarchy() )
-	"""
 
 def test_buildEgg():
-	C = Compiler(Procedure())
+	C = Compiler(Procedure([],[],[]))
 	module = C.retrieveModule("modules.acquisition.PubMed")
 	C.scanDependencies(module)
 	C.processDependencies()
