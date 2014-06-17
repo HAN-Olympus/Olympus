@@ -24,6 +24,9 @@ def start():
 	print ("Starting Olympus Tornado HTTP Server")
 	print ("------------------------------------")
 	Config() # Initialize the Config before switching to the webapp directory to make sure it gets loaded correctly.
+	Config().RootDirectory = os.path.abspath(os.getcwd())
+	Config().save()
+	
 	checkWorkingDirectory()	
 	storeWebAppDirectories()	
 

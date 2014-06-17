@@ -1,20 +1,22 @@
 import cStringIO
-import os,re, inspect
+import os,re, inspect,time,subprocess
+from Olympus.lib.Procedure import Procedure
+from Olympus.lib.Config import Config
 
 class Compiler():
-	""" This class compiles the given modules and their dependencies into a single Python file. 
-		The trick here is to insert them into their own classes to "fake" namespaces and retain the proper naming scheme in the modules.
-		This will leave a single Python file with all the modules compiled into it without comments.
-	"""
+	""" This class compiles the given modules and their dependencies into an egg file for redistribution. """
 	
-	def __init__(self):
+	def __init__(self, procedure):
+		""" Initialize the compiler with a Procedure. """
 		self.modules = {}
 		self.externalModules = {}
 		self.externalDependencies = set()
 		self.addedModules = set()
+		self.basics = ["Olympus.core.Worker","Olympus.core.Core", "Olympus.core.Core"]
+		self.procedure = procedure
 		
 		# Gets the name of the current package.
-		self.currentPackage = inspect.getmodule(inspect.stack()[1][0]).__name__.split(".")[0]
+		self.currentPackage = __name__.split(".")[0]
 
 		self.script = ""
 		
@@ -33,7 +35,8 @@ class Compiler():
 		"""
 		hierarchy = {}
 		
-		# This could also be represented recursively, but in order to consolidate all this behaviour into one function I chose to represent it as a loop. Please enjoy these extra comments, as this might not be the most straightforward method.
+		# This could also be represented recursively, but in order to consolidate all this behaviour into one function I chose to represent it as a loop.
+		# Please enjoy these extra comments, as this might not be the most straightforward method.
 		for source in self.modules.keys():
 			names = source.split(".") # Split the module in its constituent parts
 			for n in range(len(names)):
@@ -57,42 +60,17 @@ class Compiler():
 		:rtype: The contents of the module file.
 		"""
 		self.addedModules.add(moduleName)
-		if moduleName.startswith(self.currentPackage):
-			moduleName = re.sub("^"+self.currentPackage+"\.", "",moduleName)
+		if not moduleName.startswith(self.currentPackage):
+			moduleName = self.currentPackage + "." + moduleName
 		
 		path = moduleName.replace(".",os.sep) + ".py"
-		currentDir = os.sep.join(__file__.split(os.sep)[:-2])
-		absPath = os.path.join(currentDir,path)
+		absPath = os.path.join(Config().RootDirectory,path)
 		
 		if os.path.exists(absPath):		
 			return open(absPath).read()
 		else:
 			print "Can't find '%s' " % absPath
 			return ""
-		
-	def minimizeModule(self, moduleCode):
-		""" Removes all the unnecessary fluff from the Python scripts. This includes:
-
-		* Unnessecary whitespace (insofar as this is possible with Python.
-		* All regular comments starting with a hash. (#) Will not remove multiline comments (triple quotes) as these might represent actual pieces of code.
-
-		:param moduleCode: The code contained in a python script.
-		:rtype: The minimized code.
-		"""
-		# Remove comments
-		moduleCode = re.sub("#.+", "", moduleCode)
-
-		"""
-		# Remove test methods
-		testPattern = re.compile("def test_.+?:\n(\t+.+\n)+", re.MULTILINE)
-		moduleCode = re.sub(testPattern, "", moduleCode)
-		"""
-
-		# Remove whitespace
-		emptyPattern = re.compile("^[\t\n ]+$", re.MULTILINE)
-		moduleCode = re.sub(emptyPattern, "", moduleCode)
-		
-		return moduleCode
 	
 	def scanDependencies(self,moduleCode):
 		""" Scans a Python script for dependencies and records them for later import. Will reserve a special case for the current package.
@@ -144,18 +122,59 @@ class Compiler():
 				print "import %s" % ", ".join(modules)
 			else:
 				print "from %s import %s" % (source, ", ".join(modules))
-				
-	def getRequirements(self):
-		pass
-		# Get requirements file
+			
 		
-		# Loop through file
+	def buildEgg(self):
+		for node in self.procedure.nodes:
+			self.retrieveModule("Olympus.modules."+node)
+			self.processDependencies()
 		
-		# Check if module is requirement
+		# Create temporary directory
+		id = int(time.time())
+		tmpDir = os.path.abspath("tmp/build-%s" % id)
+		try:
+			os.mkdir("tmp")
+		except:
+			pass # Directory already exists
+		try:
+			os.mkdir(tmpDir)
+		except:
+			pass # Directory already exists
+		
+		# Create temporary setup file with required modules
+		setup = """
+from setuptools import setup
+import os
+print os.getcwd()
+
+setup(
+    name = "Olympus generated package",
+    version = "0.3",
+    author = "Stephan Heijl",
+	packages = [],
+    py_modules=%s
+)		
+		""" % str([module for module in self.modules.keys() + self.basics])
+		
+		print setup
+		
+		with open(os.path.join(tmpDir, "setup.py"),"w") as sfile:
+			sfile.write(setup)
+		
+		# Run temporary setup file with temporary directory as output
+		command = "cd ../../ ; python %s bdist_egg -d %s" % (os.path.join(tmpDir, "setup.py"), tmpDir)
+		subprocess.call(command, shell=True)
+		# Create a setup file with appropiate requirements
+			
+		
+		# Compile this into some sort of package (zip/installer/deb?)
+		# Return as a file.
+		
+		return id
 
 
 # TESTING #
-
+"""
 def test_retrieveModule():
 	C = Compiler()
 	C.retrieveModule("modules.acquisition.PubMed")
@@ -191,7 +210,13 @@ def test_convertModulesToHierarchy():
 	C.processDependencies()
 	import pprint
 	pprint.pprint( C.convertModulesToHierarchy() )
+	"""
 
-def test_checkRequirements():
-	pass
+def test_buildEgg():
+	C = Compiler(Procedure())
+	module = C.retrieveModule("modules.acquisition.PubMed")
+	C.scanDependencies(module)
+	C.processDependencies()
+	C.buildEgg()
+
 

@@ -2,15 +2,18 @@ from pprint import pprint
 import importlib
 import networkx as nx
 import cStringIO
+import cPickle
 from html import XHTML
 
 class Procedure():
-	def __init__(self):
-		self.nodes = []
-		self.edges = []
-		self.attributes = []
+	def __init__(self, nodes, edges, attributes):
+		self.nodes = nodes
+		self.edges = edges
+		self.attributes = attributes
 		self.graph = None
 		self.instantiatedNodes = []
+		
+		self.generateProcedure(nodes, edges, attributes)
 		
 	def importModules( self, modules ):
 		""" Imports all the modules needed. """
@@ -76,7 +79,73 @@ class Procedure():
 		self.graph = graph
 		return graph
 	
-	def generateInterface(self):
+	
+	def bfs_edges(self, G,source):
+		"""Produce edges in a breadth-first-search starting at source.
+		Based on http://www.ics.uci.edu/~eppstein/PADS/BFS.py
+		by D. Eppstein, July 2004.
+		
+		Edited to allow already visited nodes, makes it less efficient but allows this algorithm to be used in graphs that come back unto themselves.
+		
+		:param G: A networkx graph
+		:param source: The starting point of the graph."""
+
+		visited=set()
+		stack = [(source,iter(G[source]))]
+		while stack:
+			parent,children = stack[0]
+			try:
+				child = next(children)
+				if (parent,child) not in visited:
+					yield parent,child, G.get_edge_data(parent, child)
+					visited.add((parent,child))
+					stack.append((child,iter(G[child])))
+			except StopIteration:
+				stack.pop(0)
+
+
+	def traverseGraph(self, graph):
+		""" Use a Breadth-first search to work through the graph. This should allow even more complex graphs to be completed successfully.
+		
+		:param graph: A graph containing classes to execute.
+		"""
+
+		output = {}
+		storedOutput = {}
+
+		for edge in self.bfs_edges(graph, "start"):
+			parent = edge[0]
+			child = edge[1]
+
+			print "%s -> %s" % (parent, child)
+			# Should contain an outputId, determining what exactly should be retrieved from the function call.
+			attributes = edge[2]
+			# Only start the node if it's actually a module...
+			if not isinstance(child, Module):
+				continue
+
+			if not isinstance(parent, Module):
+				output[child] = [child.start()]
+			else:
+				argcount = child.start.func_code.co_argcount
+
+				if argcount == 2:
+					if child in output and isinstance(output[child], list):
+						for c in output[parent]:
+							output[child].append(child.start(c))
+					else:
+						output[child] = [child.start(c) for c in output[parent]]
+
+				elif argcount > 2:
+					if len(output[parent]) == argcount -1:
+						output[child] = [child.start(*output[parent])]
+
+				else:
+					output[child] = None
+
+		return output
+	
+	def generateControls(self):
 		html = XHTML()
 		form = html.form("", role="form")
 		
@@ -109,3 +178,19 @@ class Procedure():
 				
 		return str(form)
 	
+	def generateProcedureInterface(self):
+		form = self.generateControls()
+	
+	def save(self, filename=None):
+		if filename:
+			with open(filename,"w") as f:
+				cPickle.dump(self,f)
+			return True
+		else:
+			return cPickle.dumps(self)
+	
+def test_save():
+	modules = ["acquisition.PubMed","interpretation.Sort"]
+	p = Procedure(modules, [("acquisition.PubMed","interpretation.Sort")], [{}])
+	p.importModules(modules)
+	p.save()

@@ -1,0 +1,178 @@
+/var/www/Olympus
+running bdist_egg
+running egg_info
+writing dependency_links to Olympus_generated_package.egg-info/dependency_links.txt
+writing Olympus_generated_package.egg-info/PKG-INFO
+writing top-level names to Olympus_generated_package.egg-info/top_level.txt
+writing Olympus_generated_package.egg-info/PKG-INFO
+writing top-level names to Olympus_generated_package.egg-info/top_level.txt
+writing dependency_links to Olympus_generated_package.egg-info/dependency_links.txt
+reading manifest file 'Olympus_generated_package.egg-info/SOURCES.txt'
+writing manifest file 'Olympus_generated_package.egg-info/SOURCES.txt'
+installing library code to build/bdist.linux-x86_64/egg
+running install_lib
+running build_py
+creating build/bdist.linux-x86_64/egg
+creating build/bdist.linux-x86_64/egg/Olympus
+creating build/bdist.linux-x86_64/egg/Olympus/webapp
+copying build/lib.linux-x86_64-2.7/Olympus/webapp/svglib.py -> build/bdist.linux-x86_64/egg/Olympus/webapp
+copying build/lib.linux-x86_64-2.7/Olympus/webapp/start.py -> build/bdist.linux-x86_64/egg/Olympus/webapp
+copying build/lib.linux-x86_64-2.7/Olympus/webapp/routes.py -> build/bdist.linux-x86_64/egg/Olympus/webapp
+copying build/lib.linux-x86_64-2.7/Olympus/webapp/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/webapp
+creating build/bdist.linux-x86_64/egg/Olympus/modules
+creating build/bdist.linux-x86_64/egg/Olympus/modules/acquisition
+copying build/lib.linux-x86_64-2.7/Olympus/modules/acquisition/GeneOntology.py -> build/bdist.linux-x86_64/egg/Olympus/modules/acquisition
+copying build/lib.linux-x86_64-2.7/Olympus/modules/acquisition/PubMed.py -> build/bdist.linux-x86_64/egg/Olympus/modules/acquisition
+copying build/lib.linux-x86_64-2.7/Olympus/modules/acquisition/WormBase.py -> build/bdist.linux-x86_64/egg/Olympus/modules/acquisition
+copying build/lib.linux-x86_64-2.7/Olympus/modules/acquisition/AcquisitionModule.py -> build/bdist.linux-x86_64/egg/Olympus/modules/acquisition
+copying build/lib.linux-x86_64-2.7/Olympus/modules/acquisition/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/modules/acquisition
+copying build/lib.linux-x86_64-2.7/Olympus/modules/acquisition/TOXNET.py -> build/bdist.linux-x86_64/egg/Olympus/modules/acquisition
+copying build/lib.linux-x86_64-2.7/Olympus/modules/acquisition/UniProt.py -> build/bdist.linux-x86_64/egg/Olympus/modules/acquisition
+creating build/bdist.linux-x86_64/egg/Olympus/modules/interface
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interface/StyledHTML.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interface
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interface/LaTeX.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interface
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interface/PlainHTML.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interface
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interface/InterfaceModule.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interface
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interface/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interface
+copying build/lib.linux-x86_64-2.7/Olympus/modules/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/modules
+creating build/bdist.linux-x86_64/egg/Olympus/modules/interpretation
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interpretation/InterpretationModule.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interpretation
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interpretation/Tail.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interpretation
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interpretation/Sort.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interpretation
+copying build/lib.linux-x86_64-2.7/Olympus/modules/interpretation/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/modules/interpretation
+creating build/bdist.linux-x86_64/egg/Olympus/modules/visualization
+copying build/lib.linux-x86_64-2.7/Olympus/modules/visualization/VisualizationModule.py -> build/bdist.linux-x86_64/egg/Olympus/modules/visualization
+copying build/lib.linux-x86_64-2.7/Olympus/modules/visualization/FancyTable.py -> build/bdist.linux-x86_64/egg/Olympus/modules/visualization
+copying build/lib.linux-x86_64-2.7/Olympus/modules/visualization/Table.py -> build/bdist.linux-x86_64/egg/Olympus/modules/visualization
+copying build/lib.linux-x86_64-2.7/Olympus/modules/visualization/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/modules/visualization
+copying build/lib.linux-x86_64-2.7/Olympus/__init__.py -> build/bdist.linux-x86_64/egg/Olympus
+creating build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Output.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/ProcedureContainer.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/StringContainer.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Protein.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+creating build/bdist.linux-x86_64/egg/Olympus/lib/Controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Controls/Integer.py -> build/bdist.linux-x86_64/egg/Olympus/lib/Controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Controls/Float.py -> build/bdist.linux-x86_64/egg/Olympus/lib/Controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Controls/Text.py -> build/bdist.linux-x86_64/egg/Olympus/lib/Controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Controls/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/lib/Controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Module.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Log.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/PubMedIndex.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Collection.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Chemical.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+creating build/bdist.linux-x86_64/egg/Olympus/lib/controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/controls/Integer.py -> build/bdist.linux-x86_64/egg/Olympus/lib/controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/controls/Select.py -> build/bdist.linux-x86_64/egg/Olympus/lib/controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/controls/Float.py -> build/bdist.linux-x86_64/egg/Olympus/lib/controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/controls/Text.py -> build/bdist.linux-x86_64/egg/Olympus/lib/controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/controls/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/lib/controls
+copying build/lib.linux-x86_64-2.7/Olympus/lib/CodingSequence.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Article.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/StoredObject.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Singleton.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Control.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/TemplateTools.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Config.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/TOXNETResult.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Gene.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Procedure.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+copying build/lib.linux-x86_64-2.7/Olympus/lib/Storage.py -> build/bdist.linux-x86_64/egg/Olympus/lib
+creating build/bdist.linux-x86_64/egg/Olympus/core
+copying build/lib.linux-x86_64-2.7/Olympus/core/Compiler.py -> build/bdist.linux-x86_64/egg/Olympus/core
+copying build/lib.linux-x86_64-2.7/Olympus/core/Worker.py -> build/bdist.linux-x86_64/egg/Olympus/core
+copying build/lib.linux-x86_64-2.7/Olympus/core/Core.py -> build/bdist.linux-x86_64/egg/Olympus/core
+copying build/lib.linux-x86_64-2.7/Olympus/core/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/core
+creating build/bdist.linux-x86_64/egg/Olympus/core/massacquisition
+copying build/lib.linux-x86_64-2.7/Olympus/core/massacquisition/PubMedConnections.py -> build/bdist.linux-x86_64/egg/Olympus/core/massacquisition
+copying build/lib.linux-x86_64-2.7/Olympus/core/massacquisition/WormBase.py -> build/bdist.linux-x86_64/egg/Olympus/core/massacquisition
+copying build/lib.linux-x86_64-2.7/Olympus/core/massacquisition/PFAM.py -> build/bdist.linux-x86_64/egg/Olympus/core/massacquisition
+copying build/lib.linux-x86_64-2.7/Olympus/core/massacquisition/__init__.py -> build/bdist.linux-x86_64/egg/Olympus/core/massacquisition
+copying build/lib.linux-x86_64-2.7/Olympus/core/ModuleLoader.py -> build/bdist.linux-x86_64/egg/Olympus/core
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/webapp/svglib.py to svglib.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/webapp/start.py to start.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/webapp/routes.py to routes.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/webapp/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/acquisition/GeneOntology.py to GeneOntology.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/acquisition/PubMed.py to PubMed.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/acquisition/WormBase.py to WormBase.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/acquisition/AcquisitionModule.py to AcquisitionModule.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/acquisition/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/acquisition/TOXNET.py to TOXNET.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/acquisition/UniProt.py to UniProt.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interface/StyledHTML.py to StyledHTML.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interface/LaTeX.py to LaTeX.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interface/PlainHTML.py to PlainHTML.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interface/InterfaceModule.py to InterfaceModule.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interface/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interpretation/InterpretationModule.py to InterpretationModule.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interpretation/Tail.py to Tail.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interpretation/Sort.py to Sort.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/interpretation/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/visualization/VisualizationModule.py to VisualizationModule.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/visualization/FancyTable.py to FancyTable.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/visualization/Table.py to Table.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/modules/visualization/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Output.py to Output.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/ProcedureContainer.py to ProcedureContainer.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/StringContainer.py to StringContainer.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Protein.py to Protein.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Controls/Integer.py to Integer.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Controls/Float.py to Float.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Controls/Text.py to Text.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Controls/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Module.py to Module.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Log.py to Log.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/PubMedIndex.py to PubMedIndex.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Collection.py to Collection.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Chemical.py to Chemical.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/controls/Integer.py to Integer.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/controls/Select.py to Select.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/controls/Float.py to Float.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/controls/Text.py to Text.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/controls/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/CodingSequence.py to CodingSequence.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Article.py to Article.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/StoredObject.py to StoredObject.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Singleton.py to Singleton.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Control.py to Control.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/TemplateTools.py to TemplateTools.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Config.py to Config.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/TOXNETResult.py to TOXNETResult.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Gene.py to Gene.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Procedure.py to Procedure.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/lib/Storage.py to Storage.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/Compiler.py to Compiler.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/Worker.py to Worker.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/Core.py to Core.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/massacquisition/PubMedConnections.py to PubMedConnections.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/massacquisition/WormBase.py to WormBase.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/massacquisition/PFAM.py to PFAM.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/massacquisition/__init__.py to __init__.pyc
+byte-compiling build/bdist.linux-x86_64/egg/Olympus/core/ModuleLoader.py to ModuleLoader.pyc
+creating build/bdist.linux-x86_64/egg/EGG-INFO
+copying Olympus_generated_package.egg-info/PKG-INFO -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying Olympus_generated_package.egg-info/SOURCES.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying Olympus_generated_package.egg-info/dependency_links.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying Olympus_generated_package.egg-info/top_level.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+creating '/var/www/Olympus/tmp/build-1402880569/Olympus_generated_package-0.3-py2.7.egg' and adding 'build/bdist.linux-x86_64/egg' to it
+removing 'build/bdist.linux-x86_64/egg' (and everything under it)
+
+from setuptools import setup
+import os
+
+print os.getcwd()
+
+setup(
+    name = "Olympus generated package",
+    version = "0.3",
+    author = "Stephan Heijl",
+    py_modules=['Olympus.lib.controls.Float', 'Olympus.lib.Log', 'Olympus.lib.Module', 'Olympus.lib.Storage', 'Olympus.lib.controls.Text', 'Olympus.lib.Collection', 'Olympus.modules.acquisition.AcquisitionModule', 'Olympus.lib.controls.Integer', 'Olympus.lib.Config', 'Olympus.lib.StoredObject', 'Olympus.lib.Article', 'Olympus.lib.Singleton', 'Olympus.lib.Control']
+)		
+		
+python /var/www/Olympus/tmp/build-1402880569/setup.py bdist_egg -d /var/www/Olympus/tmp/build-1402880569

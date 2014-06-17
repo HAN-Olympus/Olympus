@@ -6,10 +6,12 @@ from Olympus.lib.Config import Config
 from Olympus.lib.TemplateTools import TemplateTools
 from Olympus.lib.Output import Output
 from Olympus.lib.Procedure import Procedure
+from Olympus.core.Compiler import Compiler
 
 import svglib
 import gearman
 import json
+import zipfile
 
 from Olympus.webapp import app, modules
 
@@ -111,27 +113,46 @@ def connection():
 	
 @app.route("/gexf/")
 def graphGefx():
-	p = Procedure()
 	nodes = json.loads( request.args.get("nodes") )
 	edges = json.loads( request.args.get("edges") )
 	attributes = json.loads( request.args.get("edgeAttributes") )
 	
-	p.generateProcedure( nodes, edges, attributes )
+	p = Procedure( nodes, edges, attributes )
 	return Response(p.toGexf())
 
 @app.route("/compile/")
 def compile():
-	""" Compiles the given modules into a Procedure. """
-	p = Procedure()
+	""" Shows the compilation page to the user. """
+	nodes = json.loads( request.args.get("nodes") )
+	edges = json.loads( request.args.get("edges") )
+	attributes = json.loads( request.args.get("edgeAttributes") )
+	
+	p = Procedure( nodes, edges, attributes )
+	
+	return render_template("results.compiled.html", procedure=p)
+
+@app.route("/compiler/")
+def compiler():
+	""" Does the actual compiling. """
 	
 	nodes = json.loads( request.args.get("nodes") )
 	edges = json.loads( request.args.get("edges") )
 	attributes = json.loads( request.args.get("edgeAttributes") )
 	
-	p.generateProcedure( nodes, edges, attributes )
+	p = Procedure( nodes, edges, attributes )
+	C = Compiler(p)
+	module = C.retrieveModule("modules.acquisition.PubMed")
+	C.scanDependencies(module)
+	C.processDependencies()
+	id = C.buildEgg()
+	return Response(json.dumps({"id":id}))
+
+@app.route("/downloadCompiled/<id>")
+def downloadCompiledEgg(id):
+	with("tmp/build-%s/") as dir:
+		pass
 	
-	return render_template("results.compiled.html", procedure=p)
-	
+
 @app.route("/results/<job>/")
 def resultsOverview(job):
 	""" Shows a list of all the available outputs of this job. """
@@ -152,23 +173,6 @@ def results(job, output):
 		return Response(out[0].getAttribute("output",output))
 	else:
 		return render_template("results.notfound.html", config=Config())
-	
-	
-@app.route("/executeDirect/<viewType>")
-def executeDirect(viewType):	
-	""" Executes the given procedure directly. """
-	pc = ProcedureCollection()
-	graph = pc.createFromJSON(request.args.get("nodes"), request.args.get("edges"), request.args.get("edgeAttributes"))
-	
-	viewTypes = { "html":"PlainHTML", "latex":"LaTeX", "csv":"CSV"}
-	output = pc.traverseGraph(graph)
-	vt = viewTypes[viewType]
-	
-	names = [ str(key) for key in output.keys() ]
-	i = names.index(vt)
-	result = output[output.keys()[i]]
-	
-	return Response(result)
 	
 # TESTING #
 def test_loadJs():

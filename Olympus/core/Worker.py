@@ -4,8 +4,9 @@ import json
 import sys
 import traceback
 
-from Olympus.lib import Config
-from Olympus.lib import Output
+from Olympus.lib.Config import Config
+from Olympus.lib.Output import Output
+from Olympus.lib.Procedure import Procedure
 
 class WorkerStatus():
 	"""  """
@@ -18,7 +19,7 @@ class Worker():
 		print "Starting"
 		print data
 		
-		pc = ProcedureCollection()
+		pc = Procedure()
 		print "Procedure instantiated, creating graph"
 				
 		try:

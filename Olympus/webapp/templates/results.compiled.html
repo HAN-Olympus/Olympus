@@ -10,14 +10,15 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<h2>Compiling</h2>
+			<h2>Compiling... </h2>
 			<p> We are compiling your job. </p>
 			{{ deferJS("/js/sigma.min.js",4) }}
 			{{ deferJS("/js/sigma.parseGexf.js",5) }}
 			{{ deferJS("/js/sigma.forceatlas2.js",7) }}
 			{{ deferJS("/js/compiling.js",7) }}
 			<div id="sigma-container"></div>
-			{{procedure.generateInterface()|safe}}
+			
+			<button class="btn btn-lg btn-primary download" disabled=disabled> Download this procedure for Linux </button>
 		</div>
 	</div>
 </div>
