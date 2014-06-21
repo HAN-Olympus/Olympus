@@ -16,7 +16,10 @@ class Procedure():
 		self.generateProcedure(nodes, edges, attributes)
 		
 	def importModules( self, modules ):
-		""" Imports all the modules needed. """
+		""" Imports all the modules needed. Will also instantiate the class inside this module with the module name. 
+		
+		:param module: A list of modules in the Olympus package. Having 'Olympus.modules.' in front of these names is optional. 
+		:rtype: A list objects, each an instance of the class inside the module with the module's name. """
 		
 		instantiatedNodes = []
 		
@@ -34,7 +37,9 @@ class Procedure():
 	
 	
 	def toGexf(self):
-		""" Turns the currently processed graph into a GEXF file, if it exists. """
+		""" Turns the currently processed graph into a GEXF file, if a graph has already been generated.
+		
+		:rtype: A NetworkX generated GEXF file describing the graph. None if the graph has not yet been generated."""
 		if self.graph == None:
 			return None
 		else:
@@ -146,6 +151,12 @@ class Procedure():
 		return output
 	
 	def generateControls(self):
+		""" A method that will generate an HTML representation of all the controls for all the modules, if they have already been instantiated. 
+		A form container will also be generated, as well as fieldsets for every individual module.
+		
+		:rtype: A complete HTML form with every control for every available module inserted. 
+		"""
+		
 		html = XHTML()
 		form = html.form("", role="form")
 		
@@ -179,9 +190,17 @@ class Procedure():
 		return str(form)
 	
 	def generateProcedureInterface(self):
+		""" Generates the interface for the procedure.
+		
+		
+		"""
 		form = self.generateControls()
 	
 	def save(self, filename=None):
+		""" Saves the procedure, with instantiated nodes.
+		
+		:param filename: Optional. 
+		"""
 		if filename:
 			with open(filename,"w") as f:
 				cPickle.dump(self,f)

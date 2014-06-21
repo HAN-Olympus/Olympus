@@ -58,7 +58,7 @@ class Worker():
 		except Exception, e:
 			print e
 		return ""
-		
+	
 def registerFunctions(workerClass, worker):
 	"""  Assigns all functions starting with 'job\_' to the gearman worker, similar to how `nosetests` uses all methods starting with 'test'.
 	
