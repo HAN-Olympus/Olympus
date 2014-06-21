@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Olympus documentation build configuration file, created by
-# sphinx-quickstart on Sat Jun 21 16:47:40 2014.
+# sphinx-quickstart on Sat Jun 21 17:10:15 2014.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Olympus'
-copyright = u'2014, Olympus'
+copyright = u'2014, Stephan Heijl'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -200,7 +200,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'Olympus.tex', u'Olympus Documentation',
-   u'Olympus', 'manual'),
+   u'Stephan Heijl', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -230,7 +230,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'olympus', u'Olympus Documentation',
-     [u'Olympus'], 1)
+     [u'Stephan Heijl'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -244,7 +244,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'Olympus', u'Olympus Documentation',
-   u'Olympus', 'Olympus', 'One line description of project.',
+   u'Stephan Heijl', 'Olympus', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -265,9 +265,9 @@ texinfo_documents = [
 
 # Bibliographic Dublin Core info.
 epub_title = u'Olympus'
-epub_author = u'Olympus'
-epub_publisher = u'Olympus'
-epub_copyright = u'2014, Olympus'
+epub_author = u'Stephan Heijl'
+epub_publisher = u'Stephan Heijl'
+epub_copyright = u'2014, Stephan Heijl'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'Olympus'
