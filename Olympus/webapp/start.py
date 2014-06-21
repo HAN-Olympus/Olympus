@@ -7,7 +7,6 @@ from Olympus.webapp import app
 from flask.ext.compress import Compress
 
 def checkWorkingDirectory():
-	raise Exception
 	print ("Current working directory: '%s'" % os.getcwd())
 	startScriptDir = os.path.dirname(os.path.realpath(__file__))
 	print ("Desired working directory: '%s'" % startScriptDir)
