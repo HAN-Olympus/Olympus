@@ -2,6 +2,7 @@ import cStringIO
 import os,re, inspect,time,subprocess
 from Olympus.lib.Procedure import Procedure
 from Olympus.lib.Config import Config
+from Olympus.core.Core import Core
 
 class Compiler():
 	""" This class compiles the given modules and their dependencies into an egg file for redistribution. """
@@ -142,6 +143,8 @@ class Compiler():
 			pass # Directory already exists
 		
 		# Create temporary setup file with required modules
+		
+		# We create a setup file.
 		setup = """
 from setuptools import setup
 import os
@@ -149,12 +152,12 @@ print os.getcwd()
 
 setup(
     name = "Olympus generated package",
-    version = "0.3",
+    version = "%s",
     author = "Stephan Heijl",
 	packages = [],
     py_modules=%s
 )		
-		""" % str([module for module in self.modules.keys() + self.basics])
+		""" % ( Core().getVersion(), str([module for module in self.modules.keys() + self.basics]) )
 		
 		print setup
 		
@@ -174,6 +177,8 @@ setup(
 
 
 # TESTING #
+
+"""
 
 def test_retrieveModule():
 	C = Compiler(Procedure([],[],[]))
@@ -196,7 +201,7 @@ def test_processDependencies():
 	module = C.retrieveModule("modules.acquisition.PubMed")
 	C.scanDependencies(module)
 	C.processDependencies()
-	#C.printImports()
+	C.printImports()
 	
 def test_convertModulesToHierarchy():
 	C = Compiler(Procedure([],[],[]))
@@ -205,6 +210,9 @@ def test_convertModulesToHierarchy():
 	C.processDependencies()
 	import pprint
 	pprint.pprint( C.convertModulesToHierarchy() )
+	
+	
+"""
 
 def test_buildEgg():
 	C = Compiler(Procedure([],[],[]))
