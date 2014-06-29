@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 from Olympus.core.Core import Core
+from Olympus.lib.Config import Config
 import os, sys, re
 import pprint
 
@@ -114,6 +115,11 @@ class installNativeDependencies(install):
         if not self.installGearman():
             print "Not all dependencies installed."
             return False
+        
+        # Set the root directory for Olympus
+        
+        Config().RootDirectory = os.path.join(os.path.sep.join(__file__.split(os.path.sep)[:-1]),"Olympus")
+        Config().save()
         
         # Do the regular install stuff
         install.run(self)            
