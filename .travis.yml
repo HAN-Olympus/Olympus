@@ -8,13 +8,11 @@ python:
 services:
   - mongodb
 before_install:
-  - sudo apt-get install libfreetype6-dev
-  - sudo apt-get install gearman-job-server
-  - sudo apt-get install python-pyside
-  - gearmand -d
   - mongo localhost:27017/olympus createMongoDatabase.js
 install: "pip install --use-mirrors -r requirements.txt"
 script:
+  - python setup.py install
+  - gearman -d
   - cd Olympus
   - nosetests -v --nocapture webapp/start.py lib/*.py lib/*/*.py modules/*/*.py core/*.py core/*/*.py
   - ls -al

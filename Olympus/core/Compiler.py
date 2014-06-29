@@ -147,8 +147,6 @@ class Compiler():
 		# We create a setup file.
 		setup = """
 from setuptools import setup
-import os
-print os.getcwd()
 
 setup(
     name = "Olympus generated package",
@@ -165,7 +163,7 @@ setup(
 			sfile.write(setup)
 		
 		# Run temporary setup file with temporary directory as output
-		command = "cd ../../ ; python %s bdist_egg -d %s" % (os.path.join(tmpDir, "setup.py"), tmpDir)
+		command = "cd %s ; cd .. ; echo pwd; python %s bdist_egg -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
 		subprocess.call(command, shell=True)
 		# Create a setup file with appropiate requirements
 			
