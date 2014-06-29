@@ -9,7 +9,11 @@ class Core:
 		When a worker is launched, it will use Core to execute the actual tasks after setting the initial state.
 	"""
 	
+	def getRootDirectory(self):
+		pass
+	
 	def getVersion(self):
+		""" Retrieves and returns the version of this Olympus instance. """
 		with open(os.path.join( Config().RootDirectory, "core/VERSION" ) ) as v:
 			return v.read()
 		

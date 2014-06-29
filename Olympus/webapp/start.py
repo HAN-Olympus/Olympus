@@ -16,7 +16,6 @@ def checkWorkingDirectory():
 		
 # STORE THE WEBAPP DIRECTORIES IN THE CONFIG #
 def storeWebAppDirectories():
-	Config().RootDirectory = os.path.abspath(os.getcwd())
 	Config().WebAppDirectory = os.path.join(os.getcwd())
 	Config().TemplatesDirectory = os.path.join(os.getcwd(), "templates") 
 	Config().save()
