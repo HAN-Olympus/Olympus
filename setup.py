@@ -116,16 +116,15 @@ class installNativeDependencies(install):
             print "Not all dependencies installed."
             return False
         
-        # Set the root directory for Olympus
-        
-        Config().RootDirectory = os.path.join(os.path.sep.join(__file__.split(os.path.sep)[:-1]),"Olympus")
-        Config().save()
-        
         # Do the regular install stuff
         install.run(self)            
 
 
 if __name__ == "__main__":
+    # Set the root directory for Olympus
+    Config().RootDirectory = os.path.join(os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-1]),"Olympus")
+    Config().save()
+    
     with open("requirements.txt") as requirements:
         requiredList = requirements.read().split("\n")
 
