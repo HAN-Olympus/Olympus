@@ -39,8 +39,11 @@ class installNativeDependencies(install):
             installed = False
             
         if not installed:
-            permission = raw_input("Install PySide? (Y/n): ")
-            if permission == "n" and "--force" not in sys.argv:
+            if "--force" not in sys.argv:
+                permission = raw_input("Install PySide? (Y/n): ")
+            else:
+                permission = True
+            if permission == "n":
                 return False
             try:
                 # Perfom the actual PySide install
@@ -59,7 +62,10 @@ class installNativeDependencies(install):
         if "libfreetype6-dev" in self.getInstalledPackages():
             return True
         
-        print "Installing libfreetype6-dev"
+        if "--force" not in sys.argv:
+            permission = raw_input("Install libfreetype6-dev? (Y/n): ")
+        else:
+            permission = True
         installed = False   
         if not installed:
             permission = raw_input("Install LibFreeType? (Y/n): ")
@@ -82,7 +88,10 @@ class installNativeDependencies(install):
         print "Installing Gearman job server."        
         installed = False            
         if not installed:
-            permission = raw_input("Install Gearman job server? (Y/n): ")
+            if "--force" not in sys.argv:
+                permission = raw_input("Install Gearman job server? (Y/n): ")
+            else:
+                permission = True
             if permission == "n" and "--force" not in sys.argv:
                 return False
             try:

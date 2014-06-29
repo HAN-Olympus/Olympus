@@ -8,6 +8,7 @@ python:
 services:
   - mongodb
 before_install:
+  - sleep 5
   - mongo localhost:27017/olympus createMongoDatabase.js
 install: "pip install --use-mirrors -r requirements.txt"
 script:
