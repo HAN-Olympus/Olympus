@@ -7,6 +7,7 @@ from PySide.QtGui import QApplication, QDesktopWidget
 from PySide.QtWebKit import *
 from PySide.QtCore import QSize
 
+
 class WorkerMonitor(object):
 	def __init__(self):
 		pass	
