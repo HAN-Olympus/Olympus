@@ -5,6 +5,7 @@ from Olympus.lib.Config import Config
 import os, sys, re
 import pprint
 
+
 class installNativeDependencies(install):
     """ We need some more stuff for the client to actually run. """
     
@@ -34,7 +35,7 @@ class installNativeDependencies(install):
         
         installed = False
         try:
-            import PySide
+            import PyQT4
             # Might add some extra version validation here.
             installed = True
         except:           
@@ -42,7 +43,7 @@ class installNativeDependencies(install):
             
         if not installed:
             if "--force" not in sys.argv:
-                permission = raw_input("Install PySide? (Y/n): ")
+                permission = raw_input("Install Pyside? (Y/n): ")
             else:
                 permission = True
             if permission == "n":
@@ -66,8 +67,7 @@ class installNativeDependencies(install):
                 name = os.popen("ls /tmp/PySide-1.2.2/dist").read()
                 os.system("sudo pip install /tmp/PySide-1.2.2/dist/%s" % name)
                 # Perform post-installation
-                os.system("sudo python /tmp/PySide-1.2.2/pyside_postinstall.py -install")                
-                
+                os.system("sudo python /tmp/PySide-1.2.2/pyside_postinstall.py -install")
                 return True
             except:
                 return False

@@ -2,10 +2,11 @@ import threading, time
 from Olympus.webapp.start import Server
 
 # GUI parts #
-import PySide
-from PySide.QtGui import QApplication, QDesktopWidget
-from PySide.QtWebKit import *
-from PySide.QtCore import QSize
+import PyQt4
+from PyQt4.QtGui import QApplication, QDesktopWidget
+from PyQt4.QtWebKit import *
+from PyQt4.QtCore import QSize, QUrl
+
 
 class WorkerMonitor(object):
 	def __init__(self):
@@ -24,7 +25,8 @@ class WorkerMonitor(object):
 		# The Webview
 		view = QWebView()
 		view.setWindowTitle('Olympus WorkerMonitor')
-		view.load("http://127.0.0.1:5000/")
+		url = QUrl("http://127.0.0.1:5000/")
+		view.load(url)
 		
 		# Set the size
 		size = QSize(1024,600)
