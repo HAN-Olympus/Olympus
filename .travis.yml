@@ -7,14 +7,13 @@ python:
   - "pypy"
 services:
   - mongodb
-virtualenv:
-    system_site_packages: true
 before_install:
   - sleep 5
   - mongo localhost:27017/olympus createMongoDatabase.js
 install:
   - "pip install --use-mirrors -r requirements.txt"
   - sudo python setup.py install --force
+  - bash ./PySideVirtualEnvFix.sh
 script:
   - gearmand -d
   - cd Olympus
