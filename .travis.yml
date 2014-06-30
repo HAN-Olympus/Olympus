@@ -12,9 +12,9 @@ before_install:
   - mongo localhost:27017/olympus createMongoDatabase.js
 install:
   - "pip install --use-mirrors -r requirements.txt"
+script:
   - sudo python setup.py install --force
   - bash ./PySideVirtualEnvFix.sh
-script:
   - gearmand -d
   - cd Olympus
   - nosetests -v --nocapture webapp/start.py lib/*.py lib/*/*.py modules/*/*.py core/*.py core/*/*.py
