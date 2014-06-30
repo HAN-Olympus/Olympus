@@ -65,9 +65,9 @@ class installNativeDependencies(install):
                 os.system("sudo pip install /tmp/PySide-1.2.2/dist/%s" % name)
                 # Perform post-installation
                 os.system("sudo python /tmp/PySide-1.2.2/pyside_postinstall.py -install")
-                return True
+                installed = True
             except:
-                return False
+                installed = False
         
         # Final check
         try:
