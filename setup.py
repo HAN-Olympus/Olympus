@@ -72,9 +72,11 @@ class installNativeDependencies(install):
         # Final check
         try:
             import PySide
+            print "PySide was installed and imported succesfully. Current PySide version is: " + PySide.__version__
             # Might add some extra version validation here.
             installed = True
-        except:           
+        except:
+            print "PySide had troubles installing. "
             installed = False
         
         return installed
