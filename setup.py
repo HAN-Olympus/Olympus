@@ -23,16 +23,16 @@ class installNativeDependencies(install):
                 self.packages.append( details[1] )
         return self.packages
     
-    def installPySide(self):
-        """ We install PySide for the user interface. """
-        print "Installing PySide"
+    def installPyQT4(self):
+        """ We install PyQT4 for the user interface. """
+        print "Installing PyQT4"
         
-        if "python-pyside" in self.getInstalledPackages():
+        if "python-qt4" in self.getInstalledPackages():
             return True
         
         installed = False
         try:
-            import PySide
+            import PyQT4
             # Might add some extra version validation here.
             installed = True
         except:           
@@ -40,16 +40,14 @@ class installNativeDependencies(install):
             
         if not installed:
             if "--force" not in sys.argv:
-                permission = raw_input("Install PySide? (Y/n): ")
+                permission = raw_input("Install PyQT4? (Y/n): ")
             else:
                 permission = True
             if permission == "n":
                 return False
             try:
-                # Perfom the actual PySide install
-                os.system("sudo add-apt-repository -y ppa:pyside")
-                os.system("sudo apt-get -y update")
-                os.system("sudo apt-get install -y python-pyside")
+                # Perfom the actual PyQT4 install
+                os.system("sudo apt-get install -y python-qt4")
                 return True
             except:
                 return False
@@ -115,7 +113,7 @@ class installNativeDependencies(install):
         
         print self.getInstalledPackages()
         
-        if not self.installPySide():
+        if not self.installPyQT4():
             print "Not all dependencies installed."
             return False
         if not self.installLibFreeType():
