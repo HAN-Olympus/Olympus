@@ -2,10 +2,15 @@ import threading, time
 from Olympus.webapp.start import Server
 
 # GUI parts #
-import PySide
-from PySide.QtGui import QApplication, QDesktopWidget
-from PySide.QtWebKit import *
-from PySide.QtCore import QSize, QUrl
+
+disableGui = False
+try:
+	import PySide
+	from PySide.QtGui import QApplication, QDesktopWidget
+	from PySide.QtWebKit import *
+	from PySide.QtCore import QSize, QUrl
+except:
+	disableGui = True
 
 
 class WorkerMonitor(object):
@@ -20,6 +25,8 @@ class WorkerMonitor(object):
 		
 
 	def GUI(self):
+		if disableGui:
+			return False
 		app = QApplication([])
 		
 		# The Webview
