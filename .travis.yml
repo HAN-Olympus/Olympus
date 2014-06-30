@@ -2,12 +2,13 @@ language: python
 python: 
   - "2.6"
   - "2.7"
+  - "2.7_with_system_site_packages"
   - "3.3"
   - "pypy"
-virtualenv:
-  system_site_packages: true
 services:
   - mongodb
+virtualenv:
+    system_site_packages: true
 before_install:
   - sleep 5
   - mongo localhost:27017/olympus createMongoDatabase.js
