@@ -2,10 +2,10 @@ import threading, time
 from Olympus.webapp.start import Server
 
 # GUI parts #
-import PyQt4
-from PyQt4.QtGui import QApplication, QDesktopWidget
-from PyQt4.QtWebKit import *
-from PyQt4.QtCore import QSize, QUrl
+import PySide
+from PySide.QtGui import QApplication, QDesktopWidget
+from PySide.QtWebKit import *
+from PySide.QtCore import QSize, QUrl
 
 
 class WorkerMonitor(object):
