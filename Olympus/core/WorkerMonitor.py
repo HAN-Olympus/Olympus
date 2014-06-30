@@ -7,6 +7,7 @@ from PyQt4.QtGui import QApplication, QDesktopWidget
 from PyQt4.QtWebKit import *
 from PyQt4.QtCore import QSize, QUrl
 
+
 class WorkerMonitor(object):
 	def __init__(self):
 		pass	
