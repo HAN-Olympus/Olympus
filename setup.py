@@ -50,7 +50,7 @@ class installNativeDependencies(install):
                 return False
             try:
                 # Perfom the actual PySide install
-                
+                """
                 # Get wheel
                 os.system("sudo pip install wheel")
                 # Download Qt4 dependenices
@@ -59,15 +59,23 @@ class installNativeDependencies(install):
                 os.system("wget https://pypi.python.org/packages/source/P/PySide/PySide-1.2.2.tar.gz -P /tmp/")
                 os.system("tar -xvzf /tmp/PySide-1.2.2.tar.gz -C /tmp/")
                 # Build PySide
-                os.system("python /tmp/PySide-1.2.2/setup.py bdist_wheel --qmake=/usr/bin/qmake-qt4 --standalone")
+                os.system("python /tmp/PySide-1.2.2/setup.py bdist_wheel --qmake=/usr/bin/qmake-qt4")
                 # Get the directory name to install
                 name = os.popen("ls /tmp/PySide-1.2.2/dist").read()
                 os.system("sudo pip install /tmp/PySide-1.2.2/dist/%s" % name)
                 # Perform post-installation
                 os.system("sudo python /tmp/PySide-1.2.2/pyside_postinstall.py -install")
+                """
+                
+                # Perfom the actual PySide install
+                os.system("sudo add-apt-repository -y ppa:pyside")
+                os.system("sudo apt-get -y update")
+                os.system("sudo apt-get install -y python-pyside")
+                
                 installed = True
             except:
                 installed = False
+                
         
         # Final check
         try:
