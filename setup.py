@@ -24,7 +24,9 @@ class installNativeDependencies(install):
         return self.packages
     
     def installPySide(self):
-        """ We install PySide for the user interface. """
+        """ We install PySide for the user interface. 
+            PySide installation instructions were derived from http://pyside.readthedocs.org/en/latest/building/linux.html
+        """
         print "Installing PySide"
         
         if "python-pyside" in self.getInstalledPackages():
@@ -47,9 +49,25 @@ class installNativeDependencies(install):
                 return False
             try:
                 # Perfom the actual PySide install
-                os.system("sudo add-apt-repository -y ppa:pyside")
-                os.system("sudo apt-get -y update")
-                os.system("sudo apt-get install -y python-pyside")
+                
+                # Get the latest setuptools
+                os.system("sudo sudo apt-get install python-setuptools")
+                # Bootstrap the newer PIP
+                os.system("wget https://bootstrap.pypa.io/get-pip.py -P /tmp/")
+                os.system("sudo python /tmp/get-pip.py")                
+                # Download Qt4 dependenices
+                os.system("sudo apt-get install build-essential cmake libqt4-dev libphonon-dev libxml2-dev libxslt1-dev qtmobility-dev -y")
+                # Download Pyside and unpack it into /tmp/
+                os.system("wget https://pypi.python.org/packages/source/P/PySide/PySide-1.2.2.tar.gz -P /tmp/")
+                os.system("tar -xvzf /tmp/PySide-1.2.2.tar.gz -C /tmp/")
+                # Build PySide
+                os.system("python /tmp/PySide-1.2.2/setup.py bdist_wheel --qmake=/usr/bin/qmake-qt4 --standalone")
+                # Get the directory name to install
+                name = os.popen("ls /tmp/PySide-1.2.2/dist").read()
+                os.system("sudo pip install /tmp/PySide-1.2.2/dist/%s" % name)
+                # Perform post-installation
+                os.system("sudo python /tmp/PySide-1.2.2/pyside_postinstall.py -install")                
+                
                 return True
             except:
                 return False
