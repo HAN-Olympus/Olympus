@@ -176,8 +176,6 @@ setup(
 
 # TESTING #
 
-"""
-
 def test_retrieveModule():
 	C = Compiler(Procedure([],[],[]))
 	C.retrieveModule("modules.acquisition.PubMed")
@@ -210,8 +208,6 @@ def test_convertModulesToHierarchy():
 	pprint.pprint( C.convertModulesToHierarchy() )
 	
 	
-"""
-
 def test_buildEgg():
 	C = Compiler(Procedure([],[],[]))
 	module = C.retrieveModule("modules.acquisition.PubMed")
