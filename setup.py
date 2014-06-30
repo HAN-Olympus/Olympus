@@ -35,7 +35,7 @@ class installNativeDependencies(install):
         
         installed = False
         try:
-            import PyQT4
+            import PySide
             # Might add some extra version validation here.
             installed = True
         except:           
@@ -55,7 +55,9 @@ class installNativeDependencies(install):
                 os.system("sudo sudo apt-get install python-setuptools")
                 # Bootstrap the newer PIP
                 os.system("wget https://bootstrap.pypa.io/get-pip.py -P /tmp/")
-                os.system("sudo python /tmp/get-pip.py")                
+                os.system("sudo python /tmp/get-pip.py")      
+                # Get wheel
+                os.system("sudo pip install wheel")
                 # Download Qt4 dependenices
                 os.system("sudo apt-get install build-essential cmake libqt4-dev libphonon-dev libxml2-dev libxslt1-dev qtmobility-dev -y")
                 # Download Pyside and unpack it into /tmp/
@@ -71,6 +73,14 @@ class installNativeDependencies(install):
                 return True
             except:
                 return False
+        
+        # Final check
+        try:
+            import PySide
+            # Might add some extra version validation here.
+            installed = True
+        except:           
+            installed = False
         
         return installed
     
@@ -134,14 +144,14 @@ class installNativeDependencies(install):
         print self.getInstalledPackages()
         
         if not self.installPySide():
-            print "Not all dependencies installed."
+            raise Exception, "Not all dependencies installed."
             return False
         if not self.installLibFreeType():
-            print "Not all dependencies installed."
+            raise Exception, "Not all dependencies installed."
             return False
         if not self.installGearman():
             print "Not all dependencies installed."
-            return False
+            raise Exception, "Not all dependencies installed."
         
         # Do the regular install stuff
         install.run(self)            
