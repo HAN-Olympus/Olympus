@@ -152,7 +152,6 @@ def downloadCompiledEgg(id):
 	with("tmp/build-%s/") as dir:
 		pass
 	
-
 @app.route("/results/<job>/")
 def resultsOverview(job):
 	""" Shows a list of all the available outputs of this job. """
@@ -173,6 +172,18 @@ def results(job, output):
 		return Response(out[0].getAttribute("output",output))
 	else:
 		return render_template("results.notfound.html", config=Config())
+	
+# This is for the WorkerMonitor interface #
+
+@app.route("/workermonitor/")
+def workermonitor():
+	return render_template("wmonitor.html", config=Config())
+
+@app.route("/workermonitor/gearman-status")
+def wmGearmanStatus():
+	pass
+
+
 	
 # TESTING #
 def test_loadJs():

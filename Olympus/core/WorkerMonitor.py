@@ -42,7 +42,6 @@ class WorkerMonitor(object):
 		view.show()
 		app.exec_()
 		
-		
 if __name__ == "__main__":
 	wm = WorkerMonitor()
 	wm.startServer()
