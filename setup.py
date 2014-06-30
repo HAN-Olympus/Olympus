@@ -51,11 +51,6 @@ class installNativeDependencies(install):
             try:
                 # Perfom the actual PySide install
                 
-                # Get the latest setuptools
-                os.system("sudo sudo apt-get install python-setuptools")
-                # Bootstrap the newer PIP
-                os.system("wget https://bootstrap.pypa.io/get-pip.py -P /tmp/")
-                os.system("sudo python /tmp/get-pip.py")      
                 # Get wheel
                 os.system("sudo pip install wheel")
                 # Download Qt4 dependenices
