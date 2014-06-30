@@ -10,10 +10,10 @@ services:
 before_install:
   - sleep 5
   - mongo localhost:27017/olympus createMongoDatabase.js
-install: "pip install --use-mirrors -r requirements.txt"
-script:
+install:
+  - "pip install --use-mirrors -r requirements.txt"
   - sudo python setup.py install --force
-  - sleep 5
+script:
   - gearmand -d
   - cd Olympus
   - nosetests -v --nocapture webapp/start.py lib/*.py lib/*/*.py modules/*/*.py core/*.py core/*/*.py
