@@ -24,6 +24,13 @@ class installNativeDependencies(install):
                 self.packages.append( details[1] )
         return self.packages
     
+    def installPipRequirements(self):
+        try:
+            os.popen("sudo pip install --use-mirrors -r requirements.txt")
+            return True
+        except:
+            return False
+    
     def installPySide(self):
         """ We install PySide for the user interface. 
             PySide installation instructions were derived from http://pyside.readthedocs.org/en/latest/building/linux.html
@@ -49,7 +56,7 @@ class installNativeDependencies(install):
             if permission == "n":
                 return False
             try:
-                # Perfom the actual PySide install
+                # Full compilation of PySide
                 """
                 # Get wheel
                 os.system("sudo pip install wheel")
@@ -148,6 +155,9 @@ class installNativeDependencies(install):
         
         print self.getInstalledPackages()
         
+        if not self.installPipRequirements():
+            raise Exception, "Not all dependencies installed."
+            return False        
         if not self.installPySide():
             raise Exception, "Not all dependencies installed."
             return False

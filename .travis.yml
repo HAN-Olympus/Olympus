@@ -10,8 +10,6 @@ services:
 before_install:
   - sleep 10
   - mongo localhost:27017/olympus createMongoDatabase.js
-install:
-  - "pip install --use-mirrors -r requirements.txt"
 script:
   - sudo python setup.py install --force
   - gearmand -d
