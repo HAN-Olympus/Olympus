@@ -24,6 +24,7 @@ class WorkerMonitor(object):
 		serverDaemon.start()
 		
 	def getGearmanStatus(self):
+		""" Returns the Gearman Server status. """
 		try:
 			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
 			return gac.get_status()
@@ -31,6 +32,7 @@ class WorkerMonitor(object):
 			return None
 		
 	def getGearmanWorkers(self):
+		""" Returns the Gearman Server worker data. """
 		try:
 			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
 			return gac.get_workers()
@@ -38,6 +40,7 @@ class WorkerMonitor(object):
 			return None
 		
 	def getGearmanPing(self):
+		""" Returns the Gearman Server response times. """
 		try:
 			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
 			return gac.ping_server()
@@ -75,10 +78,17 @@ if __name__ == "__main__":
 	wm.GUI()
 
 # TESTING #
-		
+
+def test_getGearmanWorkers():
+	wm = WorkerMonitor()
+	status = wm.getGearmanWorkers()
+	
+	assert status == None or isinstance(status, tuple)
+"""
 def test_startServer():
 	assert threading.activeCount() == 1
 	wm = WorkerMonitor()
 	wm.startServer()
 	time.sleep(5)
 	assert threading.activeCount() == 2
+"""
