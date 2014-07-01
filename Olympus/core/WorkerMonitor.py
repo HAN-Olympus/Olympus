@@ -82,13 +82,21 @@ if __name__ == "__main__":
 def test_getGearmanWorkers():
 	wm = WorkerMonitor()
 	status = wm.getGearmanWorkers()
-	
 	assert status == None or isinstance(status, tuple)
-"""
+	
+def test_getGearmanStatus():
+	wm = WorkerMonitor()
+	status = wm.getGearmanStatus()
+	assert status == None or isinstance(status, tuple)
+	
+def test_getGearmanPing():
+	wm = WorkerMonitor()
+	status = wm.getGearmanPing()
+	assert status == None or status > 0
+	
 def test_startServer():
 	assert threading.activeCount() == 1
 	wm = WorkerMonitor()
 	wm.startServer()
 	time.sleep(5)
 	assert threading.activeCount() == 2
-"""
