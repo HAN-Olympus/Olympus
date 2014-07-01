@@ -1,0 +1,43 @@
+{% extends "main.html" %} {% block index %}
+<div class="container">
+	<p></p>
+	<ol class="breadcrumb">
+		<li>
+			<a href="/">Olympus</a>
+		</li>
+		<li class="active">Worker Monitor</li>
+	</ol>
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Worker Monitor</h2>
+			<p> This is the worker monitor interface. It allows you to inspect the amount of current workers and launch new ones. </p>
+			
+			<!-- Gearman signal indicator -->
+			<div class="glyphicon glyphicon-signal pull-right" style="font-size:24pt; color: black; ">
+				<div class="glyphicon glyphicon-signal signal" style="font-size: 24pt; color: #3276b1; position: absolute; overflow: hidden;"></div>
+			</div>
+			
+		</div>
+	</div>
+			
+	<div class="row">		
+		<div class="col-md-9">
+			<h3> Controls </h3>
+			
+			<span class="btn btn-primary"> <span class="glyphicon glyphicon-plus"></span> Create a new worker </span>
+			<span class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span> Kill a worker </span>
+			
+			<span class="btn btn-default pull-right"> <span class="glyphicon glyphicon-refresh"></span> Refresh </span>
+		</div>
+		<div class="col-md-3">
+			<h3> Gearman State </h3>
+			<div class="alert alert-success gearman-state" role="alert"> Gearman is running and <span class="worker-count">-</span> workers are available. </div>
+			<div class="alert alert-warning gearman-state" role="alert"> Gearman is running, but there are no workers available. </div>
+			<div class="alert alert-danger gearman-state" role="alert">  Gearman is not running. </div>
+		</div>
+	</div>
+</div>
+
+{{ deferJS("/js/workermonitor.js",4) }}
+
+{% endblock %}

@@ -7,6 +7,7 @@ from Olympus.lib.TemplateTools import TemplateTools
 from Olympus.lib.Output import Output
 from Olympus.lib.Procedure import Procedure
 from Olympus.core.Compiler import Compiler
+from Olympus.core.WorkerMonitor import WorkerMonitor
 
 import svglib
 import gearman
@@ -181,10 +182,17 @@ def workermonitor():
 
 @app.route("/workermonitor/gearman-status")
 def wmGearmanStatus():
-	pass
+	return Response( json.dumps( WorkerMonitor().getGearmanStatus() ) )
+
+@app.route("/workermonitor/gearman-workers")
+def wmGearmanWorkers():
+	return Response( json.dumps( WorkerMonitor().getGearmanWorkers() ) )
+
+@app.route("/workermonitor/gearman-ping")
+def wmGearmanPing():
+	return Response( json.dumps( WorkerMonitor().getGearmanPing() ) )
 
 
-	
 # TESTING #
 def test_loadJs():
 	assert loadJs("bootstrap.min.js"), "Could not load necessary JS file."

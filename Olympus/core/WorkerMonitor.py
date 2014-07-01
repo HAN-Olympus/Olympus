@@ -1,5 +1,4 @@
-import threading, time
-from Olympus.webapp.start import Server
+import threading, time, gearman
 
 # GUI parts #
 
@@ -19,11 +18,32 @@ class WorkerMonitor(object):
 		
 	def startServer(self):
 		""" Launch the webapp server. This server is in a separate thread and is used to serve the interface pages. """
+		from Olympus.webapp.start import Server
 		serverDaemon = Server()
 		serverDaemon.daemon = True
 		serverDaemon.start()
 		
-
+	def getGearmanStatus(self):
+		try:
+			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
+			return gac.get_status()
+		except gearman.admin_client.ServerUnavailable:
+			return None
+		
+	def getGearmanWorkers(self):
+		try:
+			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
+			return gac.get_workers()
+		except gearman.admin_client.ServerUnavailable:
+			return None
+		
+	def getGearmanPing(self):
+		try:
+			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
+			return gac.ping_server()
+		except gearman.admin_client.ServerUnavailable:
+			return None
+	
 	def GUI(self):
 		if disableGui:
 			return False
@@ -32,7 +52,7 @@ class WorkerMonitor(object):
 		# The Webview
 		view = QWebView()
 		view.setWindowTitle('Olympus WorkerMonitor')
-		url = QUrl("http://127.0.0.1:5000/")
+		url = QUrl("http://127.0.0.1:5000/workermonitor/")
 		view.load(url)
 		
 		# Set the size
