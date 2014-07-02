@@ -24,7 +24,7 @@
 		<div class="col-md-9">
 			<h3> Controls </h3>
 			
-			<span class="btn btn-primary"> <span class="glyphicon glyphicon-plus"></span> Create a new worker </span>
+			<span class="btn btn-primary create"> <span class="glyphicon glyphicon-plus"></span> Create a new worker </span>
 			<span class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span> Kill a worker </span>
 			
 			<span class="btn btn-default pull-right"> <span class="glyphicon glyphicon-refresh"></span> Refresh </span>
@@ -35,6 +35,25 @@
 			<div class="alert alert-warning gearman-state" role="alert"> Gearman is running, but there are no workers available. </div>
 			<div class="alert alert-danger gearman-state" role="alert">  Gearman is not running. </div>
 		</div>
+	</div>
+
+	<div class="row worker-container">
+		<div class="col-md-4 worker proto-worker">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Worker
+				</div>
+				<div class="panel-body">
+					<ul>
+						<li>Process ID:<span class="worker-pid"></span></li>
+						<li>Process ID:<span class="worker-pid"></span></li>
+						<li>Process ID:<span class="worker-pid"></span></li>
+						<li>Process ID:<span class="worker-pid"></span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>
 

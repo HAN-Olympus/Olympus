@@ -13,6 +13,7 @@ import svglib
 import gearman
 import json
 import zipfile
+import cStringIO
 
 from Olympus.webapp import app, modules
 
@@ -22,6 +23,14 @@ for attribute in dir(tools):
 	if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
 		print attribute
 		app.jinja_env.globals[attribute] = getattr(tools, attribute)
+
+# TOOLS #
+
+def zipdir(path, zip):
+	""" Zips an entire directory """
+	for root, dirs, files in os.walk(path):
+		for file in files:
+			zip.write(os.path.join(root, file))
 
 # ROUTES #
 
@@ -135,7 +144,6 @@ def compile():
 @app.route("/compiler/")
 def compiler():
 	""" Does the actual compiling. """
-	
 	nodes = json.loads( request.args.get("nodes") )
 	edges = json.loads( request.args.get("edges") )
 	attributes = json.loads( request.args.get("edgeAttributes") )
@@ -149,9 +157,16 @@ def compiler():
 	return Response(json.dumps({"id":id}))
 
 @app.route("/downloadCompiled/<id>")
-def downloadCompiledEgg(id):
-	with("tmp/build-%s/") as dir:
-		pass
+def downloadCompiled(id):
+	""" Zips the Build directory for this distribution and allows the user to download it. """
+	f = cStringIO.StringIO() # We want to read the pure contents of this file, so we load it in memory.
+	z = zipfile.ZipFile(f, 'w')
+	directory = Config().WebAppDirectory
+	zipdir(directory,z)
+	z.close()
+
+	return Response(f.getvalue(), mimetype="application/zip")
+
 	
 @app.route("/results/<job>/")
 def resultsOverview(job):
@@ -192,6 +207,9 @@ def wmGearmanWorkers():
 def wmGearmanPing():
 	return Response( json.dumps( WorkerMonitor().getGearmanPing() ) )
 
+@app.route("/workermonitor/gearman-start-worker")
+def wmGearmanStartWorker():
+	return Response( json.dumps( WorkerMonitor().startNewWorker() ) )
 
 # TESTING #
 def test_loadJs():
@@ -203,4 +221,3 @@ def test_loadCss():
 def test_loadFont():
 	assert loadFont("glyphicons-halflings-regular.woff"), "Could not load necessary Font file."
 
-	

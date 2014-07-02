@@ -149,7 +149,7 @@ body {
 	position: relative;
 	width: 75%;
 }
-.panel-heading {
+.module-item.panel-heading {
 	cursor: move;
 }
 .module-buttons {
@@ -161,7 +161,7 @@ body {
 	opacity: 1;
 	transition: 0.5s all;
 }
-.panel-body {
+.module-item.panel-body {
 	max-height: 45px;
 	overflow-y: hidden;
 	padding: 0;
@@ -229,4 +229,16 @@ fieldset:last-child {
 input[type=submit] {
 	clear:both;
 	display: block;
+}
+
+
+/* WORKER MONITOR */
+.worker ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.proto-worker {
+	display:none;
 }

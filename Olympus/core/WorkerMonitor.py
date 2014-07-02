@@ -1,4 +1,5 @@
-import threading, time, gearman
+import threading, time, gearman, subprocess
+from Olympus.lib.Config import Config
 
 # GUI parts #
 
@@ -72,6 +73,11 @@ class WorkerMonitor(object):
 		view.show()
 		app.exec_()
 		
+	def startNewWorker(self):
+		command = "cd %s; python -m Olympus.core.Worker" % Config().RootDirectory
+		worker = subprocess.Popen(command, shell=True)
+		return {"pid" : worker.pid}
+
 if __name__ == "__main__":
 	wm = WorkerMonitor()
 	wm.startServer()

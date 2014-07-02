@@ -36,7 +36,7 @@ $(function() {
 	//
 	$.getJSON("/compiler/"+window.location.search, function(response) {
 		console.log(response);
-		$(".btn.download").attr("disabled",false)
+		$(".btn.download").attr("disabled",false).attr("href", "/downloadCompiled/"+response["id"])
 		$("h2").append("Done.")
 		// We can stop drawing when we're done compiling.
 		sigInst.stopForceAtlas2();
