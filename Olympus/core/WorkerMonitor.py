@@ -1,4 +1,5 @@
 import threading, time, gearman, subprocess
+import sys, re
 from Olympus.lib.Config import Config
 
 # GUI parts #
@@ -15,13 +16,20 @@ except:
 
 class WorkerMonitor(object):
 	def __init__(self):
-		pass	
+		""" Matches CLI arguments to commands """
+		self.commands = {
+			"start" : self.startWorkers,
+			"end" : self.endWorker,
+			"status" : self.getGearmanStatus,
+			"workers" : self.getGearmanWorkers,
+			"ping" : self.getGearmanPing
+		}
 		
-	def startServer(self):
+	def startServer(self, daemon=True):
 		""" Launch the webapp server. This server is in a separate thread and is used to serve the interface pages. """
 		from Olympus.webapp.start import Server
 		serverDaemon = Server()
-		serverDaemon.daemon = True
+		serverDaemon.daemon = daemon
 		serverDaemon.start()
 		
 	def getGearmanStatus(self):
@@ -76,15 +84,33 @@ class WorkerMonitor(object):
 		app.exec_()
 		
 	def startNewWorker(self):
-		command = "cd %s; python -m Olympus.core.Worker" % Config().RootDirectory
+		command = "cd %s; python -m Olympus.core.Worker --silent" % Config().RootDirectory
 		worker = subprocess.Popen(command, shell=True)
 		return {"pid" : worker.pid}
 
+	def startWorkers(self, n):
+		for w in range(int(n)):
+			self.startNewWorker()
+
+	def endWorker(self, id):
+		pass
+
+
 if __name__ == "__main__":
 	wm = WorkerMonitor()
-	wm.startServer()
-	wm.GUI()
-	print "GUI Closed"
+	if "--gui" in sys.argv:
+		wm.startServer()
+		wm.GUI()
+	for arg in sys.argv[1:]:
+		kvArg = re.search("--(\w+)?=(\d+)", arg)
+		kArg = re.search("--(\w+)", arg)
+		if kvArg != None:
+			wm.commands[kvArg.group(1)](kvArg.group(2))
+		elif kArg != None:
+			print kArg.group(1)
+		else:
+			raise Exception, "argument '%s' not recognized" % arg
+
 
 # TESTING #
 

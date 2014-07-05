@@ -13,7 +13,7 @@ class Compiler():
 		self.externalModules = {}
 		self.externalDependencies = set()
 		self.addedModules = set()
-		self.basics = ["Olympus.core.Worker","Olympus.core.Core", "Olympus.core.Core"]
+		self.basics = ["Olympus.core.Worker", "Olympus.core.Core"]
 		self.procedure = procedure
 		
 		# Gets the name of the current package.
@@ -123,10 +123,10 @@ class Compiler():
 				print "import %s" % ", ".join(modules)
 			else:
 				print "from %s import %s" % (source, ", ".join(modules))
-			
-		
+
 	def buildEgg(self):
 		for node in self.procedure.nodes:
+			print node
 			self.retrieveModule("Olympus.modules."+node)
 			self.processDependencies()
 		
@@ -157,7 +157,7 @@ setup(
 )		
 		""" % ( Core().getVersion(), str([module for module in self.modules.keys() + self.basics]) )
 		
-		print setup
+		print [module for module in self.modules.keys() + self.basics]
 		
 		with open(os.path.join(tmpDir, "setup.py"),"w") as sfile:
 			sfile.write(setup)
