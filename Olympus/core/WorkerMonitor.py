@@ -8,7 +8,7 @@ try:
 	import PySide
 	from PySide.QtGui import QApplication, QDesktopWidget
 	from PySide.QtWebKit import *
-	from PySide.QtCore import QSize, QUrl
+	from PySide.QtCore import QSize, QUrl, Qt
 except:
 	disableGui = True
 
@@ -33,10 +33,11 @@ class WorkerMonitor(object):
 			return None
 		
 	def getGearmanWorkers(self):
-		""" Returns the Gearman Server worker data. """
+		""" Returns the Gearman Server worker data. Only returns workers that have a task assigned to them. """
 		try:
 			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
-			return gac.get_workers()
+			workers = filter(lambda w: len(w["tasks"]) > 0, gac.get_workers())
+			return workers
 		except gearman.admin_client.ServerUnavailable:
 			return None
 		
@@ -58,7 +59,8 @@ class WorkerMonitor(object):
 		view.setWindowTitle('Olympus WorkerMonitor')
 		url = QUrl("http://127.0.0.1:5000/workermonitor/")
 		view.load(url)
-		
+		#view.setWindowFlags(Qt.FramelessWindowHint)
+
 		# Set the size
 		size = QSize(1024,600)
 		view.setMinimumSize(size)
@@ -82,6 +84,7 @@ if __name__ == "__main__":
 	wm = WorkerMonitor()
 	wm.startServer()
 	wm.GUI()
+	print "GUI Closed"
 
 # TESTING #
 

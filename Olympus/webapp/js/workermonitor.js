@@ -16,11 +16,15 @@ $(function() {
 				$(".gearman-state.alert-warning").show(0);
 				return false;
 			}
-			// Gearman lives, but no workers.
+			// Gearman lives and there are workers.
 			$(".gearman-state.alert-warning, .gearman-state.alert-danger").hide(0);
 			$(".gearman-state.alert-success").show(0);
 			$(".gearman-state.alert-success .worker-count").text( data[0]["workers"] )
-			createWorkerPanels(data[0]["workers"])
+			
+			$.getJSON("/workermonitor/gearman-workers", function(data) {		
+				createWorkerPanels(data);
+			});
+			
 		});
 		
 
@@ -32,12 +36,17 @@ $(function() {
 
 	}
 
-	function createWorkerPanels(n) {
+	function createWorkerPanels(workers) {
 		var wc = $(".worker-container");
 		wc.find(".worker").not(".proto-worker").remove()
-		for(w = 0; w < n; w++) {
-			$(".proto-worker").clone().removeClass("proto-worker").appendTo(wc);
-		}
+		$.each(workers, function(index, worker) {
+			w = $(".proto-worker").clone()
+			w.removeClass("proto-worker").appendTo(wc);
+			w.find(".worker-id").text(worker.file_descriptor)
+			w.find(".worker-task").text(worker.tasks)
+			w.find(".worker-clientid").text(worker.client_id)
+			w.find(".worker-ip").text(worker.ip)
+		});
 	}
 	
 	function getPingRating(ping) {
@@ -55,10 +64,6 @@ $(function() {
 	
 	checkGearmanState();
 	setInterval(checkGearmanState, 1000);
-	
-	$.getJSON("/workermonitor/gearman-workers", function(data) {		
-		console.log(data)
-	});
 
 	$(".btn.create").click(function() {
 		$.getJSON("/workermonitor/gearman-start-worker", function(data) {

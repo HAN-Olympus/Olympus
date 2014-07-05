@@ -161,7 +161,8 @@ body {
 	opacity: 1;
 	transition: 0.5s all;
 }
-.module-item.panel-body {
+
+.module-item .panel-body {
 	max-height: 45px;
 	overflow-y: hidden;
 	padding: 0;
