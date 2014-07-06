@@ -31,7 +31,6 @@ class WorkerMonitor(object):
 			Config().addAttribute("GearmanServer", "localhost:4730")
 			Config().save()
 
-
 	def startServer(self, daemon=True):
 		""" Launch the webapp server. This server is in a separate thread and is used to serve the interface pages. """
 		from Olympus.webapp.start import Server
@@ -42,7 +41,6 @@ class WorkerMonitor(object):
 		
 	def getGearmanStatus(self):
 		""" Returns the Gearman Server status. """
-		print Config().GearmanServer
 		try:
 			gac = gearman.admin_client.GearmanAdminClient(Config().GearmanServer)
 			return gac.get_status()
@@ -76,7 +74,6 @@ class WorkerMonitor(object):
 		view.setWindowTitle('Olympus WorkerMonitor')
 		url = QUrl("http://127.0.0.1:5000/workermonitor/")
 		view.load(url)
-		#view.setWindowFlags(Qt.FramelessWindowHint)
 
 		# Set the size
 		size = QSize(1024,600)
@@ -98,19 +95,26 @@ class WorkerMonitor(object):
 		return {"pid" : worker.pid}
 
 	def startWorkers(self, n):
+		""" This starts `n` number of workers. """
 		for w in range(int(n)):
 			self.startNewWorker()
 
 	def endWorker(self, id):
 		pass
 
-	def setGearmanServer(self, address):
-		print "Setting server to %s" % address
-
-		Config().GearmanServer = [address]
+	def setGearmanServer(self, address, port):
+		""" This sets the Gearman Server that needs to be monitored. """
+		
+		# Use default values on empty input
+		if address == "":
+			address = "localhost"
+		if port == "":
+			port = "4730"
+		
+		print "Setting server to %s:%s" % (address, port)
+		Config().GearmanServer = ["%s:%s" % (address, port)]
 		Config().save()
-
-
+		return True
 
 if __name__ == "__main__":
 	wm = WorkerMonitor()

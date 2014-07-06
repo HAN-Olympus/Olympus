@@ -26,7 +26,6 @@ $(function() {
 			});
 			
 		});
-		
 
 		/* Get the ping */
 		$.getJSON("/workermonitor/gearman-ping", function(data) {
@@ -37,6 +36,7 @@ $(function() {
 	}
 
 	function createWorkerPanels(workers) {
+		/* Creates panels for every worker with appropiate information */
 		var wc = $(".worker-container");
 		wc.find(".worker").not(".proto-worker").remove()
 		$.each(workers, function(index, worker) {
@@ -50,16 +50,12 @@ $(function() {
 	}
 	
 	function getPingRating(ping) {
-		rating = [10000,1000,100,10]
-		if (!ping) {
+		/* This function rates a ping on a reverse log10 scale (5 being the best, 0 being the worst) */
+		if (!ping || ping > 10000) {
 			return 0;
 		}
-		for( r in rating ) {
-			if( ping > rating[r] ) {
-				return r;
-			}
-		}
-		return 4
+		ping = Math.abs(10000-ping)
+		return( Math.log(ping) / Math.LN10)
 	}
 	
 	checkGearmanState();

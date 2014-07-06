@@ -213,16 +213,10 @@ def wmGearmanStartWorker():
 
 @app.route("/workermonitor/change-server/")
 def wmChangeServer():
-	try:
-		ip = request.args.get("serverIP")
-	except:
+	ip = request.args.get("serverIP")
+	if ip == "":
 		ip = "localhost"
-	try:
-		port = int(request.args.get("serverPort"))
-	except:
-		port = "4730"
-
-	WorkerMonitor().setGearmanServer("%s:%s" % (ip,port))
+	WorkerMonitor().setGearmanServer(ip,request.args.get("serverPort"))
 	return redirect(url_for("workermonitor"))
 
 # TESTING #

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Olympus documentation build configuration file, created by
-# sphinx-quickstart on Wed Jul  2 00:21:17 2014.
+# sphinx-quickstart on Sat Jul  5 14:32:05 2014.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
