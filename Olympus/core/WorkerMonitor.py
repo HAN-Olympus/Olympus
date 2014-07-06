@@ -16,7 +16,7 @@ except:
 
 class WorkerMonitor(object):
 	def __init__(self):
-		""" Matches CLI arguments to commands """
+		""" Matches CLI arguments to commands and checks GearmanServer in Config. """
 		self.commands = {
 			"start" : self.startWorkers,
 			"end" : self.endWorker,
@@ -25,17 +25,26 @@ class WorkerMonitor(object):
 			"ping" : self.getGearmanPing
 		}
 		
+		try:
+			Config().GearmanServer
+		except:
+			Config().addAttribute("GearmanServer", "localhost:4730")
+			Config().save()
+
+
 	def startServer(self, daemon=True):
 		""" Launch the webapp server. This server is in a separate thread and is used to serve the interface pages. """
 		from Olympus.webapp.start import Server
 		serverDaemon = Server()
 		serverDaemon.daemon = daemon
-		serverDaemon.start()
+		self.serverDaemon = serverDaemon
+		self.serverDaemon.start()
 		
 	def getGearmanStatus(self):
 		""" Returns the Gearman Server status. """
+		print Config().GearmanServer
 		try:
-			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
+			gac = gearman.admin_client.GearmanAdminClient(Config().GearmanServer)
 			return gac.get_status()
 		except gearman.admin_client.ServerUnavailable:
 			return None
@@ -43,7 +52,7 @@ class WorkerMonitor(object):
 	def getGearmanWorkers(self):
 		""" Returns the Gearman Server worker data. Only returns workers that have a task assigned to them. """
 		try:
-			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
+			gac = gearman.admin_client.GearmanAdminClient(Config().GearmanServer)
 			workers = filter(lambda w: len(w["tasks"]) > 0, gac.get_workers())
 			return workers
 		except gearman.admin_client.ServerUnavailable:
@@ -52,7 +61,7 @@ class WorkerMonitor(object):
 	def getGearmanPing(self):
 		""" Returns the Gearman Server response times. """
 		try:
-			gac = gearman.admin_client.GearmanAdminClient(['localhost:4730'])
+			gac = gearman.admin_client.GearmanAdminClient(Config().GearmanServer)
 			return gac.ping_server()
 		except gearman.admin_client.ServerUnavailable:
 			return None
@@ -94,6 +103,13 @@ class WorkerMonitor(object):
 
 	def endWorker(self, id):
 		pass
+
+	def setGearmanServer(self, address):
+		print "Setting server to %s" % address
+
+		Config().GearmanServer = [address]
+		Config().save()
+
 
 
 if __name__ == "__main__":

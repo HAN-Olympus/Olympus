@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort, Response, request
+from flask import Flask, render_template, abort, Response, request, redirect, url_for
 import os,re,sys
 import pkgutil
 
@@ -210,6 +210,20 @@ def wmGearmanPing():
 @app.route("/workermonitor/gearman-start-worker")
 def wmGearmanStartWorker():
 	return Response( json.dumps( WorkerMonitor().startNewWorker() ) )
+
+@app.route("/workermonitor/change-server/")
+def wmChangeServer():
+	try:
+		ip = request.args.get("serverIP")
+	except:
+		ip = "localhost"
+	try:
+		port = int(request.args.get("serverPort"))
+	except:
+		port = "4730"
+
+	WorkerMonitor().setGearmanServer("%s:%s" % (ip,port))
+	return redirect(url_for("workermonitor"))
 
 # TESTING #
 def test_loadJs():

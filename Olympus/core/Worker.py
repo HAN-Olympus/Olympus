@@ -91,8 +91,7 @@ def welcome():
 	
 if __name__ == "__main__":	
 	# Instantiate the worker and register all the appropiate functions.
-	gm_worker = gearman.GearmanWorker(['localhost:4730']) # Creates the worker on the default port. TODO: retrieve these from the configuration.
-	registerFunctions(Worker(), gm_worker)
+	gm_worker = gearman.GearmanWorker(Config().GearmanServer) # Creates the worker on the default port.
 	
 	# Print a welcome message
 	if not "--silent" in sys.argv:
@@ -102,5 +101,5 @@ if __name__ == "__main__":
 	
 # TESTING #
 def test_registerFunctions():
-	gm_worker = gearman.GearmanWorker(['localhost:4730']) # Creates the worker on the default port. TODO: retrieve these from the configuration.
+	gm_worker = gearman.GearmanWorker(Config().GearmanServer) # Creates the worker on the default port.
 	registerFunctions(Worker(), gm_worker)

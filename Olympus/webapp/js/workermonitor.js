@@ -7,7 +7,7 @@ $(function() {
 				// Hide the non-error state alerts
 				$(".gearman-state.alert-success, .gearman-state.alert-warning").hide(0);
 				$(".gearman-state.alert-danger").show(0);
-				$(".btn").attr("disabled", true);
+				$(".btn.create").attr("disabled", true);
 				return false;
 			}
 			if(data.length == 0 || data[0]["workers"] == 0) {
