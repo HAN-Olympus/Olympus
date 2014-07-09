@@ -27,13 +27,13 @@
 			<span class="btn btn-primary create"> <span class="glyphicon glyphicon-plus"></span> Create a new worker </span>
 			<span class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span> Kill a worker </span>
 			
-			<span class="btn btn-default pull-right"  data-toggle="modal" data-target="#selectServer"> <span class="glyphicon glyphicon-refresh"></span> Select a different server </span>
+			<span class="btn btn-default pull-right"	data-toggle="modal" data-target="#selectServer"> <span class="glyphicon glyphicon-refresh"></span> Select a different server </span>
 		</div>
 		<div class="col-md-3">
 			<h3> Gearman State </h3>
 			<div class="alert alert-success gearman-state" role="alert"> Gearman is running and <span class="worker-count">-</span> workers are available. </div>
 			<div class="alert alert-warning gearman-state" role="alert"> Gearman is running, but there are no workers available. </div>
-			<div class="alert alert-danger gearman-state" role="alert">  Gearman is not running. </div>
+			<div class="alert alert-danger gearman-state" role="alert">	Gearman is not running. </div>
 		</div>
 	</div>
 
@@ -53,34 +53,31 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </div>
 
-
-
 <!-- Modals -->
 <div class="modal fade" id="selectServer">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">Select a different server.</h4>
-      </div>
-      <div class="modal-body">
-		  <form action="/workermonitor/change-server/" method="get">
-				<p>Type the address of the server here, or leave it empty for a local server..</p>
-				<input type="text" id="serverIP" name="serverIP" placeholder="localhost">
-				:
-				<input type="text" id="serverPort" name="serverPort" placeholder="4730">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <input type="submit" class="btn btn-primary" value="Change server"></input>
-      </div>
-		  </form>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Select a different server.</h4>
+			</div>
+			<form action="/workermonitor/change-server/" method="get">
+				<div class="modal-body">
+					<p>Type the address of the server here, or leave it empty for a local server..</p>
+					<input type="text" id="serverIP" name="serverIP" placeholder="localhost">
+					:
+					<input type="text" id="serverPort" name="serverPort" placeholder="4730">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<input type="submit" class="btn btn-primary" value="Change server"></input>
+				</div>
+			</form>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 

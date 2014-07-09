@@ -3,6 +3,7 @@ $(function() {
 	function checkGearmanState() {
 		// Check the initial Gearman state.
 		$.getJSON("/workermonitor/gearman-status", function(data) {
+			console.log(data);
 			if(!data) {
 				// Hide the non-error state alerts
 				$(".gearman-state.alert-success, .gearman-state.alert-warning").hide(0);

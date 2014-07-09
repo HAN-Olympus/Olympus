@@ -1,4 +1,5 @@
 from Olympus.lib.Singleton import Singleton
+from Olympus.lib.Config import Config
 from pymongo import MongoClient
 
 class Storage(Singleton):
@@ -8,12 +9,25 @@ class Storage(Singleton):
 	"""
 	def __init__(self):
 		""" Initializes the connection with the Mongo database. 
-		As this is a Singleton, this is only done `once` per instance of Olympus resulting in lower connection time overhead.
-		This will pose problems if the ongoing connection is forcefully closed for whatever reason.
+		As this is a Singleton, this is only done **once** per instance of Olympus resulting in lower connection time overhead (unless `reconnect` is called.)
+		This might pose problems if the ongoing connection is forcefully closed for whatever reason.
 		"""
-		self.__client = MongoClient()
+		
+		dbAddress = Config().MongoServer
+		dbAddressComponents = dbAddress.split(":")
+		host = dbAddressComponents[0]
+		port = 27017 # The default MongoDB port.
+		
+		if len(dbAddressComponents) > 1:
+			port = int(dbAddressComponents[1])
+		
+		self.__client = MongoClient(host, port)
 		self.__currentCollection = None
 		self.__currentDatabase = None
+		
+	def reconnect(self):
+		""" Executes the initialization function again. This will reconnect the instance to the server. """
+		self.__init__()
 		
 	def getHost(self):
 		""" Returns the database host. """
@@ -153,6 +167,16 @@ def test_getHost():
 def test_getPort():
 	storage = Storage()
 	storage.getPort()
+	
+def test_reconnect():
+	storage = Storage()
+	# Temporarily set the Config details to a different server, without saving the Config.
+	Config().MongoServer = 	"127.0.0.1:27017"
+	# The storage details should not yet have changed.
+	assert Config().MongoServer != "%s:%s" % (storage.getHost(), storage.getPort())
+	storage.reconnect()
+	# The storage details should have changed.
+	assert Config().MongoServer == "%s:%s" % (storage.getHost(), storage.getPort())
 	
 def test_isAlive():
 	storage = Storage()
