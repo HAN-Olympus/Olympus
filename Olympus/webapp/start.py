@@ -66,6 +66,7 @@ class Server(threading.Thread):
 if __name__ == "__main__":
 	Server().startLocal()
 	
+	
 # TESTS #
 
 def test_checkWorkingDirectory():

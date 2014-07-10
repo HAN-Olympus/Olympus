@@ -21,7 +21,6 @@ from Olympus.webapp import app, modules
 tools = TemplateTools()
 for attribute in dir(tools):
 	if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
-		print attribute
 		app.jinja_env.globals[attribute] = getattr(tools, attribute)
 
 # TOOLS #
@@ -40,10 +39,12 @@ def index():
 	
 @app.route("/css/<filename>")
 def loadCss(filename):
-	if os.path.isfile("css/%s" % filename):
-		cssFile = open("css/%s" % filename)
-	elif os.path.isfile("bootstrap/css/%s" % filename):
-		cssFile = open("bootstrap/css/%s" % filename)
+	path = os.path.join(Config().WebAppDirectory, "css", filename)
+	pathBootstrap = os.path.join(Config().WebAppDirectory, "bootstrap", "css", filename)
+	if os.path.isfile(path):
+		cssFile = open(path)
+	elif os.path.isfile(pathBootstrap):
+		cssFile = open(pathBootstrap)
 	else:
 		abort(404)
 
@@ -53,10 +54,12 @@ def loadCss(filename):
 
 @app.route("/js/<filename>")
 def loadJs(filename):
-	if os.path.isfile("js/%s" % filename):
-		jsFile = open("js/%s" % filename)
-	elif os.path.isfile("bootstrap/js/%s" % filename):
-		jsFile = open("bootstrap/js/%s" % filename)
+	path = os.path.join(Config().WebAppDirectory, "js", filename)
+	pathBootstrap = os.path.join(Config().WebAppDirectory, "bootstrap", "js", filename)
+	if os.path.isfile(path):
+		jsFile = open(path)
+	elif os.path.isfile(pathBootstrap):
+		jsFile = open(pathBootstrap)
 	else:
 		abort(404)
 		
@@ -66,10 +69,12 @@ def loadJs(filename):
 	
 @app.route("/img/<filename>")
 def loadImg(filename):
-	if os.path.isfile("img/%s" % filename):
-		imgFile = open("img/%s" % filename)
-	elif os.path.isfile("bootstrap/img/%s" % filename):
-		imgFile = open("bootstrap/img/%s" % filename)
+	path = os.path.join(Config().WebAppDirectory, "img", filename)
+	pathBootstrap = os.path.join(Config().WebAppDirectory, "bootstrap", "img", filename)
+	if os.path.isfile(path):
+		imgFile = open(path)
+	elif os.path.isfile(pathBootstrap):
+		imgFile = open(pathBootstrap)
 	else:
 		abort(404)
 		
@@ -79,10 +84,12 @@ def loadImg(filename):
 
 @app.route("/fonts/<filename>")
 def loadFont(filename):
-	if os.path.isfile("fonts/%s" % filename):
-		fontFile = open("fonts/%s" % filename)
-	elif os.path.isfile("bootstrap/js/%s" % filename):
-		fontFile = open("bootstrap/js/%s" % filename)
+	path = os.path.join(Config().WebAppDirectory, "fonts", filename)
+	pathBootstrap = os.path.join(Config().WebAppDirectory, "bootstrap", "fonts", filename)
+	if os.path.isfile(path):
+		fontFile = open(path)
+	elif os.path.isfile(pathBootstrap):
+		fontFile = open(pathBootstrap)
 	else:
 		abort(404)
 		
