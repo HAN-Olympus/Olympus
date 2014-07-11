@@ -6,47 +6,91 @@
 """
 
 from Olympus.lib.Config import Config
-import os, importlib, random
+import os, importlib, random, pprint
 
 class ModuleSeparator(object):
-	"""  """
+	"""  Separates the current working version of Olympus into its constituent modules and allows developers to export them individually. """
 	def __init__(self):
-		self.packages = []
+		self.modules = []
 		self.files = {}
 		
 	def scanAll(self):
-		for root, dirs, files in os.walk(Config().RootDirectory):
-			self.scanFolder(root)
+		""" Scans the entire root folder. """ 
+		self.scanFolder(Config().RootDirectory)
+			
+		print self.modules
+		pprint.pprint( self.files)
 	
 	def scanFolder(self,name):
+		""" Scans a directory recursively for Python files.
+		
+		:param name: The path of the folder.
+		"""
 		for root, dirs, files in os.walk( os.path.join( Config().RootDirectory, name )):
 			for file in files:
 				if file.endswith(".py"):
-					module = self.importFile(os.path.join(root, file))
+					path = os.path.join(root, file)
+					module = self.importFile(path)
 					doc = module.__doc__
 					if doc != None:
-						self.parseDocString(doc)
+						dc = self.parseDocString(doc)
+						if dc != {}:
+							self.addFile(path, dc)
+						
+						
+	def addFile(self, path, dc):
+		""" Adds a file to the index.
+		
+		:param path: The path of the file.
+		:param dc: The parsed module docstring. 
+		"""
+		module = dc["module"]
+		name = dc["name"]
+		if dc["module"] not in self.modules:
+			self.modules.append(module)
+			self.files[module] = {}
+		self.files[module][name] = path
+						
 					
 	def convertPathToImport(self, path):
+		""" Converts a path to a package location.
+		
+		:param path: A local system path.
+		:rtype: A string representing the path as a package location
+		"""
 		normalPath = "Olympus." + path.replace(Config().RootDirectory, "").strip(os.path.sep).replace(os.path.sep, ".")
 		if normalPath.endswith(".py"):
 			normalPath = normalPath[:-3]
 		return normalPath
 	
 	def importFile(self, name):
+		""" Imports a file and returns the module object.
+		
+		:param name: The path of the file
+		:rtype: A module object.
+		"""
 		modulePath = self.convertPathToImport(name)
 		try:
 			module = importlib.import_module(modulePath)
 		except ImportError:
 			return False
 		
-		return module		
+		return module
 	
 	def parseDocString(self,docstring):
+		"""
+			Parses a module docstring.
+			:param docstring: A properly formatted docstring
+			:rtype: A dict with all the parsed values.
+		"""
+		parsed = {}
 		for line in docstring.split("\n"):
 			if line.startswith("@"):
-				key = line.split(" ")[0]
+				key = line.split(" ")[0][1:]
 				value = " ".join( line.split(" ")[1:] )
+				parsed[key] = value
+				
+		return parsed
 	
 	def package(self, files):
 		pass
@@ -78,3 +122,8 @@ def test_convertPathToImport():
 	for t in range(len(testPaths)):
 		result = ms.convertPathToImport(testPaths[t])
 		assert result == expected[t]
+		
+def test_parseDocString():
+	ms = ModuleSeparator()
+	docstring = "@name Test\n@author Test test"
+	assert ms.parseDocString(docstring) == {"name":"Test", "author":"Test test"}

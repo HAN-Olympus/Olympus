@@ -1,3 +1,10 @@
+"""
+@name Chemical
+@author Stephan Heijl
+@module TOXNET
+@version 0.0.3
+"""
+
 from Olympus.lib.StoredObject import StoredObject
 
 class Chemical(StoredObject):

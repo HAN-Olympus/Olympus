@@ -1,3 +1,10 @@
+"""
+@name Webapp start
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 import os, threading
 from Olympus.lib.Config import Config
 from tornado.wsgi import WSGIContainer

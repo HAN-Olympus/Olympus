@@ -1,3 +1,10 @@
+"""
+@name Procedure
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 from pprint import pprint
 import importlib
 import networkx as nx

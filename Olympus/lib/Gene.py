@@ -1,3 +1,10 @@
+"""
+@name Gene
+@author Stephan Heijl
+@module WormBase
+@version 0.0.3
+"""
+
 from Olympus.lib.StoredObject import StoredObject
 
 class Gene(StoredObject):

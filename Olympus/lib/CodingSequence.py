@@ -1,3 +1,10 @@
+"""
+@name CodingSequence
+@author Stephan Heijl
+@module WormBase
+@version 0.0.3
+"""
+
 from Olympus.lib.StoredObject import StoredObject
 
 class CodingSequence(StoredObject):

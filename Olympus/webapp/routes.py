@@ -1,3 +1,10 @@
+"""
+@name Routes
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 from flask import Flask, render_template, abort, Response, request, redirect, url_for
 import os,re,sys
 import pkgutil

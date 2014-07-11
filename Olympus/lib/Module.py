@@ -1,4 +1,10 @@
-""" The Olympus Module Class. """
+"""
+@name Module
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 # Olympus Module Class
 
 from abc import ABCMeta, abstractmethod

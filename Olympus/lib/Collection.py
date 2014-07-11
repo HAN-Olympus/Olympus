@@ -1,3 +1,10 @@
+"""
+@name Collection
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 class Collection(object):
 	""" A basic collection of results items, can be restricted to a certain type. """
 	

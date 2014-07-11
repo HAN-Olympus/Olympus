@@ -35,6 +35,14 @@ Olympus.core.ModuleLoader module
     :undoc-members:
     :show-inheritance:
 
+Olympus.core.ModuleSeparator module
+-----------------------------------
+
+.. automodule:: Olympus.core.ModuleSeparator
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Olympus.core.Worker module
 --------------------------
 

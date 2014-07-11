@@ -1,3 +1,10 @@
+"""
+@name Control
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 from abc import ABCMeta, abstractmethod
 from html import XHTML
 

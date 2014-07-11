@@ -1,3 +1,10 @@
+"""
+@name Log
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 class Log(object):
 	def __init__(self):
 		self.contents = []
