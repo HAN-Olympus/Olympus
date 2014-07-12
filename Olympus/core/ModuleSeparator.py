@@ -7,19 +7,17 @@
 
 from Olympus.lib.Config import Config
 import os, importlib, random, pprint
+import tarfile
 
 class ModuleSeparator(object):
 	"""  Separates the current working version of Olympus into its constituent modules and allows developers to export them individually. """
 	def __init__(self):
-		self.modules = []
+		self.modules = {}
 		self.files = {}
 		
 	def scanAll(self):
 		""" Scans the entire root folder. """ 
 		self.scanFolder(Config().RootDirectory)
-			
-		print self.modules
-		pprint.pprint( self.files)
 	
 	def scanFolder(self,name):
 		""" Scans a directory recursively for Python files.
@@ -46,10 +44,11 @@ class ModuleSeparator(object):
 		"""
 		module = dc["module"]
 		name = dc["name"]
-		if dc["module"] not in self.modules:
-			self.modules.append(module)
-			self.files[module] = {}
-		self.files[module][name] = path
+		key = (module, dc["version"])
+		if key not in self.files:
+			self.modules[module] = dc
+			self.files[key] = {}
+		self.files[key][name] = path
 						
 					
 	def convertPathToImport(self, path):
@@ -92,8 +91,23 @@ class ModuleSeparator(object):
 				
 		return parsed
 	
-	def package(self, files):
-		pass
+	def __package(self, files, dc):
+		""" Packages a list of files into a tarball """
+		name = dc["name"] + "-" + dc["version"] + ".tar"
+		tar = tarfile.open(name=name, mode="w:")
+		for file in files:
+			print file
+			tar.add(file)
+		tar.close()
+		
+	def packageModule(self,module):
+		"""
+			Packages an indexed module
+			:param module: A tuple with the module and the version
+		"""
+		print module
+		if module in self.files:
+			self.__package(self.files[module].values(), self.modules[module[0]])
 
 # TESTING #
 
@@ -113,6 +127,8 @@ def test_scanFolder():
 def test_scanAll():
 	ms = ModuleSeparator()
 	ms.scanAll()
+	#pprint.pprint(ms.files)
+	#pprint.pprint(ms.modules)
 	
 def test_convertPathToImport():
 	ms = ModuleSeparator()
@@ -127,3 +143,10 @@ def test_parseDocString():
 	ms = ModuleSeparator()
 	docstring = "@name Test\n@author Test test"
 	assert ms.parseDocString(docstring) == {"name":"Test", "author":"Test test"}
+	
+def test_packageModule():
+	ms = ModuleSeparator()
+	ms.scanAll()
+	pprint.pprint(ms.files)
+	ms.packageModule(("core","0.0.3"))
+	
