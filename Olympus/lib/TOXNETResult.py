@@ -1,3 +1,10 @@
+"""
+@name TOXNETResult
+@author Stephan Heijl
+@module TOXNET
+@version 0.0.3
+"""
+
 from Olympus.lib.StoredObject import StoredObject
 
 class TOXNETResult(StoredObject):

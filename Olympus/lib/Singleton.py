@@ -1,3 +1,10 @@
+"""
+@name Singleton
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 class Singleton(object):
 	""" The base singleton class for Olympus. """
 	

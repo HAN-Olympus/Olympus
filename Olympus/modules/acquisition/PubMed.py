@@ -1,3 +1,10 @@
+"""
+@name PubMed
+@author Stephan Heijl
+@module PubMed
+@version 0.0.3
+"""
+
 from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 from Bio import Entrez
 from Bio import Medline

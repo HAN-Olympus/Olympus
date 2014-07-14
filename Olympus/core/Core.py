@@ -1,4 +1,9 @@
-"""Core"""
+"""
+@name Core
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
 
 # Olympus Core
 from Olympus.lib.Config import Config

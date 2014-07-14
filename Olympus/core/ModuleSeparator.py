@@ -93,11 +93,11 @@ class ModuleSeparator(object):
 	
 	def __package(self, files, dc):
 		""" Packages a list of files into a tarball """
-		name = dc["name"] + "-" + dc["version"] + ".tar"
+		name = dc["module"] + "-" + dc["version"] + ".tar"
 		tar = tarfile.open(name=name, mode="w:")
 		for file in files:
 			print file
-			tar.add(file)
+			tar.add(file, arcname=file.replace(Config().RootDirectory, ""))
 		tar.close()
 		
 	def packageModule(self,module):
@@ -127,8 +127,9 @@ def test_scanFolder():
 def test_scanAll():
 	ms = ModuleSeparator()
 	ms.scanAll()
-	#pprint.pprint(ms.files)
-	#pprint.pprint(ms.modules)
+	assert len(ms.files) > 0
+	assert len(ms.modules) > 0
+	assert "core" in ms.modules.keys()
 	
 def test_convertPathToImport():
 	ms = ModuleSeparator()
@@ -147,6 +148,5 @@ def test_parseDocString():
 def test_packageModule():
 	ms = ModuleSeparator()
 	ms.scanAll()
-	pprint.pprint(ms.files)
-	ms.packageModule(("core","0.0.3"))
+	ms.packageModule(("PubMed","0.0.3"))
 	

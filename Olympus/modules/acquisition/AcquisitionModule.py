@@ -1,4 +1,10 @@
-""" Acquisition base class.
+"""
+@name AcquisitionModule
+@author Stephan Heijl
+@module core
+@version 0.0.3
+
+Acquisition base class.
 
 Abstract class that provides base classes and access to classes in the ../lib directory
 Uses part of the additionalImport script to allow access to the lib classes.

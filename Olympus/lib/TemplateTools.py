@@ -1,3 +1,10 @@
+"""
+@name TemplateTools
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 from Olympus.lib.Singleton import Singleton
 
 class TemplateTools(Singleton):

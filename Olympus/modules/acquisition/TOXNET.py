@@ -1,3 +1,10 @@
+"""
+@name TOXNET
+@author Stephan Heijl
+@module TOXNET
+@version 0.0.3
+"""
+
 from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 from Olympus.lib.Chemical import Chemical
 try:

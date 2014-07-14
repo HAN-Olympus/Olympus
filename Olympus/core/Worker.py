@@ -1,3 +1,10 @@
+"""
+@name Worker
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 import gearman
 import subprocess
 import json

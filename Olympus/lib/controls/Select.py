@@ -1,3 +1,10 @@
+"""
+@name Select
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 from Olympus.lib.Control import Control
 
 class Select(Control):

@@ -1,3 +1,10 @@
+"""
+@name WormBase
+@author Stephan Heijl
+@module WormBase
+@version 0.0.3
+"""
+
 from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 from Olympus.lib.Collection import Collection
 from Olympus.lib.Log import Log

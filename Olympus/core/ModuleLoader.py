@@ -1,4 +1,10 @@
-""" ModuleLoader provides an interface to select which modules will be enabled in the next instance of the Olympus Core. 
+"""
+@name ModuleLoader
+@author Stephan Heijl
+@module core
+@version 0.0.3
+
+ModuleLoader provides an interface to select which modules will be enabled in the next instance of the Olympus Core. 
 The selected modules will be stored in the configuration file through Config.
 Starting this script from the command line will automatically open the interface. This interface uses `curses` and is therefore
 not available on Microsoft Windows.

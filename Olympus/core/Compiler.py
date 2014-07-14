@@ -1,3 +1,10 @@
+"""
+@name Compiler
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 import cStringIO
 import os,re, inspect,time,subprocess
 from Olympus.lib.Procedure import Procedure
@@ -9,17 +16,32 @@ class Compiler():
 	
 	def __init__(self, procedure):
 		""" Initialize the compiler with a Procedure. """
+		
+		# Gets the name of the current package.
+		self.currentPackage = __name__.split(".")[0]
 		self.modules = {}
 		self.externalModules = {}
 		self.externalDependencies = set()
 		self.addedModules = set()
-		self.basics = ["Olympus.core.Worker", "Olympus.core.Core"]
+		self.basics = ["Olympus.core.Worker", "Olympus.core.Core", "Olympus.core.Core"]
 		self.procedure = procedure
-		
-		# Gets the name of the current package.
-		self.currentPackage = __name__.split(".")[0]
-
 		self.script = ""
+		self.data = {}
+		self.dataIgnore = [".less", ".scss"]
+		
+	def getDataFiles(self):
+		""" The webapp portion of Olympus is required. 	"""
+		for root, dirs, files in os.walk(Config().RootDirectory + os.sep + "webapp"):
+			root = root.replace(Config().RootDirectory, "")
+			root = self.currentPackage + root
+			self.data[root] = []
+			for file in files:
+				if True in [file.endswith(ext) for ext in self.dataIgnore]:
+					# Filter ignored filetypes
+					continue
+				self.data[root].append( str( root + os.sep + file ) )
+				
+		self.data = self.data.items()
 		
 	def convertModulesToHierarchy(self):
 		""" To properly add all the modules they need to be represented as a hierarchy. This method will do so for all sources in the modules list dicationary.
@@ -54,15 +76,26 @@ class Compiler():
 
 		return hierarchy
 	
+	def addModule(self, moduleName):
+		""" Adds a module to the tool. 
+		
+		:param moduleName: The name of the module, not its path. Example: `Olympus.core.Core`. This module must be in this package.
+		"""
+		module = self.retrieveModule(moduleName)
+		if not moduleName.startswith(self.currentPackage):
+			moduleName = self.currentPackage + "." + moduleName
+		self.modules[moduleName] = [moduleName.strip(".")[-1]]
+		self.scanDependencies(module)
+	
 	def retrieveModule(self,moduleName):
 		""" Opens a module for reading from its proper path.
 
-		:param moduleName: The name of the module as though it were written in an import statement. Not a filename.
+		:param moduleName: The name of the module, not its path. Example: `Olympus.core.Core`. This module must be in this package.
 		:rtype: The contents of the module file.
 		"""
 		self.addedModules.add(moduleName)
-		if not moduleName.startswith(self.currentPackage):
-			moduleName = self.currentPackage + "." + moduleName
+		if moduleName.startswith(self.currentPackage):
+			moduleName = re.sub("^" + self.currentPackage + "\.", "", moduleName)
 		
 		path = moduleName.replace(".",os.sep) + ".py"
 		absPath = os.path.join(Config().RootDirectory,path)
@@ -74,7 +107,8 @@ class Compiler():
 			return ""
 	
 	def scanDependencies(self,moduleCode):
-		""" Scans a Python script for dependencies and records them for later import. Will reserve a special case for the current package.
+		""" Scans a Python script for dependencies and records them for later import. 
+		Will reserve a special case for the current package.
 
 		:param moduleCode: The code contained in a Python script.
 		:rtype: All the imports contained within the code.
@@ -123,12 +157,25 @@ class Compiler():
 				print "import %s" % ", ".join(modules)
 			else:
 				print "from %s import %s" % (source, ", ".join(modules))
+				
+	def createRequirementsFile(self):
+		for requirement in self.externalModules:
+			print requirement
+			
+	def getPackages(self):
+		""" Retrieves the various packages used in this tool. """
+		packages = set()
+		for module in self.modules:
+			packages.add( ".".join(module.split(".")[:-1]))
+		return list(packages)
 
 	def buildEgg(self):
 		for node in self.procedure.nodes:
 			print node
 			self.retrieveModule("Olympus.modules."+node)
 			self.processDependencies()
+		
+		self.getDataFiles()
 		
 		# Create temporary directory
 		id = int(time.time())
@@ -144,18 +191,48 @@ class Compiler():
 		
 		# Create temporary setup file with required modules
 		
+		data = {
+			"version": Core().getVersion(),
+			"packages": str(self.getPackages() ),
+			"modules": str([module for module in self.modules.keys() + self.basics]),
+			"data": str(self.data)
+		}
+		
 		# We create a setup file.
 		setup = """
 from setuptools import setup
+import os, sys
+
+# Add the installation dir to the PYTHONPATH
+if "install" in sys.argv:
+	prefix = os.path.expanduser( sys.argv[-1].split("=")[-1] )
+	version = "%s.%s" % (sys.version_info[0], sys.version_info[1])
+	installDir = os.path.join( prefix, "lib", "python%s" % version, "site-packages" )
+	print installDir
+	if "PYTHONPATH" not in os.environ:
+		os.environ["PYTHONPATH"] = ""
+	if len(os.environ["PYTHONPATH"])>0 and os.environ["PYTHONPATH"][-1] != os.pathsep:
+		os.environ += os.pathsep
+	os.environ["PYTHONPATH"] += installDir
+	try:
+		os.makedirs(installDir)
+	except: 
+		pass
+	for m in {packages}:
+		try:
+			os.makedirs(os.path.join(installDir, m.replace(".",os.path.sep)))
+		except:
+			pass
 
 setup(
     name = "Olympus generated package",
-    version = "%s",
+    version = "{version}",
     author = "Stephan Heijl",
-	packages = [],
-    py_modules=%s
+	packages = {packages},
+	py_modules= {modules},
+	data_files = {data}
 )		
-		""" % ( Core().getVersion(), str([module for module in self.modules.keys() + self.basics]) )
+		""".format(**data)
 		
 		print [module for module in self.modules.keys() + self.basics]
 		
@@ -166,7 +243,7 @@ setup(
 		command = "cd %s ; cd .. ; echo pwd; python %s bdist_egg -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
 		subprocess.call(command, shell=True)
 		# Create a setup file with appropiate requirements
-			
+		
 		
 		# Compile this into some sort of package (zip/installer/deb?)
 		# Return as a file.
@@ -206,13 +283,17 @@ def test_convertModulesToHierarchy():
 	C.processDependencies()
 	import pprint
 	pprint.pprint( C.convertModulesToHierarchy() )
-	
+
 	
 def test_buildEgg():
+	print "Building egg"
 	C = Compiler(Procedure([],[],[]))
-	module = C.retrieveModule("modules.acquisition.PubMed")
-	C.scanDependencies(module)
+	C.addModule("modules.acquisition.PubMed")
 	C.processDependencies()
 	C.buildEgg()
 
-
+def test_getPackage():
+	C = Compiler(Procedure([],[],[]))
+	C.addModule("modules.acquisition.PubMed")
+	C.processDependencies()
+	print C.getPackages()

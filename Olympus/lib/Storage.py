@@ -1,3 +1,10 @@
+"""
+@name Storage
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 from Olympus.lib.Singleton import Singleton
 from Olympus.lib.Config import Config
 from pymongo import MongoClient

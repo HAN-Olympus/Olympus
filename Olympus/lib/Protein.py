@@ -1,3 +1,10 @@
+"""
+@name Protein
+@author Stephan Heijl
+@module WormBase
+@version 0.0.3
+"""
+
 from Olympus.lib.StoredObject import StoredObject
 
 class Protein(StoredObject):

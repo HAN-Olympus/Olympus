@@ -1,3 +1,10 @@
+"""
+@name UniProt
+@author Stephan Heijl
+@module UniProt
+@version 0.0.3
+"""
+
 from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule
 from Olympus.lib.Protein import Protein
 try:

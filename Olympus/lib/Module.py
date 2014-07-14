@@ -3,9 +3,12 @@
 @author Stephan Heijl
 @module core
 @version 0.0.3
-"""
 
-# Olympus Module Class
+It is important for every Python file in your plugin to include a notation like the one above. 
+This allows ModuleSeparator to distuingish your module from the others and wrap it up nicely for download.
+Version can be any number, but Semantic version is preferred. This allows ModuleLoader to update separate
+files if needed without user intervention.
+"""
 
 from abc import ABCMeta, abstractmethod
 

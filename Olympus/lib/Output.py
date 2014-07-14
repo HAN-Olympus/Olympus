@@ -1,3 +1,10 @@
+"""
+@name Output
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 from Olympus.lib.StoredObject import StoredObject
 
 class Output(StoredObject):

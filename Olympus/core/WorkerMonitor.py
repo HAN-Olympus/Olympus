@@ -1,3 +1,10 @@
+"""
+@name WorkerMonitor
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
+
 import threading, time, gearman, subprocess
 import sys, re
 from Olympus.lib.Config import Config

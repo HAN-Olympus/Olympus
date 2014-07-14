@@ -1,3 +1,10 @@
+"""
+@name PubMedConnections
+@author Stephan Heijl
+@module PubMed
+@version 0.0.3
+"""
+
 from Olympus.lib.StoredObject import StoredObject
 from Olympus.lib.PubMedIndex import PubMedIndex
 from Olympus.lib.Gene import Gene

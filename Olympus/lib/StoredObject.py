@@ -1,5 +1,9 @@
-# Olympus StoredObject Class
-# This is a stored object, the base form of an object that can be stored in our database
+"""
+@name StoredObject
+@author Stephan Heijl
+@module core
+@version 0.0.3
+"""
 
 from abc import ABCMeta, abstractmethod
 from Olympus.lib.Storage import Storage
