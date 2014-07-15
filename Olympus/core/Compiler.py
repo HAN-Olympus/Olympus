@@ -6,7 +6,7 @@
 """
 
 import cStringIO
-import os,re, inspect,time,subprocess
+import os,re, inspect,time,subprocess, pprint
 from Olympus.lib.Procedure import Procedure
 from Olympus.lib.Config import Config
 from Olympus.core.Core import Core
@@ -32,8 +32,10 @@ class Compiler():
 	def getDataFiles(self):
 		""" The webapp portion of Olympus is required. 	"""
 		for root, dirs, files in os.walk(Config().RootDirectory + os.sep + "webapp"):
+			if os.path.sep + "tmp" + os.path.sep  in root: # Ignore tmp folders
+				continue
 			root = root.replace(Config().RootDirectory, "")
-			root = self.currentPackage + root
+			root = str(self.currentPackage + root)
 			self.data[root] = []
 			for file in files:
 				if True in [file.endswith(ext) for ext in self.dataIgnore]:
@@ -166,15 +168,15 @@ class Compiler():
 		""" Retrieves the various packages used in this tool. """
 		packages = set()
 		for module in self.modules:
-			packages.add( ".".join(module.split(".")[:-1]))
+			packages.add( str(".".join(module.split(".")[:-1])) ) 
 		return list(packages)
 
 	def buildEgg(self):
 		for node in self.procedure.nodes:
 			print node
-			self.retrieveModule("Olympus.modules."+node)
-			self.processDependencies()
-		
+			self.addModule("Olympus.modules."+node)
+			
+		self.processDependencies()
 		self.getDataFiles()
 		
 		# Create temporary directory
@@ -193,8 +195,8 @@ class Compiler():
 		
 		data = {
 			"version": Core().getVersion(),
-			"packages": str(self.getPackages() ),
-			"modules": str([module for module in self.modules.keys() + self.basics]),
+			"packages": pprint.pformat(self.getPackages() ),
+			"modules": pprint.pformat([str(module) for module in self.modules.keys() + self.basics]),
 			"data": str(self.data)
 		}
 		
@@ -228,7 +230,7 @@ setup(
     name = "Olympus generated package",
     version = "{version}",
     author = "Stephan Heijl",
-	packages = {packages},
+	packages = [],
 	py_modules= {modules},
 	data_files = {data}
 )		
@@ -241,7 +243,8 @@ setup(
 		
 		# Run temporary setup file with temporary directory as output
 		command = "cd %s ; cd .. ; echo pwd; python %s bdist_egg -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
-		subprocess.call(command, shell=True)
+		subprocess.Popen(command, shell=True, stdout=open(os.devnull, 'wb')).communicate()
+		
 		# Create a setup file with appropiate requirements
 		
 		

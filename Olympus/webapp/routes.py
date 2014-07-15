@@ -30,14 +30,6 @@ for attribute in dir(tools):
 	if not attribute.startswith("__") and hasattr(getattr(tools, attribute), "__call__"):
 		app.jinja_env.globals[attribute] = getattr(tools, attribute)
 
-# TOOLS #
-
-def zipdir(path, zip):
-	""" Zips an entire directory """
-	for root, dirs, files in os.walk(path):
-		for file in files:
-			zip.write(os.path.join(root, file))
-
 # ROUTES #
 
 @app.route("/")
@@ -175,8 +167,12 @@ def downloadCompiled(id):
 	""" Zips the Build directory for this distribution and allows the user to download it. """
 	f = cStringIO.StringIO() # We want to read the pure contents of this file, so we load it in memory.
 	z = zipfile.ZipFile(f, 'w')
-	directory = Config().WebAppDirectory
-	zipdir(directory,z)
+	
+	directory = os.path.join( Config().WebAppDirectory, "tmp", "build-%s" % id )
+	for root, dirs, files in os.walk(directory):
+		for file in files:
+			path = os.path.join(root, file)
+			z.write(path, path.replace(directory, ""))
 	z.close()
 
 	return Response(f.getvalue(), mimetype="application/zip")
