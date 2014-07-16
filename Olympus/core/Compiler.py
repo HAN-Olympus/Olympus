@@ -191,13 +191,26 @@ class Compiler():
 		except:
 			pass # Directory already exists
 		
+		
+		# Create interface template
+		toolpath = os.path.join(tmpDir, "tool.htm")
+		with open(toolpath,"w") as tool:
+			tool.write( self.procedure.generateProcedureInterface() )
+		
+		
+		# Convert the data attribute to a dict for just a second to append this.
+		dataDict = dict(self.data)
+		pprint.pprint(dataDict)
+		dataDict[os.path.join("Olympus","webapp","templates")].append(toolpath)
+		self.data = dataDict.items()
+		
 		# Create temporary setup file with required modules
 		
 		data = {
 			"version": Core().getVersion(),
 			"packages": pprint.pformat(self.getPackages() ),
 			"modules": pprint.pformat([str(module) for module in self.modules.keys() + self.basics]),
-			"data": str(self.data)
+			"data": pprint.pformat(self.data)
 		}
 		
 		# We create a setup file.
@@ -244,13 +257,7 @@ setup(
 		# Run temporary setup file with temporary directory as output
 		command = "cd %s ; cd .. ; echo pwd; python %s bdist_egg -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
 		subprocess.Popen(command, shell=True, stdout=open(os.devnull, 'wb')).communicate()
-		
-		# Create a setup file with appropiate requirements
-		
-		
-		# Compile this into some sort of package (zip/installer/deb?)
-		# Return as a file.
-		
+				
 		return id
 
 

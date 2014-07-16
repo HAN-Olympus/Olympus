@@ -41,7 +41,7 @@ $(function() {
 			$("h2").append("Done.")
 			// We can stop drawing when we're done compiling.
 			sigInst.stopForceAtlas2();
-		},5000);
+		},2000);
 	});
 	
 	

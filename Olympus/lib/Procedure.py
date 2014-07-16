@@ -197,11 +197,9 @@ class Procedure():
 		return str(form)
 	
 	def generateProcedureInterface(self):
-		""" Generates the interface for the procedure.
-		
-		
-		"""
+		""" Generates the interface for the procedure. """
 		form = self.generateControls()
+		return form
 	
 	def save(self, filename=None):
 		""" Saves the procedure, with instantiated nodes.
