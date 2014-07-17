@@ -59,7 +59,7 @@ $(function () {
 
 			connections = $(this).find(".module-connection");
 			if (connections.length == 0) {
-				connection = $("<img>");
+				connection = $("<svg>");
 				var color = "428bca"
 				connection.attr("class", "module-connection");
 			} else {
@@ -103,6 +103,7 @@ $(function () {
 
 						// Change the source of the connection image
 						connection.attr("src", src)
+						connection.load(src);
 						destinationFound = true;
 
 						console.log(src)
@@ -155,11 +156,8 @@ $(function () {
 
 	function changeConnectionColor(connection, fill) {
 		src = connection.attr("src")
-		console.log(src)
 		src = src.split("&fill=")[0]
-		console.log(src)
 		src += "&fill=" + fill
-		console.log(src)
 		connection.attr("src", src)
 	}
 
@@ -173,7 +171,7 @@ $(function () {
 		return e.data("confirmedConnections")
 	}
 
-	$(".module-output").bind("click", function (event) {
+	$(".module-output .module-connection .connection").on("click", "body",function (event) {
 		if ($(this).hasClass("no-destination")) {
 			return false;
 		}

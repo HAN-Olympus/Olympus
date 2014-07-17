@@ -200,13 +200,17 @@ body {
 	top: 0px;
 }
 .module-connection.connect-bottom {
-	bottom: 0px;
+	bottom: -5px;
 }
 .module-output.no-destination {
 	background-color: #ccc;
 	border-radius: 0px 3px 3px 0px;
 	border: 1px solid #428bca;
 	border-left: 0px;
+}
+
+svg {
+	overflow: visible !important;
 }
 
 #sigma-container {
