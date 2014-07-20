@@ -182,8 +182,8 @@ body {
 	width: 25%;
 	color: white;
 }
-.module-output.destination-found {
-	cursor: pointer;
+.module-output.destination-found svg path{
+	cursor:pointer;
 }
 .module-output-name {
 	font-size: 10px;
@@ -211,6 +211,7 @@ body {
 
 svg {
 	overflow: visible !important;
+	pointer-events: visiblePainted;
 }
 
 #sigma-container {

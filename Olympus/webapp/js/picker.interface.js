@@ -55,16 +55,17 @@ $(function () {
 		$(e).find(".module-output").each(function () {
 			output = $(this)
 			output.removeClass("no-destination destination-found");
+			
 			outputs = $(this).data("accept").split(",");
 
 			connections = $(this).find(".module-connection");
 			if (connections.length == 0) {
-				connection = $("<svg>");
+				connection = $("<div>");
 				var color = "428bca"
 				connection.attr("class", "module-connection");
 			} else {
 				connection = connections.eq(0)
-				var color = connection.attr("src").match(/\&fill=([\da-fA-F]{3,6})$/)[1];
+				var color = connection.data("src").match(/\&fill=([\da-fA-F]{3,6})$/)[1];
 				console.log(color);
 			}
 
@@ -84,31 +85,32 @@ $(function () {
 					if (intersects) {
 						// These modules can communicate with each other, draw a connection
 
-						y = $(this).offset().top - output.offset().top + 10
+						y = $(this).offset().top - output.offset().top + 10;
 						if (y > 0) {
-							src = "/svg/connection?x1=0&y1=0&x2=55&y2=" + parseInt(y)
-							connection.removeClass("connect-bottom")
-							connection.addClass("connect-top")
+							src = "/svg/connection?x1=0&y1=0&x2=55&y2=" + parseInt(y);
+							connection.removeClass("connect-bottom");
+							connection.addClass("connect-top");
 						} else {
-							src = "/svg/connection?x1=0&y1=" + Math.abs(parseInt(y)) + "&x2=55&y2=0"
-							connection.removeClass("connect-top")
-							connection.addClass("connect-bottom")
+							src = "/svg/connection?x1=0&y1=" + Math.abs(parseInt(y)) + "&x2=55&y2=0";
+							connection.removeClass("connect-top");
+							connection.addClass("connect-bottom");
 						}
-
-						if (output.hasClass("connection-approved")) {
-							src += "&fill=#dff0d8"
+						
+						console.log(output)
+						
+						if (connection.data("confirmed")==true) {
+							src += "&fill=#dff0d8";
 						} else {
-							src += "&fill=" + color
+							src += "&fill=" + color;
 						}
 
 						// Change the source of the connection image
-						connection.attr("src", src)
+						connection.attr("data-src", src)
 						connection.load(src);
 						destinationFound = true;
 
-						console.log(src)
-						output.append(connection)
-						output.data("target", $(this))
+						output.append(connection);
+						connection.data("target", $(this));
 						
 						connection = connection.clone().appendTo(connection.parent())
 					}
@@ -155,10 +157,11 @@ $(function () {
 	});
 
 	function changeConnectionColor(connection, fill) {
-		src = connection.attr("src")
+		src = connection.data("src")
 		src = src.split("&fill=")[0]
 		src += "&fill=" + fill
-		connection.attr("src", src)
+		connection.data("src",src)
+		connection.load(src)
 	}
 
 	function changeConfirmedConnections(e, by) {
@@ -170,22 +173,28 @@ $(function () {
 		}
 		return e.data("confirmedConnections")
 	}
-
-	$(".module-output .module-connection .connection").on("click", "body",function (event) {
-		if ($(this).hasClass("no-destination")) {
+	
+	// Handles a click on a module connection
+	var handleConnectionClick = function (event) {
+		if( $(event.target).prop("tagName").toLowerCase() != "path" ) {
 			return false;
 		}
-		target = $(this).data("target").parent().find(".panel")
-		current = $(this).parent().find(".panel")
+		console.log("You clicked on a path!")
+		
+		path = $(event.target); // This is the actual SVG path that was clicked on.
+		conn = path.parents(".module-connection") // This is the parent div that contains the svg.
+		output = conn.parent() // This is the output.
+				
+		target = conn.data("target").parent().find(".panel")
+		current = output.parent().find(".panel")
+		console.log(target, current);
 
 		currentModuleItem = current.parents(".module-item")
 		targetModuleItem = target.parents(".module-item")
 
-		if ($(this).hasClass("destination-confirmed") || $(this).hasClass("destination-removed")) {
+		if (conn.data("confirmed")==true) {
 			// Switch to destination found - this will turn the modules blue
-			$(this).removeClass("destination-confirmed");
-
-			console.log(currentModuleItem.find(".destination-confirmed").length)
+			conn.data("confirmed",false)
 
 			changeConfirmedConnections(currentModuleItem, -1);
 			if (currentModuleItem.data("confirmedConnections") == 0) {
@@ -200,6 +209,7 @@ $(function () {
 
 			bgcolor = $(".panel-primary .panel-heading").css("background-color");
 			color = $(".panel-primary .panel-heading").css("color");
+			output.css({color:color, background:bgcolor})
 
 		} else {
 			// Switch to destination confirmed - this will turn the modules green
@@ -209,19 +219,18 @@ $(function () {
 			current.removeClass("panel-primary");
 			target.addClass("panel-success");
 			current.addClass("panel-success");
-			$(this).addClass("destination-confirmed");
+			conn.data("confirmed",true)
 
 			bgcolor = $(".panel-success .panel-heading").css("background-color")
 			color = $(".panel-success .panel-heading").css("color")
+			output.css({color:color, background:bgcolor})
 		}
+		
+		changeConnectionColor(conn, rgb2hex(bgcolor).substr(1));
 
-		$(this).css({
-			"background-color": bgcolor,
-			"color": color
-		});
-		changeConnectionColor($(this).find(".module-connection"), rgb2hex(bgcolor).substr(1));
-
-	});
+	}	
+	
+	document.body.addEventListener("click", handleConnectionClick, true);
 
 	// Moving the modules with the arrow
 	$("body").on("click", ".move-module-down", function () {

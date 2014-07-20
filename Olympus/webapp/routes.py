@@ -21,6 +21,7 @@ import gearman
 import json
 import zipfile
 import cStringIO
+import requests
 
 from Olympus.webapp import app, modules
 
@@ -68,7 +69,6 @@ def loadJs(filename):
 	
 @app.route("/img/<filename>")
 def loadImg(filename):
-	path = os.path.join(Config().WebAppDirectory, "img", filename)
 	pathBootstrap = os.path.join(Config().WebAppDirectory, "bootstrap", "img", filename)
 	if os.path.isfile(path):
 		imgFile = open(path)
@@ -80,6 +80,33 @@ def loadImg(filename):
 	img = imgFile.read()
 	imgFile.close()
 	return Response(img, mimetype="image/jpeg")	
+
+@app.route("/favicon")
+def loadFavicon():
+	# Loads the favicon based on the build status of according to Travis
+	# Change this to get the results from another repository.
+	
+	travisUrl = "https://api.travis-ci.org/repositories/HAN-Olympus/Olympus.json"
+	filename = "favicon.png"
+	try:
+		r = requests.get(travisUrl)
+		data = r.json()
+
+		if data["last_build_result"] == 1: # Something went wrong with the build.
+			filename = "favicon-red.png"
+		if data["last_build_result"] == 0: # Build passed
+			filename = "favicon-green.png"
+	except:
+		pass # Ignore errors, just use the default icon.
+	
+	path = os.path.join(Config().WebAppDirectory, "img", filename)
+	imgFile = open(path)
+	img = imgFile.read()
+	imgFile.close()
+	return Response(img, mimetype="image/png")
+
+	
+	
 
 @app.route("/fonts/<filename>")
 def loadFont(filename):
@@ -110,8 +137,6 @@ def interface():
 	enabledModules = Config().modules["enabled"]
 	# The amount of modules category columns
 	colCount = len([ 1 for c in enabledModules if len(enabledModules[c]) > 0])
-	
-	print modules
 	return render_template("picker.html", config=Config(), name="picker", colCount=colCount, modules=modules )	
 	
 @app.route("/svg/connection")
