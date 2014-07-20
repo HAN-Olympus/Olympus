@@ -176,6 +176,9 @@ $(function () {
 	
 	// Handles a click on a module connection
 	var handleConnectionClick = function (event) {
+		
+		console.log(event.target)
+		
 		if( $(event.target).prop("tagName").toLowerCase() != "path" ) {
 			return false;
 		}
