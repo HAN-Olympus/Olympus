@@ -170,6 +170,31 @@ class Compiler():
 		for module in self.modules:
 			packages.add( str(".".join(module.split(".")[:-1])) ) 
 		return list(packages)
+	
+	def addToolInterface(self):
+		""" Creates the interface template. """
+		toolpath = os.path.join(self.tmpDir, "tool.htm")
+		with open(toolpath,"w") as tool:
+			tool.write( self.procedure.generateProcedureInterface() )
+			
+		# Convert the data attribute to a dict for just a second to append this.
+		dataDict = dict(self.data)
+		pprint.pprint(dataDict)
+		dataDict[os.path.join("Olympus","webapp","templates")].append(toolpath)
+		self.data = dataDict.items()
+		
+	def addSavedProcedure(self):
+		""" Adds the procedure as a file to the data files. """
+		procedurepath = os.path.join(self.tmpDir, "tool.prc")
+		self.procedure.save(procedurepath)
+		
+		# Convert the data attribute to a dict for just a second to append this.
+		dataDict = dict(self.data)
+		pprint.pprint(dataDict)
+		if "Olympus" not in dataDict:
+			dataDict["Olympus"] = []
+		dataDict["Olympus"].append(procedurepath)
+		self.data = dataDict.items()
 
 	def buildEgg(self):
 		for node in self.procedure.nodes:
@@ -182,6 +207,7 @@ class Compiler():
 		# Create temporary directory
 		id = int(time.time())
 		tmpDir = os.path.abspath("tmp/build-%s" % id)
+		self.tmpDir = tmpDir
 		try:
 			os.mkdir("tmp")
 		except:
@@ -191,18 +217,10 @@ class Compiler():
 		except:
 			pass # Directory already exists
 		
+		# Add various tool-specific components
+		self.addToolInterface()
+		self.addSavedProcedure()
 		
-		# Create interface template
-		toolpath = os.path.join(tmpDir, "tool.htm")
-		with open(toolpath,"w") as tool:
-			tool.write( self.procedure.generateProcedureInterface() )
-		
-		
-		# Convert the data attribute to a dict for just a second to append this.
-		dataDict = dict(self.data)
-		pprint.pprint(dataDict)
-		dataDict[os.path.join("Olympus","webapp","templates")].append(toolpath)
-		self.data = dataDict.items()
 		
 		# Create temporary setup file with required modules
 		
