@@ -182,7 +182,7 @@ body {
 	width: 25%;
 	color: white;
 }
-.module-output.destination-found svg path{
+.module-output svg path{
 	cursor:pointer;
 	pointer-events: all;
 }

@@ -176,9 +176,7 @@ $(function () {
 	
 	// Handles a click on a module connection
 	var handleConnectionClick = function (event) {
-		
-		console.log(event.target)
-		
+		//console.log(event.target)
 		if( $(event.target).prop("tagName").toLowerCase() != "path" ) {
 			return false;
 		}
@@ -212,6 +210,9 @@ $(function () {
 
 			bgcolor = $(".panel-primary .panel-heading").css("background-color");
 			color = $(".panel-primary .panel-heading").css("color");
+			output.addClass("destination-found");
+			output.removeClass("destination-confirmed");
+			
 			output.css({color:color, background:bgcolor})
 
 		} else {
@@ -223,6 +224,8 @@ $(function () {
 			target.addClass("panel-success");
 			current.addClass("panel-success");
 			conn.data("confirmed",true)
+			output.addClass("destination-confirmed");
+			output.removeClass("destination-found");
 
 			bgcolor = $(".panel-success .panel-heading").css("background-color")
 			color = $(".panel-success .panel-heading").css("color")
@@ -278,32 +281,37 @@ $(function () {
 		// Get all the found destinations columns
 		$(".destination .module-output.destination-confirmed").each(function () {
 			output = $(this).parents(".module-item")
-			target = $(this).data("target").parent(".module-item")
+			
+			targets = $(this).find(".module-connection")
+			targets.each(function () {
+				target = $(this).data("target").parents(".module-item")
+				
+				// Get the names of the output module and the target module
+				outputName = output.find(".module-name").text()
+				targetName = target.find(".module-name").text()
+								
+				outputId = $(this).text();
+				
+				// The nodes must be unique.
+				if ($.inArray(outputName, nodes) < 0) {
+					nodes.push(outputName);
+				}
+				if ($.inArray(targetName, nodes) < 0) {
+					nodes.push(targetName);
+				}
+				// Check if the output is in the first column, these are always linked to start.
+				if (output.parents(".destination .col").eq(0).index() == 0) {
+					edgeAttributes.push({
+						"outputId": ""
+					});
+					edges.push(["start", outputName])
+				}
 
-			outputName = output.find(".module-name").text()
-			targetName = target.find(".module-name").text()
-
-			outputId = $(this).text();
-
-			if ($.inArray(outputName, nodes) < 0) {
-				nodes.push(outputName);
-			}
-			if ($.inArray(targetName, nodes) < 0) {
-				nodes.push(targetName);
-			}
-			// Check if the output is in the first column
-			if (output.parents(".destination .col").eq(0).index() == 0) {
 				edgeAttributes.push({
-					"outputId": ""
+					"outputId": outputId.trim()
 				});
-				edges.push(["start", outputName])
-			}
-
-			edgeAttributes.push({
-				"outputId": outputId.trim()
+				edges.push([outputName, targetName]);
 			});
-			edges.push([outputName, targetName])
-
 		});
 
 		var nodes = JSON.stringify(nodes, null, "").replace(/(\\n|\\t| )/g,'')
