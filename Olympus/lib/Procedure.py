@@ -5,11 +5,12 @@
 @version 0.0.3
 """
 
-from pprint import pprint
+from pprint import pprint, isreadable
 import importlib
 import networkx as nx
 import cStringIO
 import cPickle
+import sys
 from html import XHTML
 
 class Procedure():
@@ -65,9 +66,13 @@ class Procedure():
 		:param attributes: A dictionary of attributes for each edge, should correspond in order with the edges list.
 		:rtype: A networkx (Di)Graph object
 		"""		
-
-		instantiatedNodes = self.importModules(nodes)
-		instantiatedNodes.append("start")
+		
+		# We only need to import modules if there aren't any instantiated nodes yet.
+		if len(self.instantiatedNodes) == 0:
+			instantiatedNodes = self.importModules(nodes)
+			instantiatedNodes.append("start")
+		else:
+			instantiatedNodes = self.instantiatedNodes
 
 		instantiatedEdges = []
 		
@@ -201,11 +206,14 @@ class Procedure():
 		form = self.generateControls()
 		return form
 	
+	
 	def save(self, filename=None):
-		""" Saves the procedure, with instantiated nodes.
+		""" Saves the procedure, with instantiated nodes. 
 		
 		:param filename: Optional. 
+		:rtype: True if filename was provided and save was successful. A string containing the pickled document if no filename was provided.
 		"""
+		
 		if filename:
 			with open(filename,"w") as f:
 				cPickle.dump(self,f)

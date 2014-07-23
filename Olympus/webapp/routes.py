@@ -69,6 +69,7 @@ def loadJs(filename):
 	
 @app.route("/img/<filename>")
 def loadImg(filename):
+	path = os.path.join(Config().WebAppDirectory, "img", filename)
 	pathBootstrap = os.path.join(Config().WebAppDirectory, "bootstrap", "img", filename)
 	if os.path.isfile(path):
 		imgFile = open(path)
@@ -112,6 +113,7 @@ def loadFavicon():
 def loadFont(filename):
 	path = os.path.join(Config().WebAppDirectory, "fonts", filename)
 	pathBootstrap = os.path.join(Config().WebAppDirectory, "bootstrap", "fonts", filename)
+	print path
 	if os.path.isfile(path):
 		fontFile = open(path)
 	elif os.path.isfile(pathBootstrap):
@@ -223,6 +225,12 @@ def results(job, output):
 		return Response(out[0].getAttribute("output",output))
 	else:
 		return render_template("results.notfound.html", config=Config())
+	
+@app.route("/tool")
+def tool():
+	""" Renders the tool interface. """
+	
+	return render_template("tool.html", config=Config())
 	
 # This is for the WorkerMonitor interface #
 

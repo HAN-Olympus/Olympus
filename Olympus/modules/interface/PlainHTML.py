@@ -12,27 +12,16 @@ class PlainHTML(InterfaceModule.InterfaceModule):
 		
 		:param title: The title of the document under construction.
 		"""
-		contents = HTML()
-		self.html = contents.html
-		head = self.html.head
-		head.title(title)
-		self.body = self.html.body
+		self.title = title
 		
-	def appendToBody(self, html):
-		""" Appends a piece of HTML to the body. 
-		
-		:param html: The HTML to append to the body element of the document that is currently being constructed.
-		"""
-		self.body.text(html, escape=False)
-		
-	def addVisualizations(self, visualizations):
+	def addVisualizations(self, body, visualizations):
 		""" Takes a collection of visualizations and attempts to add them to the document as HTML.
 		If the visualization does not have a proper toHTML() function the one in the VisualizationModule superclass will be used.
 		
 		:param visualizations: A collection of visualizations to be added to the body.
 		"""
 		for v in visualizations:
-			vContainer = self.body.div(klass="visualization")
+			vContainer = body.div(klass="visualization")
 			vContainer.text(v.toHTML(), escape=False)
 			
 	def specifyControls(self):
@@ -50,25 +39,26 @@ class PlainHTML(InterfaceModule.InterfaceModule):
 		pass
 		
 	def start(self, input):
-		if isinstance(input, list):
-			self.addVisualizations(input)
-		else:
-			self.addVisualizations([input])
+		contents = HTML()
+		html = contents.html
+		head = html.head
+		head.title(self.title)
+		body = html.body
 		
-		return str(self.html)
+		if isinstance(input, list):
+			self.addVisualizations(body, input)
+		else:
+			self.addVisualizations(body, [input])
+		
+		return str(html)
 
 # TESTING #
 import difflib
 		
 def test_init():
 	ph = PlainHTML()
-	testString = "<html><head><title>PlainHTML Generated Page</title></head><body></html>"	
-	assert str(ph.html) == testString
-	
-def test_appendToBody():
-	ph = PlainHTML()
-	appendText = "Hello world <br/>"
-	testString = "<html><head><title>PlainHTML Generated Page</title></head><body>%s</body></html>" % appendText
-	ph.appendToBody(appendText)
-	assert str(ph.html) == testString
+	testString = "<html><head><title>PlainHTML Generated Page</title></head><body></html>"
+	result = ph.start([])
+	print result
+	assert result == testString
 	

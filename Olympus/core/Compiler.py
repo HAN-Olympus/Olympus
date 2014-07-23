@@ -179,7 +179,6 @@ class Compiler():
 			
 		# Convert the data attribute to a dict for just a second to append this.
 		dataDict = dict(self.data)
-		pprint.pprint(dataDict)
 		dataDict[os.path.join("Olympus","webapp","templates")].append(toolpath)
 		self.data = dataDict.items()
 		
@@ -190,7 +189,6 @@ class Compiler():
 		
 		# Convert the data attribute to a dict for just a second to append this.
 		dataDict = dict(self.data)
-		pprint.pprint(dataDict)
 		if "Olympus" not in dataDict:
 			dataDict["Olympus"] = []
 		dataDict["Olympus"].append(procedurepath)
@@ -267,7 +265,7 @@ setup(
 )		
 		""".format(**data)
 		
-		print [module for module in self.modules.keys() + self.basics]
+		#print [module for module in self.modules.keys() + self.basics]
 		
 		with open(os.path.join(tmpDir, "setup.py"),"w") as sfile:
 			sfile.write(setup)
