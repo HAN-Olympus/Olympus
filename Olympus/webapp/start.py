@@ -14,6 +14,10 @@ from Olympus.webapp import app
 from flask.ext.compress import Compress
 
 class Server(threading.Thread):
+	def __init__(self):
+		self.PORT = 5000
+		super(Server, self).__init__()
+	
 	def checkWorkingDirectory(self):
 		""" Checks the working directory and sets it to the webapp directory if needed. """
 		print ("Current working directory: '%s'" % os.getcwd())
@@ -39,18 +43,25 @@ class Server(threading.Thread):
 
 		self.checkWorkingDirectory()	
 		self.storeWebAppDirectories()	
-
-		PORT = 5000
+		
 		print ("Starting on port %s..." % PORT)
 
 		# Compress all plaintext communications
 		Compress(app)
 		app.config['COMPRESS_MIMETYPES'] = ['text/html', 'text/css', 'text/xml', 'application/json', 'application/javascript', 'image/svg+xml']
 		app.config['COMPRESS_DEBUG'] = True
-
-		http_server = HTTPServer(WSGIContainer(app))
-		http_server.listen(PORT)
-		IOLoop.instance().start()
+		
+		serverStarted = False
+		while not serverStarted:
+			# Try adding 1 to the port every time we can't listen on the preferred port.
+			try:
+				print ("Starting on port %s..." % self.PORT)
+				http_server = HTTPServer(WSGIContainer(app))
+				http_server.listen(PORT)
+				IOLoop.instance().start()
+				serverStarted = True
+			except Exception:
+				self.PORT +=1
 
 	def startLocal(self):
 		print ("Starting Olympus Tornado HTTP Server (LOCAL)")
@@ -59,13 +70,18 @@ class Server(threading.Thread):
 
 		self.checkWorkingDirectory()	
 		self.storeWebAppDirectories()	
-
-		PORT = 5000
-		print ("Starting on port %s..." % PORT)
-
-		http_server = HTTPServer(WSGIContainer(app))
-		http_server.listen(PORT)
-		IOLoop.instance().start()
+		
+		serverStarted = False
+		while not serverStarted:
+			# Try adding 1 to the port every time we can't listen on the preferred port.
+			try:
+				print ("Starting on port %s..." % self.PORT)
+				http_server = HTTPServer(WSGIContainer(app))
+				http_server.listen(self.PORT)
+				IOLoop.instance().start()
+				serverStarted = True
+			except Exception:
+				self.PORT +=1
 		
 	def run(self):
 		self.startLocal()

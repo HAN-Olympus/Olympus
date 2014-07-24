@@ -43,6 +43,14 @@ Olympus.core.ModuleSeparator module
     :undoc-members:
     :show-inheritance:
 
+Olympus.core.ToolInterface module
+---------------------------------
+
+.. automodule:: Olympus.core.ToolInterface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Olympus.core.Worker module
 --------------------------
 

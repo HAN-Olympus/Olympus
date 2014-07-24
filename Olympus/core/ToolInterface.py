@@ -66,8 +66,8 @@ if __name__ == "__main__":
 # TESTING #
 	
 def test_startServer():
-	assert threading.activeCount() == 1
+	currentCount = threading.activeCount()
 	ti = ToolInterface()
 	ti.startServer()
 	time.sleep(5)
-	assert threading.activeCount() == 2
+	assert threading.activeCount() == currentCount + 1

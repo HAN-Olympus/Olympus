@@ -159,8 +159,8 @@ def test_getGearmanPing():
 	assert status == None or status > 0
 	
 def test_startServer():
-	assert threading.activeCount() == 1
+	currentCount = threading.activeCount()
 	wm = WorkerMonitor()
 	wm.startServer()
 	time.sleep(5)
-	assert threading.activeCount() == 2
+	assert threading.activeCount() == currentCount + 1
