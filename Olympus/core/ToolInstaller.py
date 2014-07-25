@@ -106,10 +106,11 @@ def test_activateVirtualEnv():
 	assert os.environ["PATH"] != prevPATH
 	os.system("rm -r %s" % ti.virtualEnvDir)
 	
-def test_installRequirements():	
+def test_installRequirements():
 	ti = ToolInstaller()
 	if not os.path.isfile(ti.requirementsFile):
-		ti.requirementsFile = "../requirements.txt"
+		from Olympus.lib.Config import Config
+		ti.requirementsFile = os.path.join( Config().RootDirectory,"..","requirements.txt" )
 	ti.createVirtualEnv()
 	ti.activateVirtualEnv()
 	# Get all the installed packages
