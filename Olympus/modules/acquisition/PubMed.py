@@ -54,10 +54,12 @@ class PubMed(AcquisitionModule):
 		"""
 		search = Entrez.esearch("pubmed", term=term, retmax=limit)
 		ids = Entrez.read(search)["IdList"]
+		print ids, len(ids)
 		if len(ids) == 0:
 			return []
 					
 		articles = self.getById(list(ids), limit=limit)
+		print articles, len(articles)
 			
 		return articles
 		
@@ -210,7 +212,7 @@ def test_formatTerm():
 def test_getBySearchTerm():
 	pm = PubMed()
 	articles = pm.getBySearchTerm("zinc")
-	assert len(articles) == 10
+	assert len(articles) > 5
 
 def test_convertDateToNative():
 	dt = PubMed().convertDateToNative(1,1,2014)
