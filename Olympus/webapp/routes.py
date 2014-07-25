@@ -198,8 +198,18 @@ def downloadCompiled(id):
 	directory = os.path.join( Config().WebAppDirectory, "tmp", "build-%s" % id )
 	for root, dirs, files in os.walk(directory):
 		for file in files:
-			path = os.path.join(root, file)
-			z.write(path, path.replace(directory, ""))
+			if file.endswith(".egg"): # Just add the .egg
+				path = os.path.join(root, file)
+				z.write(path, path.replace(directory, ""))
+	
+	# Add ToolInstaller.py as install.py
+	installer = os.path.join(Config().RootDirectory,"core", "ToolInstaller.py")
+	z.write(installer, "install.py")
+	
+	# And include the requirements.
+	requirements = os.path.join(Config().RootDirectory,"..", "requirements.txt")
+	z.write(requirements, "requirements.txt")
+
 	z.close()
 
 	return Response(f.getvalue(), mimetype="application/zip")
