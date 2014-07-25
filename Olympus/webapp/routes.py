@@ -198,7 +198,7 @@ def downloadCompiled(id):
 	directory = os.path.join( Config().WebAppDirectory, "tmp", "build-%s" % id )
 	for root, dirs, files in os.walk(directory):
 		for file in files:
-			if file.endswith(".egg"): # Just add the .egg
+			if file.endswith(".whl"): # Just add the .whl
 				path = os.path.join(root, file)
 				z.write(path, path.replace(directory, ""))
 	

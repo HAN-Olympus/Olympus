@@ -52,10 +52,10 @@ class ToolInstaller():
 		os.system(pipPath + " install -r " + self.requirementsFile)
 		
 	def installTool(self):
-		""" Uses the easy_install provided by the virtualenv to install the egg file.. """
+		""" Uses the easy_install provided by the virtualenv to install the wheel file.. """
 		easyInstallPath = os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, "easy_install")
 		for file in os.listdir():
-			if file.endswith(".egg"):
+			if file.endswith(".whl"):
 				os.system(easyInstallPath + " " + file)
 	
 	def createShortcuts(self):
@@ -106,8 +106,10 @@ def test_activateVirtualEnv():
 	assert os.environ["PATH"] != prevPATH
 	os.system("rm -r %s" % ti.virtualEnvDir)
 	
-def test_installRequirements():
+def test_installRequirements():	
 	ti = ToolInstaller()
+	if not os.path.isfile(ti.requirementsFile):
+		ti.requirementsFile = "../requirements.txt"
 	ti.createVirtualEnv()
 	ti.activateVirtualEnv()
 	# Get all the installed packages
@@ -125,5 +127,5 @@ def test_createShortcuts():
 	ti.createShortcuts()	
 	assert os.path.isfile("startServer.sh")
 	
-	os.system("rm serverStart.sh")
+	os.system("rm startServer.sh")
 	

@@ -198,7 +198,7 @@ class Compiler():
 		dataDict["Olympus"].append(procedurepath)
 		self.data = dataDict.items()
 
-	def buildEgg(self):
+	def buildWheel(self):
 		for node in self.procedure.nodes:
 			print node
 			self.addModule("Olympus.modules."+node)
@@ -275,7 +275,7 @@ setup(
 			sfile.write(setup)
 		
 		# Run temporary setup file with temporary directory as output
-		command = "cd %s ; cd .. ; echo pwd; python %s bdist_egg -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
+		command = "cd %s ; cd .. ; echo pwd; python %s bdist_wheel -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
 		subprocess.Popen(command, shell=True, stdout=open(os.devnull, 'wb')).communicate()
 				
 		return id
@@ -315,12 +315,12 @@ def test_convertModulesToHierarchy():
 	pprint.pprint( C.convertModulesToHierarchy() )
 
 	
-def test_buildEgg():
-	print "Building egg"
+def test_buildWheel():
+	print "Building wheel"
 	C = Compiler(Procedure([],[],[]))
 	C.addModule("modules.acquisition.PubMed")
 	C.processDependencies()
-	C.buildEgg()
+	C.buildWheel()
 
 def test_getPackage():
 	C = Compiler(Procedure([],[],[]))
