@@ -46,13 +46,17 @@ class ToolInstaller():
 		actthispath = os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, self.virtualEnvActivationPath)
 		execfile(actthispath,dict(__file__=actthispath) )
 	
-	def installRequirements(self):
-		""" Uses pip to install the requirements for this package. """
+	def installRequirements(self, installPySide=True):
+		""" Uses pip to install the requirements for this package.
+		
+		:param installPySide: Installing PySide takes a LONG time, so installing it is optional. Enabled by default, disabled in tests.
+		"""
 		pipPath = os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, "pip")
 		os.system(pipPath + " install -r " + self.requirementsFile)
 		# Also install PySide, which is not a requirement for the server package.
 		print "Installing PySide. This will probably take a long time."
-		pip.main(["install","pyside"])
+		if installPySide:
+			os.system(pipPath + " install pyside")
 		
 	def installTool(self):
 		""" Uses the easy_install provided by the virtualenv to install the dist file.. """
@@ -130,7 +134,7 @@ def test_installRequirements():
 	# Get all the installed packages
 	packages = os.popen('pip freeze').read()
 	
-	ti.installRequirements()
+	ti.installRequirements(installPySide=False)
 	
 	newPackages = os.popen('pip freeze').read()
 	
