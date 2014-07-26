@@ -223,12 +223,11 @@ class Compiler():
 		self.addToolInterface()
 		self.addSavedProcedure()
 		
-		
 		# Create temporary setup file with required modules
 		
 		data = {
 			"version": Core().getVersion(),
-			"packages": pprint.pformat(self.getPackages() ),
+			"packages": pprint.pformat(self.getPackages()+["Olympus","Olympus.modules","Olympus.webapp"]),
 			"modules": pprint.pformat([str(module) for module in self.modules.keys() + self.basics]),
 			"data": pprint.pformat(self.data)
 		}
@@ -260,10 +259,10 @@ if "install" in sys.argv:
 			pass
 
 setup(
-    name = "Olympus generated package",
+    name = "OlympusTool",
     version = "{version}",
     author = "Stephan Heijl",
-	packages = [],
+	packages = {packages},
 	py_modules= {modules},
 	data_files = {data}
 )		
