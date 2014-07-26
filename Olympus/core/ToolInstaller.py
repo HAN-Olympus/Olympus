@@ -52,11 +52,11 @@ class ToolInstaller():
 		os.system(pipPath + " install -r " + self.requirementsFile)
 		
 	def installTool(self):
-		""" Uses the easy_install provided by the virtualenv to install the wheel file.. """
+		""" Uses the easy_install provided by the virtualenv to install the dist file.. """
 		easyInstallPath = os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, "easy_install")
-		for file in os.listdir():
+		for file in os.listdir("."):
 			if file.endswith(".whl"):
-				os.system(easyInstallPath + " " + file)
+				os.system("pip install --use-wheel --no-index " + file)
 	
 	def createShortcuts(self):
 		""" Creates a variety of shortcuts for the tool.

@@ -186,7 +186,7 @@ def compiler():
 	module = C.retrieveModule("modules.acquisition.PubMed")
 	C.scanDependencies(module)
 	C.processDependencies()
-	id = C.buildEgg()
+	id = C.buildDist()
 	return Response(json.dumps({"id":id}))
 
 @app.route("/downloadCompiled/<id>")

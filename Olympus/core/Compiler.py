@@ -198,7 +198,7 @@ class Compiler():
 		dataDict["Olympus"].append(procedurepath)
 		self.data = dataDict.items()
 
-	def buildWheel(self):
+	def buildDist(self):
 		for node in self.procedure.nodes:
 			print node
 			self.addModule("Olympus.modules."+node)
@@ -315,12 +315,12 @@ def test_convertModulesToHierarchy():
 	pprint.pprint( C.convertModulesToHierarchy() )
 
 	
-def test_buildWheel():
+def test_buildDist():
 	print "Building wheel"
 	C = Compiler(Procedure([],[],[]))
 	C.addModule("modules.acquisition.PubMed")
 	C.processDependencies()
-	C.buildWheel()
+	C.buildDist()
 
 def test_getPackage():
 	C = Compiler(Procedure([],[],[]))

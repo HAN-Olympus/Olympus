@@ -106,9 +106,7 @@ class PubMed(AcquisitionModule):
 				articles.append( article )
 				article.save()
 			
-		return articles
-		
-		
+		return articles		
 	
 	def convertToArticle(self, article):
 		"""Takes the parsed Pubmed article and converts it to our lightweight format.
