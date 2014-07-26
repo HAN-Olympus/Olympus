@@ -50,13 +50,16 @@ class ToolInstaller():
 		""" Uses pip to install the requirements for this package. """
 		pipPath = os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, "pip")
 		os.system(pipPath + " install -r " + self.requirementsFile)
+		# Also install PySide, which is not a requirement for the server package.
+		print "Installing PySide. This will probably take a long time."
+		pip.main(["install","pyside"])
 		
 	def installTool(self):
 		""" Uses the easy_install provided by the virtualenv to install the dist file.. """
 		easyInstallPath = os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, "easy_install")
 		for file in os.listdir("."):
-			if file.endswith(".whl"):
-				os.system("pip install --use-wheel --no-index " + file)
+			if file.endswith(".egg"):
+				os.system(easyInstallPath + " " + file)
 	
 	def createShortcuts(self):
 		""" Creates a variety of shortcuts for the tool.
@@ -68,11 +71,22 @@ class ToolInstaller():
 		params = {"activate": os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, "activate")}
 		
 		startServerScript = """
-		source {activate}
-		python -m Olympus.webapp.start
+#!/bin/sh
+source {activate}
+python -m Olympus.webapp.start --tool
 		""".format(**params)
+		
+		startToolScript = """
+#!/bin/sh
+source {activate}
+python -m Olympus.core.ToolInterface --tool
+		""".format(**params)
+		
 		with open("startServer.sh", "w") as startServerFile:
 			startServerFile.write(startServerScript)
+			
+		with open("startTool.sh", "w") as startToolFile:
+			startToolFile.write(startToolScript)	
 	
 	def start(self):
 		""" Starts the installation procedure. """

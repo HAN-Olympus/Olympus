@@ -13,7 +13,6 @@ from Olympus.lib.Config import Config
 from Olympus.lib.TemplateTools import TemplateTools
 from Olympus.lib.Output import Output
 from Olympus.lib.Procedure import Procedure
-from Olympus.core.Compiler import Compiler
 from Olympus.core.WorkerMonitor import WorkerMonitor
 
 import svglib
@@ -24,6 +23,10 @@ import cStringIO
 import requests
 
 from Olympus.webapp import app, modules
+
+# ONLY IMPORT THESE IF THE APP IS NOT IN TOOL MODE: #
+if "--tool" not in sys.argv:
+	from Olympus.core.Compiler import Compiler
 
 # LOAD TEMPLATE TOOLS #
 tools = TemplateTools()
@@ -198,7 +201,7 @@ def downloadCompiled(id):
 	directory = os.path.join( Config().WebAppDirectory, "tmp", "build-%s" % id )
 	for root, dirs, files in os.walk(directory):
 		for file in files:
-			if file.endswith(".whl"): # Just add the .whl
+			if file.endswith(".egg"): # Just add the .egg
 				path = os.path.join(root, file)
 				z.write(path, path.replace(directory, ""))
 	

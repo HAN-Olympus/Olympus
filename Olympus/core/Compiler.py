@@ -23,7 +23,7 @@ class Compiler():
 		self.externalModules = {}
 		self.externalDependencies = set()
 		self.addedModules = set()
-		self.basics = ["Olympus.core.Worker", "Olympus.core.Core", "Olympus.core.ToolInterface"]
+		self.basics = ["Olympus.core.Worker", "Olympus.core.Core", "Olympus.core.ToolInterface", "Olympus.core.WorkerMonitor"]
 		self.procedure = procedure
 		self.script = ""
 		self.data = {}
@@ -42,7 +42,9 @@ class Compiler():
 					# Filter ignored filetypes
 					continue
 				self.data[root].append( str( root + os.sep + file ) )
-				
+		
+		# Also add the current config
+		self.data["Olympus"] = [Config().configFileName]
 		self.data = self.data.items()
 		
 	def convertModulesToHierarchy(self):
@@ -237,34 +239,14 @@ class Compiler():
 from setuptools import setup
 import os, sys
 
-# Add the installation dir to the PYTHONPATH
-if "install" in sys.argv:
-	prefix = os.path.expanduser( sys.argv[-1].split("=")[-1] )
-	version = "%s.%s" % (sys.version_info[0], sys.version_info[1])
-	installDir = os.path.join( prefix, "lib", "python%s" % version, "site-packages" )
-	print installDir
-	if "PYTHONPATH" not in os.environ:
-		os.environ["PYTHONPATH"] = ""
-	if len(os.environ["PYTHONPATH"])>0 and os.environ["PYTHONPATH"][-1] != os.pathsep:
-		os.environ += os.pathsep
-	os.environ["PYTHONPATH"] += installDir
-	try:
-		os.makedirs(installDir)
-	except: 
-		pass
-	for m in {packages}:
-		try:
-			os.makedirs(os.path.join(installDir, m.replace(".",os.path.sep)))
-		except:
-			pass
-
 setup(
     name = "OlympusTool",
     version = "{version}",
     author = "Stephan Heijl",
 	packages = {packages},
 	py_modules= {modules},
-	data_files = {data}
+	data_files = {data},
+	
 )		
 		""".format(**data)
 		
@@ -274,7 +256,7 @@ setup(
 			sfile.write(setup)
 		
 		# Run temporary setup file with temporary directory as output
-		command = "cd %s ; cd .. ; echo pwd; python %s bdist_wheel -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
+		command = "cd %s ; cd .. ; echo pwd; python %s bdist_egg -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
 		subprocess.Popen(command, shell=True, stdout=open(os.devnull, 'wb')).communicate()
 				
 		return id

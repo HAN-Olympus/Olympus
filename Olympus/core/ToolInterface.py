@@ -20,6 +20,7 @@ try:
 	from PySide.QtWebKit import *
 	from PySide.QtCore import QSize, QUrl, Qt
 except:
+	print "PySide was not installed."
 	disableGui = True
 
 
