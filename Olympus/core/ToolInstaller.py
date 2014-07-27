@@ -2,7 +2,7 @@
 @name ToolInstaller
 @author Stephan Heijl
 @module core
-@version 0.0.3
+@version 0.1.0
 
 This module installs a tool when it has been downloaded. It will appear in the root folder of the downloaded zip.
 It requires only Python and pip.

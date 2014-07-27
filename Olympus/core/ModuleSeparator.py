@@ -2,11 +2,11 @@
 @name ModuleSeparator
 @author Stephan Heijl
 @module core
-@version 0.0.3
+@version 0.1.0
 """
 
 from Olympus.lib.Config import Config
-import os, importlib, random, pprint
+import os, importlib, random, pprint, sys
 import tarfile
 
 class ModuleSeparator(object):
@@ -91,24 +91,58 @@ class ModuleSeparator(object):
 				
 		return parsed
 	
-	def __package(self, files, dc):
+	def __package(self, files, dc, prefix=""):
 		""" Packages a list of files into a tarball """
 		name = dc["module"] + "-" + dc["version"] + ".tar"
-		tar = tarfile.open(name=name, mode="w:")
+		tar = tarfile.open(name=os.path.join(prefix, name), mode="w:")
 		for file in files:
 			print file
 			tar.add(file, arcname=file.replace(Config().RootDirectory, ""))
 		tar.close()
 		
-	def packageModule(self,module):
+	def packageModule(self,module, prefix=""):
 		"""
 			Packages an indexed module
 			:param module: A tuple with the module and the version
 		"""
 		print module
 		if module in self.files:
-			self.__package(self.files[module].values(), self.modules[module[0]])
+			self.__package(self.files[module].values(), self.modules[module[0]],prefix)
+			
+	def listModule(self,module):
+		"""
+			Lists an indexed module
+			:param module: A tuple with the module and the version
+		"""
+		print module
+		if module in self.files:
+			pprint.pprint(self.files[module].values())
 
+
+if __name__ == "__main__":
+	if len(sys.argv) < 4:
+		print "Not enough arguments supplied."
+		sys.exit()
+	operation = sys.argv[1]
+	
+	if operation not in ["export", "list"]:
+		print "I don't know how to '%s'. " % operation
+	
+	ms = ModuleSeparator()
+	ms.scanAll()
+	
+	module = sys.argv[2]
+	version = sys.argv[3]
+	prefix = ""
+	if len(sys.argv)>4:
+		prefix = sys.argv[4]
+	
+	if operation == "export":
+		ms.packageModule((module, version),prefix)
+	if operation == "list":
+		ms.listModule((module, version))
+	
+			
 # TESTING #
 
 def test_importFile():
@@ -148,5 +182,5 @@ def test_parseDocString():
 def test_packageModule():
 	ms = ModuleSeparator()
 	ms.scanAll()
-	ms.packageModule(("PubMed","0.0.3"))
+	ms.packageModule(("PubMed","0.1.0"))
 	

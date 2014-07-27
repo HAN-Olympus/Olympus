@@ -2,7 +2,7 @@
 @name PubMedIndex
 @author Stephan Heijl
 @module PubMed
-@version 0.0.3
+@version 0.1.0
 """
 
 from Olympus.lib.StoredObject import StoredObject

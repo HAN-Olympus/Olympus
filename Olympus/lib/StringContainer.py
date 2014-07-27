@@ -2,7 +2,7 @@
 @name StringContainer
 @author Stephan Heijl
 @module core
-@version 0.0.3
+@version 0.1.0
 """
 
 class StringContainer(object):
