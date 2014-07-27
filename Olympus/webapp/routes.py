@@ -107,10 +107,7 @@ def loadFavicon():
 	imgFile = open(path)
 	img = imgFile.read()
 	imgFile.close()
-	return Response(img, mimetype="image/png")
-
-	
-	
+	return Response(img, mimetype="image/png")	
 
 @app.route("/fonts/<filename>")
 def loadFont(filename):
@@ -250,7 +247,22 @@ def tool():
 def toolStart():
 	""" Starts the tool locally. """
 	procedure = Procedure.load( os.path.join( Config().RootDirectory, "tool.prc") )
-	id = procedure.run()
+	
+	# Parse the arguments
+	arguments = {}
+	for key, value in dict(request.form).items():
+		moduleName = key.split("-")[0]
+		keyName = "-".join(key.split("-")[1:])
+		if isinstance(value,list):
+			value = value[0]
+		
+		if moduleName in arguments:
+			arguments[moduleName][keyName] = value
+		else:
+			arguments[moduleName] = {keyName:value}
+	
+	print arguments
+	id = procedure.run(arguments=arguments)
 	return redirect("/results/%s/" % id)
 
 @app.route("/toolQueue", methods=['GET', 'POST'])

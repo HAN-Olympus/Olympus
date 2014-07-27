@@ -55,10 +55,12 @@ class WormBase(AcquisitionModule):
 	def specifyControls(self):
 		controls = {
 			"searchterm" : Text("searchterm", value="", label="Search term"),
-			"type" : Select("searchtype", label="Search type")
+			"type" : Select("searchtype", label="Search type"),
+			"field" : Select("searchfield", label="Search field")
 		}
 		
-		controls["type"].addOption("gene","Gene")
+		controls["type"].addOption("Gene","gene")
+		controls["field"].addOption("Cloned by","cloned_by")
 		return controls
 		
 	def specifyInput(self):
@@ -77,8 +79,10 @@ class WormBase(AcquisitionModule):
 		return output
 		
 	def start(self, **kwargs):
-		# This is currently just test data!
-		return Gene(**self.findByField("gene", "WBGene00006763", "cloned_by"))
+		searchterm = kwargs.get("searchterm", "WBGene00006763")
+		type = kwargs.get("searchtype", "gene")
+		field = kwargs.get("searchfield", "cloned_by")
+		return Gene(**self.findByField(type, searchterm, field))
 		
 # TESTING #
 

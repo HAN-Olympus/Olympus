@@ -33,7 +33,7 @@ class Select(Control):
 								id="control-"+name)
 		
 		for key, value in self.options.items():
-			select.option(value, value="key")
+			select.option(key, value=value)
 		
 		return select
 

@@ -138,10 +138,12 @@ class Table(VisualizationModule.VisualizationModule):
 		xAxis = []
 		
 		for input in inputOne:
-			xAxis += input.__dict__.keys()
+			if input is not None:
+				xAxis += input.__dict__.keys()
 		
 		for input in inputTwo:
-			xAxis += input.__dict__.keys()
+			if input is not None:
+				xAxis += input.__dict__.keys()
 			
 		return list(set(xAxis))
 		

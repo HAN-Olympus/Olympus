@@ -94,20 +94,20 @@ class FancyTable(Table.Table):
 
 		table = {}
 		for input in inputOne:
-			table[str(input)] = {}
+			table[unicode(input)] = {}
 			for key in keys:
 				if hasattr(input,key):
-					table[str(input)][key] = getattr(input, key)
+					table[unicode(input)][key] = getattr(input, key)
 				else:
-					table[str(input)][key] = None
+					table[unicode(input)][key] = None
 				 
 		for input in inputTwo:
-			table[str(input)] = {}
+			table[unicode(input)] = {}
 			for key in keys:
 				if hasattr(input,key):
-					table[str(input)][key] = getattr(input, key)
+					table[unicode(input)][key] = getattr(input, key)
 				else:
-					table[str(input)][key] = None
+					table[unicode(input)][key] = None
 				 
 		return self.convertDictionaryToHTMLTable(table)
 		

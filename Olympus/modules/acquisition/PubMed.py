@@ -188,8 +188,9 @@ class PubMed(AcquisitionModule):
 		return output
 		
 	def start(self, **kwargs):
-		# This is currently just test data!
-		articles = self.getBySearchTerm("zinc",limit=10)
+		searchterm = kwargs.get("searchterm", "zinc")
+		limit = kwargs.get("limit", 10)
+		articles = self.getBySearchTerm(searchterm,limit=limit)
 		return articles
 
 # TESTING #

@@ -126,10 +126,11 @@ class Procedure():
 				stack.pop(0)
 
 
-	def traverseGraph(self, graph):
+	def traverseGraph(self, graph, arguments={}):
 		""" Use a Breadth-first search to work through the graph. This should allow even more complex graphs to be completed successfully.
 		
 		:param graph: A graph containing classes to execute.
+		:param arguments: The arguments for each module, if appropiate.
 		"""
 
 		output = {}
@@ -147,10 +148,16 @@ class Procedure():
 				continue
 
 			if not isinstance(parent, Module):
-				output[child] = [child.start()]
+				if str(child) in arguments.keys():
+					print "Using arguments for: ",arguments[str(child)]
+					output[child] = [child.start(**arguments[str(child)])]
+				else:
+					output[child] = [child.start()]
 			else:
 				argcount = child.start.func_code.co_argcount
-
+				print argcount
+				print output
+				
 				if argcount == 2:
 					if child in output and isinstance(output[child], list):
 						for c in output[parent]:
@@ -161,6 +168,15 @@ class Procedure():
 				elif argcount > 2:
 					if len(output[parent]) == argcount -1:
 						output[child] = [child.start(*output[parent])]
+					elif len(output[parent]) < argcount -1:
+						while(len(output[parent]) < argcount -1):
+							output[parent].append(None)
+							
+						output[child] = [child.start(*output[parent])]
+					elif len(output[parent]) > argcount -1:
+						output[parent] = output[parent][:argcount-1]
+						output[child] = [child.start(*output[parent])]
+						
 
 				else:
 					output[child] = None
@@ -186,8 +202,7 @@ class Procedure():
 			controls = node.specifyControls()
 			if controls == None:
 				fieldset.p("No controls specified for this module.")
-				continue;
-				
+				continue;				
 				
 			for key, control in controls.items():
 				group = fieldset.div(klass="form-group")
@@ -214,10 +229,10 @@ class Procedure():
 		return html
 	
 	
-	def run(self):
+	def run(self, arguments={}):
 		print "Start traversing"
 		try:
-			output = self.traverseGraph(self.graph)
+			output = self.traverseGraph(self.graph,arguments)
 		except Exception, e:
 			traceback.print_exc(file=sys.stdout)
 		print "Done traversing"
