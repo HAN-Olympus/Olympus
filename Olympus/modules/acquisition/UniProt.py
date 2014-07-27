@@ -2,7 +2,7 @@
 @name UniProt
 @author Stephan Heijl
 @module UniProt
-@version 0.0.3
+@version 0.1.0
 """
 
 from Olympus.modules.acquisition.AcquisitionModule import AcquisitionModule

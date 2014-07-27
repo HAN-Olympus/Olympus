@@ -2,7 +2,7 @@
 @name Webapp start
 @author Stephan Heijl
 @module core
-@version 0.0.3
+@version 0.1.0
 """
 
 import os, threading

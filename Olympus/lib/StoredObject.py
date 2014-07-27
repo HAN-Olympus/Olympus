@@ -2,7 +2,7 @@
 @name StoredObject
 @author Stephan Heijl
 @module core
-@version 0.0.3
+@version 0.1.0
 """
 
 from abc import ABCMeta, abstractmethod

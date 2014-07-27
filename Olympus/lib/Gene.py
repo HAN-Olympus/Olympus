@@ -2,7 +2,7 @@
 @name Gene
 @author Stephan Heijl
 @module WormBase
-@version 0.0.3
+@version 0.1.0
 """
 
 from Olympus.lib.StoredObject import StoredObject

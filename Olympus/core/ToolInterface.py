@@ -2,7 +2,7 @@
 @name ToolInterface
 @author Stephan Heijl
 @module core
-@version 0.0.3
+@version 0.1.0
 
 This is a stripped down version of the WorkerMonitor, serving only the included tool interface.
 """
