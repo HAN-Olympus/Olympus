@@ -147,7 +147,6 @@ class Table(VisualizationModule.VisualizationModule):
 			
 		return list(set(xAxis))
 		
-		
 	def toHTML(self):
 		inputOne = self.inputOne
 		inputTwo = self.inputTwo
