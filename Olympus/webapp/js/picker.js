@@ -282,9 +282,14 @@ $(function () {
 	// Expanding the module descriptions
 	$("body").on("click", ".expand-module-description", function () {
 		var module = $(this).parents(".module-item").find(".panel-body")
-		maxHeight = parseInt(module.css("max-height"));
-		normalHeight = module.css("max-height", "none").height();
-		module.data("maxHeight", maxHeight);
+		if (!module.attr('data-maxHeight')) {
+			maxHeight = parseInt(module.css("max-height"));
+		}
+		normalHeight = module.css({
+			"max-height": "none",
+			"height": "auto"
+		}).height();
+		module.attr("data-maxHeight", maxHeight);
 		module.css("height", maxHeight);
 		module.animate({
 			"height": normalHeight
@@ -296,7 +301,7 @@ $(function () {
 	// Contract the module descriptions
 	$("body").on("click", ".contract-module-description", function () {
 		var module = $(this).parents(".module-item").find(".panel-body")
-		maxHeight = parseInt(module.data("maxHeight"));
+		maxHeight = parseInt(module.attr("data-maxHeight"));
 		module.animate({
 			"height": maxHeight
 		}, 300);

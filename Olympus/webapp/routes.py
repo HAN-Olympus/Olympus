@@ -241,15 +241,34 @@ def results(job, output):
 @app.route("/moduleLoader")
 def moduleLoader():
 	""" Renders the ModuleLoader interface """
+	return render_template("moduleloader.html", config=Config(), loader=ModuleLoader(), modules=modules)
+
+@app.route("/moduleLoader/setEnabled")
+def setEnabledModules():
+	""" Sets the modules that are enabled. """
+	modules = {}
+	for module in json.loads(request.args.get("enabled")):
+		category, name = module.split(".")
+		if category not in modules:
+			modules[category] = []
+		modules[category].append(name)
 	
-	return render_template("moduleloader.html", config=Config(), loader=ModuleLoader())
+	# If currently available category has not been sent, remember tot disable it fully.
+	for cat in Config().modules["enabled"]:
+		if cat not in modules.keys():
+			modules[cat] = []
+	
+	for category, names in modules.items():
+		print category, names
+		ModuleLoader().setModules(category, names);
+	
+	return Response(json.dumps(True));
 	
 	
 # This is for the Tool interface #
 @app.route("/tool")
 def tool():
 	""" Renders the tool interface. """
-	
 	return render_template("tool.html", config=Config())
 
 @app.route("/toolStart", methods=['GET', 'POST'])

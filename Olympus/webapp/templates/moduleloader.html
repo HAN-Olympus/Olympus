@@ -7,32 +7,32 @@
 		</li>
 		<li class="active">ModuleLoader</li>
 	</ol>
-	{% set modules = loader.getAllAvailableModules() %}
+	{% set enabledModules = loader.getEnabledModules() %}
 	<div class="row">
 		<div class="col-md-12">
 			<h2>ModuleLoader</h2>
 		</div>
 	</div>
 
-
 	<div class="row">
 		{% for category in ["acquisition","interpretation","visualization","interface"] %} {% set category_loop = loop %}
-		<div class="{{category}}-container col col-md-12">
+		<div class="{{category}}-container col col-md-4">
 			<h3>{{category.title()}}</h3>
 			<div class="module-container">
-				{% for module in modules[category] %} {% set zindex = 100 + category_loop.index %}
-				<div class="module-item" style="z-index: {{zindex}}">
-
-					<div class="panel panel-primary">
+				{% for module in modules[category] %} {% set zindex = 100 + category_loop.index %} {% set isEnabled = module in enabledModules[category] %}
+				<div class="module-item" style="z-index: {{zindex}}" data-enabled="{{isEnabled|lower}}">
+					<div class="panel panel-{% if isEnabled %}success{% else %}primary {% endif %}">
 						<div class="panel-heading">
 							<span class="module-name">
 								<span style="display:none;">{{category}}.</span>{{module}}
 							</span>
 							<span class="module-buttons btn-group">
-								<button type="button" class="btn btn-default btn-xs move-module-down">
-									<span class="glyphicon glyphicon-ok"></span>
+								<button type="button" class="btn btn-default btn-xs {% if isEnabled %}disable-module{% else %}enable-module{% endif %}">
+									<span class="glyphicon glyphicon-{% if isEnabled %}remove{% else %}ok{% endif %}"></span>
 							</button>
-							</span>
+							<button type="button" class="btn btn-default btn-xs expand-module-description">
+								<span class="glyphicon glyphicon-align-left"></span>
+							</button>
 
 						</div>
 						<div class="panel-body">
@@ -44,12 +44,18 @@
 							{% endif %} {% endautoescape %}
 						</div>
 					</div>
-
-
 				</div>
 				{% endfor %}
 			</div>
 		</div>{% endfor %}
 	</div>
+	<br/>
+	<div class="row">
+		<div class="col col-md-12">
+			<a class="btn btn-lg btn-default" href="">Reset</a>
+			<a class="btn btn-lg btn-primary submit">Submit this configuration</a>
+		</div>
+	</div>
 </div>
-{% endblock %}
+
+{{ deferJS("/js/moduleloader.js", 3) }} {% endblock %}
