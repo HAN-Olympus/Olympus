@@ -14,6 +14,7 @@ from Olympus.lib.TemplateTools import TemplateTools
 from Olympus.lib.Output import Output
 from Olympus.lib.Procedure import Procedure
 from Olympus.core.WorkerMonitor import WorkerMonitor
+from Olympus.core.ModuleLoader import ModuleLoader
 
 import svglib
 import gearman
@@ -235,6 +236,14 @@ def results(job, output):
 	else:
 		return render_template("results.notfound.html", config=Config())
 
+
+# This is for the ModuleLoader interface #
+@app.route("/moduleLoader")
+def moduleLoader():
+	""" Renders the ModuleLoader interface """
+	
+	return render_template("moduleloader.html", config=Config(), loader=ModuleLoader())
+	
 	
 # This is for the Tool interface #
 @app.route("/tool")

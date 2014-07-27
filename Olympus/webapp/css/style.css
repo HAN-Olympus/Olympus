@@ -1,6 +1,8 @@
 /* Remove outline */
-* { outline: 0; }
 
+* {
+	outline: 0;
+}
 /* Move down content because we have a fixed navbar that is 50px tall */
 
 body {
@@ -147,6 +149,8 @@ body {
 .module-item {
 	margin: 10px;
 	position: relative;
+}
+.modulepicker .module-item {
 	width: 75%;
 }
 .module-item.panel-heading {
@@ -161,7 +165,6 @@ body {
 	opacity: 1;
 	transition: 0.5s all;
 }
-
 .module-item .panel-body {
 	max-height: 45px;
 	overflow-y: hidden;
@@ -182,8 +185,8 @@ body {
 	width: 25%;
 	color: white;
 }
-.module-output svg path{
-	cursor:pointer;
+.module-output svg path {
+	cursor: pointer;
 	pointer-events: all;
 }
 .module-output-name {
@@ -210,42 +213,36 @@ body {
 	border: 1px solid #428bca;
 	border-left: 0px;
 }
-
 svg {
 	overflow: visible !important;
 	pointer-events: none;
 }
 #sigma-container {
-	width:100%;
+	width: 100%;
 	height: 300px;
 }
-
 fieldset {
 	width: 33%;
 	float: left;
 	padding: 1%;
 }
-
 fieldset:first-child {
 	margin-left: -1%;
 }
 fieldset:last-child {
 	margin-left: -1%;
 }
-
 input[type=submit] {
-	clear:both;
+	clear: both;
 	display: block;
 }
-
-
 /* WORKER MONITOR */
+
 .worker ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 }
-
 .proto-worker {
-	display:none;
+	display: none;
 }

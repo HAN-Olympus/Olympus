@@ -1,5 +1,5 @@
 {% extends "main.html" %} {% block index %}
-<div class="container">
+<div class="container modulepicker">
 	<p></p>
 	<ol class="breadcrumb">
 		<li>
@@ -18,7 +18,7 @@
 				<div class="module-item" style="z-index: {{zindex}}">
 
 					{% set input = modules[category][module]().specifyInput() %} {% if input != None %} {% for name, types in input.items() %}
-					<span class="module-accept" data-accept="{% for t in types %}{{t.__class__.__name__}}[{{t.restrict if t.restrict!=None else ""}}],{% endfor %}"></span>
+					<span class="module-accept" data-accept="{% for t in types %}{{t.__class__.__name__}}[{{t.restrict if t.restrict!=None else " "}}],{% endfor %}"></span>
 					{% endfor %} {% endif %}
 
 					<div class="panel panel-primary">
@@ -29,13 +29,13 @@
 							<span class="module-buttons btn-group">
 								<button type="button" class="btn btn-default btn-xs move-module-down">
 									<span class="glyphicon glyphicon-arrow-down"></span>
-								</button>
-								<button type="button" class="btn btn-default btn-xs">
-									<span class="glyphicon glyphicon-th-large"></span>
-								</button>
-								<button type="button" class="btn btn-default btn-xs">
-									<span class="glyphicon glyphicon-align-left"></span>
-								</button>
+							</button>
+							<button type="button" class="btn btn-default btn-xs">
+								<span class="glyphicon glyphicon-th-large"></span>
+							</button>
+							<button type="button" class="btn btn-default btn-xs expand-module-description">
+								<span class="glyphicon glyphicon-align-left"></span>
+							</button>
 							</span>
 
 						</div>

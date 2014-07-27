@@ -55,7 +55,7 @@ $(function () {
 		$(e).find(".module-output").each(function () {
 			output = $(this)
 			output.removeClass("no-destination destination-found");
-			
+
 			outputs = $(this).data("accept").split(",");
 
 			connections = $(this).find(".module-connection");
@@ -95,10 +95,10 @@ $(function () {
 							connection.removeClass("connect-top");
 							connection.addClass("connect-bottom");
 						}
-						
+
 						console.log(output)
-						
-						if (connection.data("confirmed")==true) {
+
+						if (connection.data("confirmed") == true) {
 							src += "&fill=#dff0d8";
 						} else {
 							src += "&fill=" + color;
@@ -111,13 +111,13 @@ $(function () {
 
 						output.append(connection);
 						connection.data("target", $(this));
-						
+
 						connection = connection.clone().appendTo(connection.parent())
 					}
 
 				});
 			});
-			
+
 			connection.parent().find(".module-connection").last().remove()
 
 			if (!destinationFound) {
@@ -160,7 +160,7 @@ $(function () {
 		src = connection.data("src")
 		src = src.split("&fill=")[0]
 		src += "&fill=" + fill
-		connection.data("src",src)
+		connection.data("src", src)
 		connection.load(src)
 	}
 
@@ -173,19 +173,19 @@ $(function () {
 		}
 		return e.data("confirmedConnections")
 	}
-	
+
 	// Handles a click on a module connection
 	var handleConnectionClick = function (event) {
 		//console.log(event.target)
-		if( $(event.target).prop("tagName").toLowerCase() != "path" ) {
+		if ($(event.target).prop("tagName").toLowerCase() != "path") {
 			return false;
 		}
 		console.log("You clicked on a path!")
-		
+
 		path = $(event.target); // This is the actual SVG path that was clicked on.
 		conn = path.parents(".module-connection") // This is the parent div that contains the svg.
 		output = conn.parent() // This is the output.
-				
+
 		target = conn.data("target").parent().find(".panel")
 		current = output.parent().find(".panel")
 		console.log(target, current);
@@ -193,9 +193,9 @@ $(function () {
 		currentModuleItem = current.parents(".module-item")
 		targetModuleItem = target.parents(".module-item")
 
-		if (conn.data("confirmed")==true) {
+		if (conn.data("confirmed") == true) {
 			// Switch to destination found - this will turn the modules blue
-			conn.data("confirmed",false)
+			conn.data("confirmed", false)
 
 			changeConfirmedConnections(currentModuleItem, -1);
 			if (currentModuleItem.data("confirmedConnections") == 0) {
@@ -212,8 +212,11 @@ $(function () {
 			color = $(".panel-primary .panel-heading").css("color");
 			output.addClass("destination-found");
 			output.removeClass("destination-confirmed");
-			
-			output.css({color:color, background:bgcolor})
+
+			output.css({
+				color: color,
+				background: bgcolor
+			})
 
 		} else {
 			// Switch to destination confirmed - this will turn the modules green
@@ -223,19 +226,22 @@ $(function () {
 			current.removeClass("panel-primary");
 			target.addClass("panel-success");
 			current.addClass("panel-success");
-			conn.data("confirmed",true)
+			conn.data("confirmed", true)
 			output.addClass("destination-confirmed");
 			output.removeClass("destination-found");
 
 			bgcolor = $(".panel-success .panel-heading").css("background-color")
 			color = $(".panel-success .panel-heading").css("color")
-			output.css({color:color, background:bgcolor})
+			output.css({
+				color: color,
+				background: bgcolor
+			})
 		}
-		
+
 		changeConnectionColor(conn, rgb2hex(bgcolor).substr(1));
 
-	}	
-	
+	}
+
 	document.body.addEventListener("click", handleConnectionClick, true);
 
 	// Moving the modules with the arrow
@@ -272,6 +278,33 @@ $(function () {
 		$(this).find(".glyphicon").removeClass("glyphicon-arrow-up").addClass("glyphicon-arrow-down")
 	});
 
+
+	// Expanding the module descriptions
+	$("body").on("click", ".expand-module-description", function () {
+		var module = $(this).parents(".module-item").find(".panel-body")
+		maxHeight = parseInt(module.css("max-height"));
+		normalHeight = module.css("max-height", "none").height();
+		module.data("maxHeight", maxHeight);
+		module.css("height", maxHeight);
+		module.animate({
+			"height": normalHeight
+		}, 300);
+		$(this).addClass("contract-module-description");
+		$(this).removeClass("expand-module-description");
+	});
+
+	// Contract the module descriptions
+	$("body").on("click", ".contract-module-description", function () {
+		var module = $(this).parents(".module-item").find(".panel-body")
+		maxHeight = parseInt(module.data("maxHeight"));
+		module.animate({
+			"height": maxHeight
+		}, 300);
+		$(this).removeClass("contract-module-description");
+		$(this).addClass("expand-module-description");
+	});
+
+
 	// Compiling the Procedure
 
 	$("#btn-compile").click(function () {
@@ -281,17 +314,17 @@ $(function () {
 		// Get all the found destinations columns
 		$(".destination .module-output.destination-confirmed").each(function () {
 			output = $(this).parents(".module-item")
-			
+
 			targets = $(this).find(".module-connection")
 			targets.each(function () {
 				target = $(this).data("target").parents(".module-item")
-				
+
 				// Get the names of the output module and the target module
 				outputName = output.find(".module-name").text()
 				targetName = target.find(".module-name").text()
-								
+
 				outputId = $(this).text();
-				
+
 				// The nodes must be unique.
 				if ($.inArray(outputName, nodes) < 0) {
 					nodes.push(outputName);
@@ -314,8 +347,8 @@ $(function () {
 			});
 		});
 
-		var nodes = JSON.stringify(nodes, null, "").replace(/(\\n|\\t| )/g,'')
-		var edges = JSON.stringify(edges, null, "").replace(/(\\n|\\t| )/g,'')
+		var nodes = JSON.stringify(nodes, null, "").replace(/(\\n|\\t| )/g, '')
+		var edges = JSON.stringify(edges, null, "").replace(/(\\n|\\t| )/g, '')
 		var edgeAttributes = JSON.stringify(edgeAttributes, null, "")
 		console.log(nodes)
 		console.log(edges)

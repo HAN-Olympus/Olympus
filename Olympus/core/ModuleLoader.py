@@ -19,9 +19,8 @@ class ModuleLoader():
 		
 	def getAllAvailableModules(self):
 		""" Returns a dictionary with every single available module in your distribution. The modules are divided up by their category."""
-		currentDir = os.path.dirname(__file__)
-		modulesFolder = "../modules"
-		modulesFolderPath = os.path.abspath(currentDir + "/" + modulesFolder)
+		modulesFolder = "modules"
+		modulesFolderPath = os.path.abspath(os.path.join(Config().RootDirectory, modulesFolder))
 		
 		modules = {}
 		
@@ -121,7 +120,7 @@ class ModuleLoader():
 import curses,time,json
 		
 class ModuleLoaderInterface():
-	""" The curses interface for the ModuleLoader. This is the default way of setting the available modules."""
+	""" The curses interface for the ModuleLoader. This is the fallback way of setting the available modules."""
 	def __init__(self):
 		self.moduleloader = ModuleLoader()
 		

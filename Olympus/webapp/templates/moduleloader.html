@@ -1,0 +1,55 @@
+{% extends "main.html" %} {% block index %}
+<div class="container moduleloader">
+	<p></p>
+	<ol class="breadcrumb">
+		<li>
+			<a href="/">Olympus</a>
+		</li>
+		<li class="active">ModuleLoader</li>
+	</ol>
+	{% set modules = loader.getAllAvailableModules() %}
+	<div class="row">
+		<div class="col-md-12">
+			<h2>ModuleLoader</h2>
+		</div>
+	</div>
+
+
+	<div class="row">
+		{% for category in ["acquisition","interpretation","visualization","interface"] %} {% set category_loop = loop %}
+		<div class="{{category}}-container col col-md-12">
+			<h3>{{category.title()}}</h3>
+			<div class="module-container">
+				{% for module in modules[category] %} {% set zindex = 100 + category_loop.index %}
+				<div class="module-item" style="z-index: {{zindex}}">
+
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<span class="module-name">
+								<span style="display:none;">{{category}}.</span>{{module}}
+							</span>
+							<span class="module-buttons btn-group">
+								<button type="button" class="btn btn-default btn-xs move-module-down">
+									<span class="glyphicon glyphicon-ok"></span>
+							</button>
+							</span>
+
+						</div>
+						<div class="panel-body">
+							{% autoescape false %} {% set doc = modules[category][module].__doc__ %} {% if doc != None %}
+							<span class="module-description">{{doc.strip()|replace("\n","
+								<br/>")}}</span>
+							{% else %}
+							<span class="module-description">This module does not have any documentation.</span>
+							{% endif %} {% endautoescape %}
+						</div>
+					</div>
+
+
+				</div>
+				{% endfor %}
+			</div>
+		</div>{% endfor %}
+	</div>
+</div>
+{% endblock %}
