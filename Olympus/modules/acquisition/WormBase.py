@@ -55,7 +55,7 @@ class WormBase(AcquisitionModule):
 	def specifyControls(self):
 		controls = {
 			"searchterm" : Text("searchterm", value="", label="Search term"),
-			"type" : Select(label="Search type")
+			"type" : Select("searchtype", label="Search type")
 		}
 		
 		controls["type"].addOption("gene","Gene")

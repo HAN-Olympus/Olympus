@@ -238,12 +238,30 @@ def results(job, output):
 		return Response(out[0].getAttribute("output",output))
 	else:
 		return render_template("results.notfound.html", config=Config())
+
 	
+# This is for the Tool interface #
 @app.route("/tool")
 def tool():
 	""" Renders the tool interface. """
 	
 	return render_template("tool.html", config=Config())
+
+@app.route("/toolStart", methods=['GET', 'POST'])
+def toolStart():
+	""" Starts the tool locally. """
+	procedure = Procedure.load( os.path.join( Config().RootDirectory, "tool.prc") )
+	id = procedure.run()
+	return redirect("/results/%s/" % id)
+
+@app.route("/toolQueue", methods=['GET', 'POST'])
+def toolQueue(viewType):	
+ 	""" Puts the Procedure in the Gearman Queue. """
+ 	data = json.dumps({"nodes":request.args.get("nodes"), "edges":request.args.get("edges"), "edgeAttributes":request.args.get("edgeAttributes")})
+	gm_client = gearman.GearmanClient(['localhost:4730'])
+	job = gm_client.submit_job("runNewProcedure", data, background=True)
+	
+	return render_template("submitted.html", config=Config(), id=job.gearman_job.unique )
 	
 # This is for the WorkerMonitor interface #
 

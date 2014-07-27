@@ -40,7 +40,7 @@ class ToolInterface(object):
 		
 		# The Webview
 		view = QWebView()
-		view.setWindowTitle('Olympus WorkerMonitor')
+		view.setWindowTitle('Olympus ToolInterface')
 		url = QUrl("http://127.0.0.1:5000/tool")
 		view.load(url)
 

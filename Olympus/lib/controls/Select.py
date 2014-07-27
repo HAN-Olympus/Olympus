@@ -10,9 +10,9 @@ from Olympus.lib.Control import Control
 class Select(Control):
 	""" A select item """
 	
-	def __init__(self, **kwargs):
+	def __init__(self, *args, **kwargs):
 		self.options = {}
-		super(Select, self).__init__(**kwargs)
+		super(Select, self).__init__(*args, **kwargs)
 	
 	def setValue(self, v):
 		self.value = unicode(v)

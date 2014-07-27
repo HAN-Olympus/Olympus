@@ -177,11 +177,7 @@ class Compiler():
 		""" Creates the interface template. """
 		toolpath = os.path.join(self.tmpDir, "tool.html")
 		with open(toolpath,"w") as tool:
-			tool.write("{% extends \"main.html\" %} {% block index %}")
-			tool.write("<br/> <div class='col-md-12'>")
 			tool.write( self.procedure.generateProcedureInterface() )
-			tool.write("</div>")
-			tool.write("{% endblock %}")
 			
 		# Convert the data attribute to a dict for just a second to append this.
 		dataDict = dict(self.data)

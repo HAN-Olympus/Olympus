@@ -10,17 +10,24 @@ import subprocess
 import json
 import sys
 import traceback
+import pickle
 
 from Olympus.lib.Config import Config
 from Olympus.lib.Output import Output
 from Olympus.lib.Procedure import Procedure
 
-class WorkerStatus():
-	"""  """
+class PickleDataEncoder(gearman.DataEncoder):
+    @classmethod
+    def encode(cls, encodable_object):
+        return pickle.dumps(encodable_object)
+
+    @classmethod
+    def decode(cls, decodable_string):
+        return pickle.loads(decodable_string)
 
 class Worker():
 	""" This is the default worker for Olympus. This worker's job methods cannot rely on `self`, as that would impair them from functioning as a standalone task."""
-	def job_runProcedure(worker, job):
+	def job_runNewProcedure(worker, job):
 		print job.unique
 		data = json.loads(job.data)
 		print "Starting"
@@ -73,7 +80,7 @@ def registerFunctions(workerClass, worker):
 	:param worker: The GearmanWorker instance these functions need to be assigned to.
 	"""
 	for attribute in dir(workerClass):
-		if attribute.startswith("job_") :
+		if attribute.startswith("job_"):
 			method = getattr(workerClass,attribute)
 			if hasattr(method, '__call__'): # Check if the attribute is a function
 				worker.register_task(attribute[4:], method.__func__)
@@ -99,6 +106,7 @@ def welcome():
 if __name__ == "__main__":	
 	# Instantiate the worker and register all the appropiate functions.
 	gm_worker = gearman.GearmanWorker(Config().GearmanServer) # Creates the worker on the default port.
+	gm_worker.data_encoder = PickleDataEncoder
 	
 	# Print a welcome message
 	if not "--silent" in sys.argv:

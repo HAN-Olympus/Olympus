@@ -10,7 +10,7 @@ from Olympus.lib.StoredObject import StoredObject
 class Output(StoredObject):
 	def __init__(self):
 		self.job_id = 0
-		super(Output, self).__init__(database = "olympus", collection = "output")
+		super(Output, self).__init__(database="olympus", collection = "output")
 		
 	def getByJobId(self, id):
 		print id

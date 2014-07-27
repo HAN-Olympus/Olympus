@@ -145,6 +145,7 @@ def test_createShortcuts():
 	ti = ToolInstaller()
 	ti.createShortcuts()	
 	assert os.path.isfile("startServer.sh")
+	assert os.path.isfile("startTool.sh")
 	
-	os.system("rm startServer.sh")
+	os.system("rm startTool.sh")
 	

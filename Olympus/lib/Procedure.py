@@ -5,12 +5,17 @@
 @version 0.0.3
 """
 
+from Olympus.lib.Output import Output
+from Olympus.lib.Module import Module
+
 from pprint import pprint, isreadable
 import importlib
 import networkx as nx
 import cStringIO
 import cPickle
 import sys
+import traceback
+import time
 from html import XHTML
 
 class Procedure():
@@ -170,8 +175,7 @@ class Procedure():
 		"""
 		
 		html = XHTML()
-		form = html.form("", role="form")
-		
+		form = html.form("", role="form", action="/toolStart", method="post")		
 		for node in self.instantiatedNodes:
 			if node == "start":
 				continue;
@@ -203,9 +207,45 @@ class Procedure():
 	
 	def generateProcedureInterface(self):
 		""" Generates the interface for the procedure. """
-		form = self.generateControls()
-		return form
+		
+		html = """ {% extends \"main.html\" %} {% block index %} <br/> <div class="container"> <div class='col-md-12'> """
+		html += self.generateControls()
+		html += """ </div></div> {% endblock %} """
+		return html
 	
+	
+	def run(self):
+		print "Start traversing"
+		try:
+			output = self.traverseGraph(self.graph)
+		except Exception, e:
+			traceback.print_exc(file=sys.stdout)
+		print "Done traversing"
+		
+		try:
+			out = Output()
+		except Exception, e:
+			return False, traceback.print_exc(file=sys.stdout)
+		
+		out.job_id = str(int(time.time()))
+		
+		for k,v in output.items():
+			print k, len(v)
+			if isinstance(v, list) and len(v)>0:
+				out.addAttribute("output", str(k), str(v[0]))
+			else:
+				out.addAttribute("output", str(k), str(v))
+			print k, len(v)
+			try:
+				out.save()
+			except Exception, e:
+				return False, traceback.print_exc(file=sys.stdout)
+		try:
+			out.save()
+			return out.job_id
+		
+		except Exception, e:
+			return False, traceback.print_exc(file=sys.stdout)
 	
 	def save(self, filename=None):
 		""" Saves the procedure, with instantiated nodes. 
@@ -215,11 +255,19 @@ class Procedure():
 		"""
 		
 		if filename:
-			with open(filename,"w") as f:
+			with open(filename,"wb") as f:
 				cPickle.dump(self,f)
 			return True
 		else:
 			return cPickle.dumps(self)
+		
+	@staticmethod
+	def load(filename):
+		""" Loads a procedure from a file. """
+		print filename
+		with open(filename,"rb") as f:
+			procedure = cPickle.load(f)
+		return procedure
 	
 def test_save():
 	modules = ["acquisition.PubMed","interpretation.Sort"]
