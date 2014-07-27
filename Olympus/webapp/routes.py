@@ -116,7 +116,6 @@ def loadFavicon():
 def loadFont(filename):
 	path = os.path.join(Config().WebAppDirectory, "fonts", filename)
 	pathBootstrap = os.path.join(Config().WebAppDirectory, "bootstrap", "fonts", filename)
-	print path
 	if os.path.isfile(path):
 		fontFile = open(path)
 	elif os.path.isfile(pathBootstrap):

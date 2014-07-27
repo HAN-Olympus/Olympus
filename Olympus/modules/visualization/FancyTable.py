@@ -1,4 +1,5 @@
 import Table
+import json
 
 class FancyTable(Table.Table):
 	""" This module is a fancier, jQuery enhanced version of the normal table. 
@@ -42,7 +43,7 @@ class FancyTable(Table.Table):
 			for key in keys:
 				if key in variables.keys():
 					if variables[key] != None:
-						html.append("<td>%s</td>" % variables[key])
+						html.append("<td>%s</td>" % self.formatValue(variables[key]) )
 					else:
 						html.append("<td>%s</td>" % empty)
 				else:
@@ -60,7 +61,24 @@ class FancyTable(Table.Table):
 					"{{ deferJS('http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js',4 ) }}",
 					"{{ deferInlineJS('$(document).ready(function() {{ $(\"#fancytable\").dataTable({{ \"sScrollX\": \"100%\", \"bScrollCollapse\": true}}); }} );',4) }}"
 				]
-		return "\n".join(html)		
+		return "\n".join(html)
+	
+	def formatValue(self, value):
+		""" Check if a value can be formatted better. Also checks if a value is formatted as JSON. """
+		try:
+			v = json.loads(value)
+		except:
+			v = value
+		
+		if isinstance(v, list):
+			return "<ul>" + "".join(["<li>%s</li>" % self.formatValue(i) for i in v]) + "</ul>"
+		
+		if isinstance(v, dict):
+			return "<dl>" + "".join(["<dt>%s</dt><dd>%s</dd>" % (ik, self.formatValue(iv)) for ik, iv in v.items()]) + "</dl>"
+		
+		return unicode(value)
+		
+		
 		
 	def toHTML(self):
 		inputOne = self.inputOne
@@ -108,3 +126,14 @@ def test_fail_convertDictionaryToHTMLTable():
 	d = { "Subject 1" : { "variable 1" : "value", "variable 2" : "value" },"Subject 2" : { "variable 1" : "value", "variable 2" : "value", "variable 3" : "value"} }
 	print table.convertDictionaryToHTMLTable(d, None)
 	
+def test_formatValue():
+	table = FancyTable(None)
+	assert table.formatValue("string") == "string"
+	assert table.formatValue("1") == "1"
+	assert table.formatValue('["string"]') == "<ul><li>string</li></ul>"
+	assert table.formatValue('["string","string2"]') == "<ul><li>string</li><li>string2</li></ul>"
+	assert table.formatValue('{"string":"string2"}') == "<dl><dt>string</dt><dd>string2</dd></dl>"
+	
+	assert table.formatValue(["string"]) == "<ul><li>string</li></ul>"
+	assert table.formatValue(["string","string2"]) == "<ul><li>string</li><li>string2</li></ul>"
+	assert table.formatValue({"string":"string2"}) == "<dl><dt>string</dt><dd>string2</dd></dl>"

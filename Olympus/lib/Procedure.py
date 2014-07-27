@@ -232,9 +232,9 @@ class Procedure():
 		for k,v in output.items():
 			print k, len(v)
 			if isinstance(v, list) and len(v)>0:
-				out.addAttribute("output", str(k), str(v[0]))
+				out.addAttribute("output", unicode(k), unicode(v[0]))
 			else:
-				out.addAttribute("output", str(k), str(v))
+				out.addAttribute("output", unicode(k), unicode(v))
 			print k, len(v)
 			try:
 				out.save()
