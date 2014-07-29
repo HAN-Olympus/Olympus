@@ -66,12 +66,13 @@ $(function () {
 			} else {
 				connection = connections.eq(0)
 				var color = connection.data("src").match(/\&fill=([\da-fA-F]{3,6})$/)[1];
-				console.log(color);
 			}
 
 			$(this).find(".module-connection").remove()
 
 			destinationFound = false;
+			
+			console.log(output)
 
 			// Now find all the modules in the row next to this one
 			$(e).parent().next().find(".module-item").each(function () {
@@ -80,6 +81,7 @@ $(function () {
 				$(this).find(".module-accept").each(function () {
 					// Get all the formats the port accepts
 					inputs = $(this).data("accept").split(",");
+					console.log(inputs,outputs)
 					intersects = intersect(inputs, outputs);
 
 					if (intersects) {
@@ -95,8 +97,6 @@ $(function () {
 							connection.removeClass("connect-top");
 							connection.addClass("connect-bottom");
 						}
-
-						console.log(output)
 
 						if (connection.data("confirmed") == true) {
 							src += "&fill=#dff0d8";
@@ -129,8 +129,6 @@ $(function () {
 	}
 
 	function redrawInputs(e) {
-		console.log($(e))
-		console.log($(e).parent().prev().children(".module-container"))
 		redrawOutputs($(e).parent().prev().children(".module-container"))
 	}
 
@@ -188,7 +186,6 @@ $(function () {
 
 		target = conn.data("target").parent().find(".panel")
 		current = output.parent().find(".panel")
-		console.log(target, current);
 
 		currentModuleItem = current.parents(".module-item")
 		targetModuleItem = target.parents(".module-item")
@@ -267,7 +264,7 @@ $(function () {
 		currentList = $(this).parents(".module-container")
 		listAboveClass = "." + $(this).parents(".col").attr("class").replace(/ /g, ".")
 		listAbove = $(listAboveClass).first().find(".module-container")
-		console.log(listAbove);
+
 
 		moduleItem.appendTo(listAbove);
 		findConnections(currentList, false);
@@ -355,9 +352,6 @@ $(function () {
 		var nodes = JSON.stringify(nodes, null, "").replace(/(\\n|\\t| )/g, '')
 		var edges = JSON.stringify(edges, null, "").replace(/(\\n|\\t| )/g, '')
 		var edgeAttributes = JSON.stringify(edgeAttributes, null, "")
-		console.log(nodes)
-		console.log(edges)
-		console.log(edgeAttributes)
 
 		compileUrl = "/compile/?nodes=" + nodes + "&edges=" + edges + "&edgeAttributes=" + edgeAttributes;
 		window.open(compileUrl)

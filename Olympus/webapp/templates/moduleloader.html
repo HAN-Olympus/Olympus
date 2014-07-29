@@ -39,7 +39,7 @@
 			<h3>{{category.title()}}</h3>
 			<div class="module-container ">
 				{% for module in modules[category] %} {% set zindex = 100 + category_loop.index %} {% set isEnabled = module in enabledModules[category] %}
-				<div class="module-item " style="z-index: {{zindex}} " data-enabled="{{isEnabled|lower}} ">
+				<div class="module-item " style="z-index: {{zindex}} " data-enabled="{{isEnabled|lower}}">
 					<div class="panel panel-{% if isEnabled %}success{% else %}primary {% endif %} ">
 						<div class="panel-heading ">
 							<span class="module-name ">
