@@ -13,6 +13,7 @@ not available on Microsoft Windows.
 # ModuleLoader
 from Olympus.lib.Config import Config
 import os
+from github import Github
 
 class ModuleLoader():
 	""" The base class for the loading of modules. This class provides all the functionality for actually adding, removing and finding modules.	"""
@@ -117,8 +118,21 @@ class ModuleLoader():
 			return {}
 		return c.modules["enabled"]
 	
-	def downloadFromGithub(self):
+	def downloadFromGithub(self, user, repo):
 		""" Downloads a packed module from GitHub. """
+		print
+		print "-"*70
+		g = Github();
+		repository = g.get_repo("%s/%s" % (user,repo))
+
+		expectedFiles = [""]
+		
+		print repository
+		return;
+		
+	def installFromGithub(self):
+		""" Installs a packed module from GitHub """
+		
 		
 		return;
 		
@@ -316,6 +330,10 @@ def test_teardown():
 	print handle.read()
 	handle.close()
 	os.remove(Config().configFileName)
+	
+def test_downloadFromGithub():
+	ml = ModuleLoader()
+	ml.downloadFromGithub("HAN-Olympus","Olympus-PubMed")
 		
 if __name__ == "__main__":
 	mli = ModuleLoaderInterface()
