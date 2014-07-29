@@ -2,7 +2,7 @@
 @name Article
 @author Stephan Heijl
 @module PubMed
-@version v1.0.0
+@version 1.0.0
 """
 
 from Olympus.lib.StoredObject import StoredObject

@@ -7,13 +7,14 @@
 
 from Olympus.lib.Config import Config
 import os, importlib, random, pprint, sys
-import tarfile
+import tarfile, json
 
 class ModuleSeparator(object):
 	"""  Separates the current working version of Olympus into its constituent modules and allows developers to export them individually. """
 	def __init__(self):
 		self.modules = {}
 		self.files = {}
+		self.name = None
 		
 	def scanAll(self):
 		""" Scans the entire root folder. """ 
@@ -94,12 +95,19 @@ class ModuleSeparator(object):
 	def __package(self, files, dc, prefix=""):
 		""" Packages a list of files into a tarball """
 		name = dc["module"] + "-" + dc["version"] + ".tar"
-		tar = tarfile.open(name=os.path.join(prefix, name), mode="w:")
+		tar = tarfile.open(name=os.path.join(prefix, name), mode="w")
 		for file in files:
-			print file
 			tar.add(file, arcname=file.replace(Config().RootDirectory, ""))
 		tar.close()
 		
+	def __createBoltFile(self, dc, files, prefix=""):
+		""" Creates a json file describing the module. """
+		name = dc["module"] + "-" + dc["version"] + ".json"
+		dc["files"] = [file.replace(Config().RootDirectory,"") for file in files]
+		
+		with open(os.path.join(prefix, name),"w") as bolt:
+			bolt.write(json.dumps(dc))
+			
 	def packageModule(self,module, prefix=""):
 		"""
 			Packages an indexed module
@@ -108,6 +116,7 @@ class ModuleSeparator(object):
 		print module
 		if module in self.files:
 			self.__package(self.files[module].values(), self.modules[module[0]],prefix)
+			self.__createBoltFile(self.modules[module[0]],self.files[module].values(),prefix)
 			
 	def listModule(self,module):
 		"""
@@ -133,7 +142,7 @@ if __name__ == "__main__":
 	
 	module = sys.argv[2]
 	version = sys.argv[3]
-	prefix = ""
+	prefix = "."
 	if len(sys.argv)>4:
 		prefix = sys.argv[4]
 	

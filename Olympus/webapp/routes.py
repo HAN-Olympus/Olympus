@@ -264,7 +264,6 @@ def setEnabledModules():
 	
 	return Response(json.dumps(True));
 	
-	
 # This is for the Tool interface #
 @app.route("/tool")
 def tool():

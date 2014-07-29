@@ -116,6 +116,11 @@ class ModuleLoader():
 		if "enabled" not in c.modules:
 			return {}
 		return c.modules["enabled"]
+	
+	def downloadFromGithub(self):
+		""" Downloads a packed module from GitHub. """
+		
+		return;
 		
 import curses,time,json
 		
