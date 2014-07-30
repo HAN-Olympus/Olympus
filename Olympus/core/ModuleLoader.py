@@ -12,7 +12,9 @@ not available on Microsoft Windows.
 
 # ModuleLoader
 from Olympus.lib.Config import Config
-import os
+from Olympus.core.ModuleSeparator import ModuleSeparator
+import os, time, tarfile, json, re
+import requests
 from github import Github
 
 class ModuleLoader():
@@ -118,23 +120,132 @@ class ModuleLoader():
 			return {}
 		return c.modules["enabled"]
 	
-	def downloadFromGithub(self, user, repo):
-		""" Downloads a packed module from GitHub. """
-		print
-		print "-"*70
-		g = Github();
-		repository = g.get_repo("%s/%s" % (user,repo))
+	def __downloadFromGithub(self, user, repo):
+		""" Downloads a packed module from GitHub. 
+		
+		:param user: The username for this repository.
+		:param repo" The name of the repository.
+		"""
+#		g = Github();
+#		repository = g.get_repo("%s/%s" % (user,repo))
+#		url = repository.get_archive_link("tarball")
+		url = "https://codeload.github.com/HAN-Olympus/Olympus-PubMed/legacy.tar.gz/master"
+		
+		r = requests.get(url)
+		
+		# Create temporary copy of the module
+		tmpDir = os.path.join(Config().RootDirectory, "tmp")
+		if not os.path.isdir(tmpDir):
+			os.mkdir(tmpDir)
+		
+		tmpFileName = "downloadedModule"+str(int(time.time()))+".tar"
+		
+		# Download the file in 1kb chunks
+		with open(os.path.join(tmpDir, tmpFileName), "wb") as tarball:
+			for block in r.iter_content(1024):
+				if not block:
+					break
+				tarball.write(block)
+				
+		return tmpDir,tmpFileName
+		
+	def __getRequiredFiles(self, names):
+		""" This function will return all the files in a list of filenames that
+			have the same base name, but not necessarily the same extensions.
+		
+			:param names: A list of filesystem paths.
+			:rtype: A dictionary with the basename of these files as key and a list with their full paths as a value.
+		"""
+		# We expect some files with the exact same name.
+		expectedExtensions = ["json","tar"]
+		probableFiles = []
+		seen = {}
+		intersect = {}
+		
+		for dirname, filename in names:
+			basename = ".".join(filename.split(".")[:-1])
+			extension = filename.split(".")[-1]
+			
+			if (expectedExtensions > 0) and extension in expectedExtensions:
+				print filename
+				probableFiles.append((dirname, filename, basename, extension))
+				
+		for dirname, filename, basename, extension in probableFiles:
+			data = os.path.join(dirname, filename)
+			if basename not in seen:
+				seen[basename] = data
+			else:
+				if basename in intersect:
+					intersect[basename].append(data)
+				else:
+					intersect[basename] = [seen[basename], data]
+					
+		return intersect
+			
+		
+	def __unpackModule(self, tmpDir, tmpFileName):
+		""" Unpacks the tarball from GitHub and places it the Olympus directory. 
+		
+		:param tmpDir: The directory where the tarball was stored
+		:param tmpFileName: The name of the tarball.
+		"""
+		tarPath = os.path.join(tmpDir, tmpFileName)
+		if not tarfile.is_tarfile(tarPath):
+			return Exception, "The downloaded file was corrupt."
 
-		expectedFiles = [""]
+		tar = tarfile.open(tarPath)
+			
+		names = [os.path.split(n) for n in tar.getnames()]
+		requiredFiles = self.__getRequiredFiles(names)
+		tar.extractall(tmpDir)
 		
-		print repository
-		return;
+		print requiredFiles.values()
+		for paths in requiredFiles.values():
+			# Installation paths
+			boltPath = ""
+			tarballPath = ""
+			for path in paths:
+				
+				filename = os.path.basename(path)
+				basename = ".".join(filename.split(".")[:-1])
+				extension = filename.split(".")[-1]
+				
+				# We need to direct this path to the tmpDir
+				path = os.path.join(tmpDir, path)
+				if extension == "json":
+					boltPath = path
+				if extension == "tar":
+					tarballPath = path
+			
+			# Parse the bolt file
+			with open(boltPath) as bolt:
+				bolt = json.load(bolt)
+				
+				# Check every path before copying.
+				for targetPath in bolt["files"].values():
+					targetPath = os.path.join(Config().RootDirectory, targetPath.strip(os.path.sep))
+					print targetPath
+					# Handle files that already exist.
+					if os.path.exists(targetPath):
+						print "Conflict: This filename already exists."
+						with open(targetPath) as conflictFile:
+							pattern = '\"{3}.+?\"{3}'
+							print re.findall(pattern, conflictFile.read(), flags=re.DOTALL)
+							ModuleSeparator()
+						return False;
+				
+				for tmpPath, targetPath in bolt["files"].items():
+					targetPath = os.path.join(Config().RootDirectory, targetPath.strip(os.path.sep))
+					print "Copying %s to %s" % (tmpPath, targetPath)
+					
+						
 		
-	def installFromGithub(self):
-		""" Installs a packed module from GitHub """
+	def installFromGithub(self, user, repo):
+		""" Installs a module from GitHub """
+		tmpDir, tmpFileName = self.__downloadFromGithub(user, repo)
+		self.__unpackModule( tmpDir, tmpFileName)
 		
-		
-		return;
+
 		
 import curses,time,json
 		
@@ -331,9 +442,9 @@ def test_teardown():
 	handle.close()
 	os.remove(Config().configFileName)
 	
-def test_downloadFromGithub():
+def test_installFromGithub():
 	ml = ModuleLoader()
-	ml.downloadFromGithub("HAN-Olympus","Olympus-PubMed")
+	ml.installFromGithub("HAN-Olympus","Olympus-PubMed")
 		
 if __name__ == "__main__":
 	mli = ModuleLoaderInterface()

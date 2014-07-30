@@ -103,7 +103,10 @@ class ModuleSeparator(object):
 	def __createBoltFile(self, dc, files, prefix=""):
 		""" Creates a json file describing the module. """
 		name = dc["module"] + "-" + dc["version"] + ".json"
-		dc["files"] = [file.replace(Config().RootDirectory,"") for file in files]
+		dc["files"] = {}
+		for file in files:
+			properPath = file.replace(Config().RootDirectory,"")
+			dc["files"][properPath] = properPath
 		
 		with open(os.path.join(prefix, name),"w") as bolt:
 			bolt.write(json.dumps(dc))
@@ -134,7 +137,7 @@ if __name__ == "__main__":
 		sys.exit()
 	operation = sys.argv[1]
 	
-	if operation not in ["export", "list"]:
+	if operation not in ["extract", "list"]:
 		print "I don't know how to '%s'. " % operation
 	
 	ms = ModuleSeparator()
@@ -146,7 +149,7 @@ if __name__ == "__main__":
 	if len(sys.argv)>4:
 		prefix = sys.argv[4]
 	
-	if operation == "export":
+	if operation == "extract":
 		ms.packageModule((module, version),prefix)
 	if operation == "list":
 		ms.listModule((module, version))
