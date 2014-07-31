@@ -2,7 +2,7 @@
 @name Module
 @author Stephan Heijl
 @module core
-@version 0.1.0
+@version 0.2.0
 
 It is important for every Python file in your plugin to include a notation like the one above. 
 This allows ModuleSeparator to distuingish your module from the others and wrap it up nicely for download.

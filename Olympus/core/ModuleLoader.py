@@ -2,7 +2,7 @@
 @name ModuleLoader
 @author Stephan Heijl
 @module core
-@version 0.1.0
+@version 0.2.0
 
 ModuleLoader provides an interface to select which modules will be enabled in the next instance of the Olympus Core. 
 The selected modules will be stored in the configuration file through Config.

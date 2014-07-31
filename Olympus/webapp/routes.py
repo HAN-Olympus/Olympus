@@ -2,7 +2,7 @@
 @name Routes
 @author Stephan Heijl
 @module core
-@version 0.1.0
+@version 0.2.0
 """
 
 from flask import Flask, render_template, abort, Response, request, redirect, url_for
