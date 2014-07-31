@@ -8,7 +8,7 @@ python:
 services:
   - mongodb
 before_install:
-  - sleep 10
+  - sleep 30
   - mongo localhost:27017/olympus createMongoDatabase.js
 script:
   - sudo python setup.py install --force
