@@ -13,7 +13,7 @@ not available on Microsoft Windows.
 # ModuleLoader
 from Olympus.lib.Config import Config
 from Olympus.core.ModuleSeparator import ModuleSeparator
-import os, time, tarfile, json, re
+import os, time, tarfile, json, re, shutil
 import requests
 from github import Github
 
@@ -183,7 +183,7 @@ class ModuleLoader():
 		return intersect
 			
 		
-	def __unpackModule(self, tmpDir, tmpFileName):
+	def __unpackModules(self, tmpDir, tmpFileName):
 		""" Unpacks the tarball from GitHub and places it the Olympus directory. 
 		
 		:param tmpDir: The directory where the tarball was stored
@@ -216,36 +216,58 @@ class ModuleLoader():
 					boltPath = path
 				if extension == "tar":
 					tarballPath = path
-			
-			# Parse the bolt file
-			with open(boltPath) as bolt:
-				bolt = json.load(bolt)
 				
-				# Check every path before copying.
-				for targetPath in bolt["files"].values():
-					targetPath = os.path.join(Config().RootDirectory, targetPath.strip(os.path.sep))
-					print targetPath
-					# Handle files that already exist.
-					if os.path.exists(targetPath):
-						print "Conflict: This filename already exists."
-						with open(targetPath) as conflictFile:
-							pattern = '\"{3}.+?\"{3}'
-							print re.findall(pattern, conflictFile.read(), flags=re.DOTALL)
-							ModuleSeparator()
-						return False;
-				
-				for tmpPath, targetPath in bolt["files"].items():
-					targetPath = os.path.join(Config().RootDirectory, targetPath.strip(os.path.sep))
-					print "Copying %s to %s" % (tmpPath, targetPath)
+				if boltPath != "" and tarballPath != "":
+					self.__unpackModule(tmpDir, boltPath, tarballPath)
+					boltPath = ""
+					tarballPath = ""
 					
-						
+					
+	def __unpackModule(self, tmpDir, boltPath, tarballPath):
+		""" Unpacks a single module from a downloaded GitHub repo. """
+		# Parse the bolt file
+		print tarballPath
+		with open(boltPath) as bolt:
+			bolt = json.load(bolt)
+
+			# Check every path before copying.
+			for downloadedPath in bolt["files"].values():
+				targetPath = os.path.join(Config().RootDirectory, downloadedPath.strip(os.path.sep))
+				print targetPath
+				# Handle files that already exist.
+				if os.path.exists(targetPath):
+					print "Conflict: This filename already exists."
+
+					existingVersion = ""
+					downloadedVersion = bolt["version"]
+					pattern = '\"{3}.+?\"{3}'
+					with open(targetPath) as conflictFile:
+						doc = re.findall(pattern, conflictFile.read(), flags=re.DOTALL)[0]
+						parsedDocs = ModuleSeparator().parseDocString(doc)
+						existingVersion = parsedDocs["version"]
+					
+					# Compare the two version numbers
+					if "".join(re.findall("([0-9]+)", existingVersion)) > "".join(re.findall("([0-9]+)", downloadedVersion)):
+						return False																			 
+			
+			tarball = tarfile.open(tarballPath)
+			for tmpPath, targetPath in bolt["files"].items():
+				targetPath = os.path.join(Config().RootDirectory, targetPath.strip(os.path.sep))
+				print "Copying %s to %s" % (tmpPath, targetPath)
+				# Rename old files
+				if os.path.exists(targetPath):
+					oldPath = targetPath + ".%s.old" % existingVersion
+					os.rename(targetPath, oldPath)
+				tarball.extract(tmpPath.strip(os.path.sep), Config().RootDirectory)
+				if os.path.exists(targetPath):
+					print "Copied successfully!"
+				
 		
 	def installFromGithub(self, user, repo):
 		""" Installs a module from GitHub """
 		tmpDir, tmpFileName = self.__downloadFromGithub(user, repo)
-		self.__unpackModule( tmpDir, tmpFileName)
+		self.__unpackModules( tmpDir, tmpFileName)
 		
-
 		
 import curses,time,json
 		
