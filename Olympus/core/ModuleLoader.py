@@ -237,7 +237,6 @@ class ModuleLoader():
 				# Handle files that already exist.
 				if os.path.exists(targetPath):
 					print "Conflict: This filename already exists."
-
 					existingVersion = ""
 					downloadedVersion = bolt["version"]
 					pattern = '\"{3}.+?\"{3}'
@@ -256,7 +255,7 @@ class ModuleLoader():
 				print "Copying %s to %s" % (tmpPath, targetPath)
 				# Rename old files
 				if os.path.exists(targetPath):
-					oldPath = targetPath + ".%s.old" % existingVersion
+					oldPath = targetPath + ".%s.%s.old" % (existingVersion, int(time.time()))
 					os.rename(targetPath, oldPath)
 				tarball.extract(tmpPath.strip(os.path.sep), Config().RootDirectory)
 				if os.path.exists(targetPath):
@@ -268,8 +267,8 @@ class ModuleLoader():
 		tmpDir, tmpFileName = self.__downloadFromGithub(user, repo)
 		self.__unpackModules( tmpDir, tmpFileName)
 		
-		
-import curses,time,json
+	
+# THIS IS THE CURSES MODULELOADER INTERFACE. IT IS STILL COMPATIBLE WITH THE OLD FEATURES, BUT CANNOT DOWNLOAD MODULES AND WILL AS SUCH BE DEPRECATED BY MILESTONE 4 #
 		
 class ModuleLoaderInterface():
 	""" The curses interface for the ModuleLoader. This is the fallback way of setting the available modules."""
