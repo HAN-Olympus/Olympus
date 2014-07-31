@@ -10,26 +10,23 @@
 	{% set enabledModules = loader.getEnabledModules() %}
 	<div class="row">
 		<div class="col col-md-12">
-			<h2>ModuleLoader</h2>
+			<h2 class="module-loader-title">ModuleLoader</h2>
+			<span class=" add-module-link ">Add module</span>
 		</div>
-		<div class="col col-md-6">
+	</div>
+	<div class="row add-module-row">
+		<div class="col col-md-6 ">
 			<h3>Add a module from GitHub</h3>
 			<p>Type the username and repository name here to download it.</p>
 			<p>
-				<input type="text" class="form-control" id="github-download-input" placeholder="Example: HAN-Olympus/Olympus-PubMed" />
+				<input type="text " class="form-control " id="github-download-input " placeholder="Example: HAN-Olympus/Olympus-PubMed " />
 			</p>
 
-			<button class=" btn btn-lg btn-primary ">Download</button>
+			<button class=" btn btn-lg btn-primary download-button ">Download</button>
 		</div>
-		<div class="col col-md-6">
-			<h3>Statistics</h3>
-			<dl>
-				<dt>Total modules</dt>
-				<dd>{{modules|count}}</dd>
-
-				<dt>Enabled modules</dt>
-				<dd>{{enabledModules|count}}</dd>
-			</dl>
+		<div class="col col-md-6 ">
+			<h3>Console</h3>
+			<div class="console ">Output from the ModuleLoader progress will appear here.</div>
 		</div>
 	</div>
 

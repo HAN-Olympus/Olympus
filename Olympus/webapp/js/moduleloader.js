@@ -56,4 +56,34 @@ $(function () {
 			}
 		});
 	});
+
+	$(".download-button").click(function () {
+		var value = $("#github-download-input").val()
+		$.get("/moduleLoader/install", {
+			"module": value
+		}, function (response) {
+			var id = JSON.parse(response)["id"];
+			if (isNaN(id)) {
+				return;
+			}
+			var logCheck = setInterval(function () {
+				$.get("/moduleLoader/log", {
+					"id": id
+				}, function (response) {
+					// End the interval if end has been reached.
+					$(".console").text(response);
+					elem = $(".console")[0];
+					elem.scrollTop = elem.scrollHeight;
+					if (response.indexOf("Exited.") > -1 || response.indexOf("Invalid arguments") > -1) {
+						clearInterval(logCheck)
+					}
+				})
+			}, 1000);
+
+		});
+	});
+
+	$(".add-module-link").click(function () {
+		$(".add-module-row").slideToggle();
+	});
 });

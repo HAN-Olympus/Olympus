@@ -22,6 +22,8 @@ import json
 import zipfile
 import cStringIO
 import requests
+import time
+import subprocess
 
 from Olympus.webapp import app, modules
 
@@ -263,6 +265,26 @@ def setEnabledModules():
 		ModuleLoader().setModules(category, names);
 	
 	return Response(json.dumps(True));
+
+@app.route("/moduleLoader/install")
+def installGithubModule():
+	""" Installs a module from Github """
+	module = request.args.get("module", "")
+	id = int(time.time())
+	logPath = os.path.join(Config().WebAppDirectory,"tmp","install.%s.log" % id)
+	moduleLoaderCommand = "cd %s; cd ..; python -u -m Olympus.core.ModuleLoader install %s > %s" % (Config().RootDirectory, module, logPath)
+	subprocess.Popen(moduleLoaderCommand, shell=True)
+	return json.dumps({"id":id,"command":moduleLoaderCommand})
+	
+@app.route("/moduleLoader/log")
+def moduleInstallLog():
+	""" Returns the current log of an installing Github module. """
+	id = request.args.get("id",0)
+	tmpPath = os.path.join(Config().WebAppDirectory,"tmp","install.%s.log" % id)
+	logFile = open(tmpPath)
+	log = logFile.read()
+	logFile.close()
+	return log
 	
 # This is for the Tool interface #
 @app.route("/tool")

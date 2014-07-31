@@ -6,14 +6,12 @@
 
 ModuleLoader provides an interface to select which modules will be enabled in the next instance of the Olympus Core. 
 The selected modules will be stored in the configuration file through Config.
-Starting this script from the command line will automatically open the interface. This interface uses `curses` and is therefore
-not available on Microsoft Windows.
 """
 
 # ModuleLoader
 from Olympus.lib.Config import Config
 from Olympus.core.ModuleSeparator import ModuleSeparator
-import os, time, tarfile, json, re, shutil
+import os, time, tarfile, json, re, sys
 import requests
 from github import Github
 
@@ -232,6 +230,7 @@ class ModuleLoader():
 
 			# Check every path before copying.
 			for downloadedPath in bolt["files"].values():
+				time.sleep(1)
 				targetPath = os.path.join(Config().RootDirectory, downloadedPath.strip(os.path.sep))
 				print targetPath
 				# Handle files that already exist.
@@ -251,6 +250,7 @@ class ModuleLoader():
 			
 			tarball = tarfile.open(tarballPath)
 			for tmpPath, targetPath in bolt["files"].items():
+				time.sleep(1)
 				targetPath = os.path.join(Config().RootDirectory, targetPath.strip(os.path.sep))
 				print "Copying %s to %s" % (tmpPath, targetPath)
 				# Rename old files
@@ -267,167 +267,7 @@ class ModuleLoader():
 		tmpDir, tmpFileName = self.__downloadFromGithub(user, repo)
 		self.__unpackModules( tmpDir, tmpFileName)
 		
-	
-# THIS IS THE CURSES MODULELOADER INTERFACE. IT IS STILL COMPATIBLE WITH THE OLD FEATURES, BUT CANNOT DOWNLOAD MODULES AND WILL AS SUCH BE DEPRECATED BY MILESTONE 4 #
 		
-class ModuleLoaderInterface():
-	""" The curses interface for the ModuleLoader. This is the fallback way of setting the available modules."""
-	def __init__(self):
-		self.moduleloader = ModuleLoader()
-		
-	def start(self):
-		""" Starts the interface with help from the curses wrapper """
-		curses.wrapper(self.welcome)
-		
-	def addCenteredString(self, width, y, string, screen, color_pair=None):
-		""" Adds a string to center of the given screen.
-		
-		:param width: The width (int) of the screen you are adding the screen to.
-		:param y: The y coordinate (int) of the text you are adding.
-		:param string: The string to be added.
-		:param sceen: The screen the text needs to be added to.
-		:param color_pair: Optional, the color pair to be used when adding the string.
-		"""
-		length = len(string)
-		
-		offsetLeft = (width - length) /2
-		if color_pair == None:
-			screen.addstr(y, offsetLeft, string)
-		else:
-			screen.addstr(y, offsetLeft, string,color_pair)
-		
-	def welcome(self, stdscr):
-		""" Shows the welcome display on the screen provided.
-		
-		:param stdscr: An instance of a curses screen.
-		"""
-		
-		height, width = stdscr.getmaxyx()
-		
-		curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_YELLOW)
-		
-		self.addCenteredString(width, 1, " Welcome to the Olympus Module Loader ",stdscr)
-		self.addCenteredString(width, 2, " Press enter or Q to exit and save your selected modules. ",stdscr)
-		
-		curses.curs_set(0)
-		self.welcomeInputLoop(stdscr)
-		
-	def convertRegularSelectedToCursesSelected(self, modules, selected):
-		#raise Exception, selected
-		i = 0
-		cSelected = []
-		for category in modules:
-			for module in modules[category]:
-				if category not in selected:
-					continue
-				if unicode(module) in [str(s) for s in selected[category]]:
-					cSelected.append(i)
-				i+=1		
-		
-		return cSelected
-	
-	def welcomeInputLoop(self, stdscr):
-		""" Loops over the input of the welcome screen and processes it.
-		
-		:param stdscr: A curses screen.
-		"""
-		height, width = stdscr.getmaxyx()
-		modules = self.moduleloader.getAllAvailableModules()
-		
-		selected = self.convertRegularSelectedToCursesSelected(modules, self.moduleloader.getEnabledModules())
-		
-		hover = 0
-		max = self.drawModuleList(stdscr, modules, hover, selected)
-	
-		while True:
-			char = stdscr.getch()
-			if char == curses.KEY_ENTER or char == ord("q"):
-				break
-			if char == ord(" "):
-				if hover in selected:
-					selected.remove(hover)
-				else:
-					selected.append(hover)
-				self.drawModuleList(stdscr, modules, hover, selected)
-			elif char == curses.KEY_UP:
-				if hover > 0:
-					hover -= 1
-				self.drawModuleList(stdscr, modules, hover, selected)			
-			elif char == curses.KEY_DOWN:
-				if hover < max-1:
-					hover += 1
-				self.drawModuleList(stdscr, modules, hover, selected)	
-			
-			stdscr.refresh()
-			time.sleep(0.1)
-		
-		self.addCenteredString(width, 30, " Are you sure? (Y/n) ",stdscr)
-		response = stdscr.getch()
-		if response == ord("n"):
-			self.addCenteredString(width, 30, "                    ",stdscr)
-			self.welcomeInputLoop(stdscr)
-		
-		self.saveModules( self.getSelectedModules(modules,selected) )
-		
-	def saveModules(self,selectedModules):
-		for category,modules in selectedModules.items():
-			self.moduleloader.setModules(category, modules)
-		
-	def getSelectedModules(self, modules, selected):
-		""" Gets the modules that were selected based on the list generated by the curses program.
-		
-		:param modules: The dict with available modules.
-		:param selected: A list of integers signifying the selected modules.
-		"""
-		i = 0
-		names = {}
-		for category in modules:
-			names[category] = []
-			for module in modules[category]:
-				if i in selected:
-					names[category].append(module)
-				i+=1
-		return names
-			
-	def drawModuleList(self, stdscr, modules, hover, selected):
-		""" Draws a list of modules on the given screen, separated by their respective categories.
-		This will probably need some refining for smaller screens.
-		
-		:param stdscr: A curses screen.
-		:param modules: The dict with available modules.
-		:param hover: The index of the module where the cursor is positioned.
-		:param selected: The list of currently selected modules.
-		"""
-		
-		i = 0
-		line = 3
-		for category in modules:
-			stdscr.addstr(line, 1, category.capitalize())
-			line+=1
-			stdscr.hline(line, 1, curses.ACS_HLINE, len(category))
-			for module in modules[category]:
-				line+=1
-				
-				if i == hover:
-					pair = 1
-				else: 
-					pair = 0
-				
-				if i in selected:
-					stdscr.addstr(line, 1, "[*] " + module, curses.color_pair(pair))
-				else:
-					stdscr.addstr(line, 1, "[ ] " + module, curses.color_pair(pair))
-				i+=1
-				
-				
-			if len(modules[category]) == 0:
-				line+=1
-				stdscr.addstr(line, 1, "<no modules available>")
-			
-			line+=2
-		stdscr.refresh()
-		return i
-
 def test_setup():
 	c = Config()
 	currentDir = os.path.dirname(__file__)
@@ -468,5 +308,18 @@ def test_installFromGithub():
 	ml.installFromGithub("HAN-Olympus","Olympus-PubMed")
 		
 if __name__ == "__main__":
-	mli = ModuleLoaderInterface()
-	mli.start()
+	# The default start now provides a way to auto install a module.
+	ml = ModuleLoader()
+	command = sys.argv[1]
+	if command == "install":
+		if len(sys.argv) == 3 and "/" in sys.argv[2]:
+			# The user has submitted a user/repo pair with a slash
+			ml.installFromGithub(*sys.argv[2].split("/"))
+		elif len(sys.argv) == 4:
+			# The user has submitted a user repo pair with a space
+			ml.installFromGithub(sys.argv[2],sys.argv[3])
+		else:
+			print "Invalid arguments. Try submitting a user/repo pair like HAN-Olympus/Olympus-PubMed"
+		print "Exited."
+	else:
+		print "Command not recognized."
