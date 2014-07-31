@@ -15,7 +15,6 @@ script:
   - gearmand -d
   - cd Olympus
   - nosetests -v --nocapture webapp/start.py lib/*.py lib/*/*.py modules/*/*.py core/*.py core/*/*.py
-  - xenon --no-assert webapp/start.py lib/*.py lib/*/*.py modules/*/*.py core/*.py core/*/*.py
   - radon cc -a webapp/start.py lib/*.py lib/*/*.py modules/*/*.py core/*.py core/*/*.py
   - ls -al
   - sphinx-apidoc -f -o docs/ . ; cd docs/ ; make html ; cd ..
