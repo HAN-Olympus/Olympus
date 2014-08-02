@@ -23,7 +23,7 @@ class Compiler():
 		self.externalModules = {}
 		self.externalDependencies = set()
 		self.addedModules = set()
-		self.basics = ["Olympus.core.Worker", "Olympus.core.Core", "Olympus.core.ToolInterface", "Olympus.core.WorkerMonitor"]
+		self.basics = ["Olympus.core.Worker", "Olympus.core.Core", "Olympus.core.ToolInterface", "Olympus.core.WorkerMonitor", "Olympus.core.ModuleLoader","Olympus.core.ModuleSeparator"]
 		self.procedure = procedure
 		self.script = ""
 		self.data = {}
@@ -32,7 +32,7 @@ class Compiler():
 	def getDataFiles(self):
 		""" The webapp portion of Olympus is required. 	"""
 		for root, dirs, files in os.walk(Config().RootDirectory + os.sep + "webapp"):
-			if os.path.sep + "tmp" + os.path.sep  in root: # Ignore tmp folders
+			if os.path.sep + "tmp" + os.path.sep  in root: # Ignore tmp foldersifjx25
 				continue
 			root = root.replace(Config().RootDirectory, "")
 			root = str(self.currentPackage + root)
@@ -293,7 +293,7 @@ def test_convertModulesToHierarchy():
 
 	
 def test_buildDist():
-	print "Building wheel"
+	print "Building pacakge"
 	C = Compiler(Procedure([],[],[]))
 	C.addModule("modules.acquisition.PubMed")
 	C.processDependencies()

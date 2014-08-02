@@ -2,7 +2,7 @@
 @name ToolInstaller
 @author Stephan Heijl
 @module core
-@version 0.1.0
+@version 0.2.0
 
 This module installs a tool when it has been downloaded. It will appear in the root folder of the downloaded zip.
 It requires only Python and pip.
@@ -13,7 +13,7 @@ try:
 	import pip
 except ImportError:
 	raise Exception, "Python 'pip' is required for this installer to work."
-
+	
 class ToolInstaller():
 	""" This script installs the egg and all its dependencies in the current directory inside a virtualenv. """
 	def __init__(self):
@@ -27,6 +27,18 @@ class ToolInstaller():
 		
 		self.virtualEnvActivationPath = "activate_this.py"
 		self.requirementsFile = "requirements.txt"
+		
+	def warnBuildRequirementsPosix(self):
+		requirements = "build-essential git cmake libqt4-dev libphonon-dev python2.7-dev libxml2-dev libxslt1-dev qtmobility-dev"
+		print "To use this tool the following dependencies are required for your system:"
+		for r in requirements.split(" "):
+			print r
+		print "Make sure your have these packages by running the following command:"
+		print "sudo apt-get install", requirements
+		print
+		print "If you do not have installation rights on this computer, please contact your administrator."
+		print "These packages are required for the full installation of this tool."
+		print "Any other required packages do not need administration level permission to install."
 	
 	def installVirtualEnv(self):
 		""" This will try to install virtualenv using pip. """
@@ -103,6 +115,12 @@ python -m Olympus.core.ToolInterface --tool
 		
 if __name__ == "__main__":
 	ti = ToolInstaller()
+	if os.name == "posix":
+		print "-"*50
+		ti.warnBuildRequirementsPosix()
+		print "-"*50
+	
+	raw_input("Press enter to continue.")
 	ti.start()
 	
 def test_installVirtualEnv():
