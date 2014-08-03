@@ -4,8 +4,8 @@
 @module core
 @version 0.2.0
 
-This module installs a tool when it has been downloaded. It will appear in the root folder of the downloaded zip.
-It requires only Python and pip.
+This module installs a tool when it has been downloaded.
+It will appear in the root folder of the downloaded zip.
 """
 import os,sys
 
@@ -32,7 +32,7 @@ class ToolInstaller():
 		requirements = "build-essential git cmake libqt4-dev libphonon-dev python2.7-dev libxml2-dev libxslt1-dev qtmobility-dev"
 		print "To use this tool the following dependencies are required for your system:"
 		for r in requirements.split(" "):
-			print r
+			print "  *", r
 		print "Make sure your have these packages by running the following command:"
 		print "sudo apt-get install", requirements
 		print
@@ -75,6 +75,9 @@ class ToolInstaller():
 		easyInstallPath = os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, "easy_install")
 		for file in os.listdir("."):
 			if file.endswith(".egg"):
+				# We store the name of the OlympusTool egg, that way we can set the configuration details later.
+				if "OlympusTool" in file:
+					self.olympusToolPath = file
 				os.system(easyInstallPath + " " + file)
 	
 	def createShortcuts(self):
@@ -102,7 +105,18 @@ python -m Olympus.core.ToolInterface --tool
 			startServerFile.write(startServerScript)
 			
 		with open("startTool.sh", "w") as startToolFile:
-			startToolFile.write(startToolScript)	
+			startToolFile.write(startToolScript)
+			
+	def setInitialConfigs(self):
+		""" Makes sure that the initial configuration for the tool is correct. This is mainly the directory settings. """
+		from Olympus.lib.Config import Config
+		config = Config()
+		libDir = os.path.abspath(os.path.join(self.virtualEnvDir, "lib"))
+		versionDir = os.listdir(libDir)[0]
+		config.RootDirectory = os.path.join(libDir, versionDir, "site-packages", self.olympusToolPath, "Olympus")
+		config.WebAppDirectory = os.path.join(config.RootDirectory, "webapp")
+		config.TemplatesDirectory = os.path.join(config.WebAppDirectory, "templates")
+		config.save()
 	
 	def start(self):
 		""" Starts the installation procedure. """
@@ -166,4 +180,8 @@ def test_createShortcuts():
 	assert os.path.isfile("startTool.sh")
 	
 	os.system("rm startTool.sh")
+	
+def test_shortCuts():
+	os.system("bash startServer.sh")
+	os.system("bash startTool.sh")
 	
