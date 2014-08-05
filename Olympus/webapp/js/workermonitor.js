@@ -3,7 +3,6 @@ $(function () {
 	function checkGearmanState() {
 		// Check the initial Gearman state.
 		$.getJSON("/workermonitor/gearman-status?callback=?", function (data) {
-			console.log(data);
 			if (!data) {
 				// Hide the non-error state alerts
 				$(".gearman-state.alert-success, .gearman-state.alert-warning").hide(0);
@@ -26,12 +25,12 @@ $(function () {
 				createWorkerPanels(data);
 			});
 
-		});
-
-		/* Get the ping */
-		$.getJSON("/workermonitor/gearman-ping?callback=?", function (data) {
-			var width = (getPingRating(data * 1000) * 25) + "%";
-			$(".signal").css("width", width);
+			/* Get the ping */
+			$.getJSON("/workermonitor/gearman-ping?callback=?", function (data) {
+				var width = (getPingRating(data * 1000) * 25) + "%";
+				$(".signal").css("width", width);
+				console.log((data * 1000), getPingRating(data * 1000));
+			});
 		});
 
 	}
@@ -55,12 +54,11 @@ $(function () {
 		if (!ping || ping > 10000) {
 			return 0;
 		}
-		ping = Math.abs(10000 - ping)
-		return (Math.log(ping) / Math.LN10)
+		return 5 - (Math.log(ping) / Math.LN10)
 	}
 
 	checkGearmanState();
-	setInterval(checkGearmanState, 1000);
+	setInterval(checkGearmanState, 2000);
 
 	$(".btn.create").click(function () {
 		$.getJSON("/workermonitor/gearman-start-worker?callback=?", function (data) {

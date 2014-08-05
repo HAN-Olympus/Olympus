@@ -50,8 +50,12 @@ class ToolInstaller():
 			raise Exception, "Python 'virtualenv' is required for this installer to work."
 	
 	def createVirtualEnv(self):
-		""" Launches virtualenv and creates the virtualenv without system packages. """
-		os.system("virtualenv --no-site " + self.virtualEnvDir)
+		""" Launches virtualenv and creates the virtualenv without system packages.
+		Site-packages are disabled by default, but can """
+		if "--with-site-packages" in sys.argv:
+			os.system("virtualenv " + self.virtualEnvDir)
+		else:
+			os.system("virtualenv --no-site " + self.virtualEnvDir)
 	
 	def activateVirtualEnv(self):
 		""" Makes sure the following commands are run inside the virtualenv. """
@@ -127,8 +131,19 @@ python -m Olympus.core.ToolInterface --tool
 		self.installTool()
 		self.createShortcuts()
 		
-if __name__ == "__main__":
+	def help(self):
+		print "This will install the Olympus tool. The following options are available:"
+		print "    --help                    Will show this screen."
+		print "    --with-site-packages      Will install this tool with virtualenv site packages."
+		print "    This is useful if you are running multiple tools on this computer and some"
+		print "    dependencies are already available."
+		
+if __name__ == "__main__":	
 	ti = ToolInstaller()
+	if "--help" in sys.argv:
+		ti.help()
+		sys.exit()
+	
 	if os.name == "posix":
 		print "-"*50
 		ti.warnBuildRequirementsPosix()

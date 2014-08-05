@@ -68,6 +68,7 @@ class WorkerMonitor(object):
 		
 	def getGearmanPing(self):
 		""" Returns the Gearman Server response times. """
+		print Config().GearmanServer
 		try:
 			gac = gearman.admin_client.GearmanAdminClient(Config().GearmanServer)
 			return gac.ping_server()

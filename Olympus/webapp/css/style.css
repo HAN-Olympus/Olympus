@@ -265,6 +265,10 @@ input[type=submit] {
 }
 /* WORKER MONITOR */
 
+.signal {
+	top: 0px;
+	left: 0px;
+}
 .worker ul {
 	list-style-type: none;
 	margin: 0;
