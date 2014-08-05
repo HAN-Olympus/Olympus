@@ -39,6 +39,18 @@ class ToolInstaller():
 		print "If you do not have installation rights on this computer, please contact your administrator."
 		print "These packages are required for the full installation of this tool."
 		print "Any other required packages do not need administration level permission to install."
+		
+	def warnBuildRequirementsNt(self):
+		print "Many modules require the BioPython package. This cannot be retrieved from pip on Windows systems."
+		print "Download the BioPython lib from the following url for your system:"
+		print
+		print "http://www.lfd.uci.edu/~gohlke/pythonlibs/#biopython"
+		print 
+		print "After it has been installed, install this tool with `--with-site-packages` command to use the installed library."
+		print "In addition, a running MongoDB instance is required. MongoDB can be retrieved from the following link:"
+		print 
+		print "http://www.mongodb.org/downloads"
+
 	
 	def installVirtualEnv(self):
 		""" This will try to install virtualenv using pip. """
@@ -53,7 +65,7 @@ class ToolInstaller():
 		""" Launches virtualenv and creates the virtualenv without system packages.
 		Site-packages are disabled by default, but can """
 		if "--with-site-packages" in sys.argv:
-			os.system("virtualenv " + self.virtualEnvDir)
+			os.system("virtualenv --system-site-packages " + self.virtualEnvDir)
 		else:
 			os.system("virtualenv --no-site " + self.virtualEnvDir)
 	
@@ -114,10 +126,14 @@ python -m Olympus.core.ToolInterface --tool
 	def setInitialConfigs(self):
 		""" Makes sure that the initial configuration for the tool is correct. This is mainly the directory settings. """
 		from Olympus.lib.Config import Config
+		
 		config = Config()
 		libDir = os.path.abspath(os.path.join(self.virtualEnvDir, "lib"))
 		versionDir = os.listdir(libDir)[0]
-		config.RootDirectory = os.path.join(libDir, versionDir, "site-packages", self.olympusToolPath, "Olympus")
+		if os.name == "posix":
+			config.RootDirectory = os.path.join(libDir, versionDir, "site-packages", self.olympusToolPath, "Olympus")
+		elif os.name == "nt":
+			config.RootDirectory = os.path.join(libDir, "site-packages", self.olympusToolPath, "Olympus")
 		config.WebAppDirectory = os.path.join(config.RootDirectory, "webapp")
 		config.TemplatesDirectory = os.path.join(config.WebAppDirectory, "templates")
 		config.save()
@@ -145,10 +161,12 @@ if __name__ == "__main__":
 		ti.help()
 		sys.exit()
 	
+	print "-"*50
 	if os.name == "posix":
-		print "-"*50
 		ti.warnBuildRequirementsPosix()
-		print "-"*50
+	if os.name == "nt":
+		ti.warnBuildRequirementsNt()
+	print "-"*50
 	
 	raw_input("Press enter to continue.")
 	ti.start()
@@ -194,7 +212,6 @@ def test_createShortcuts():
 	ti.createShortcuts()	
 	assert os.path.isfile("startServer.sh")
 	assert os.path.isfile("startTool.sh")
-	
 	os.system("rm startTool.sh")
 	
 def test_shortCuts():
