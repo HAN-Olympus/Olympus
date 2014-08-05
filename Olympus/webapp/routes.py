@@ -30,6 +30,26 @@ from Olympus.webapp import app, modules
 # ONLY IMPORT THESE IF THE APP IS NOT IN TOOL MODE: #
 if "--tool" not in sys.argv:
 	from Olympus.core.Compiler import Compiler
+	
+	
+# THIS IS A DECORATOR FOR JSONP #
+from functools import wraps
+from flask import request, current_app
+
+
+def jsonp(func):
+    """Wraps JSONified output for JSONP requests."""
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        callback = request.args.get('callback', False)
+        if callback:
+            data = str(func(*args, **kwargs).data)
+            content = str(callback) + '(' + data + ')'
+            mimetype = 'application/javascript'
+            return current_app.response_class(content, mimetype=mimetype)
+        else:
+            return func(*args, **kwargs)
+    return decorated_function
 
 # LOAD TEMPLATE TOOLS #
 tools = TemplateTools()
@@ -315,7 +335,7 @@ def toolStart():
 	return redirect("/results/%s/" % id)
 
 @app.route("/toolQueue", methods=['GET', 'POST'])
-def toolQueue(viewType):	
+def toolQueue():	
  	""" Puts the Procedure in the Gearman Queue. """
  	data = json.dumps({"nodes":request.args.get("nodes"), "edges":request.args.get("edges"), "edgeAttributes":request.args.get("edgeAttributes")})
 	gm_client = gearman.GearmanClient(['localhost:4730'])
@@ -330,18 +350,22 @@ def workermonitor():
 	return render_template("wmonitor.html", config=Config())
 
 @app.route("/workermonitor/gearman-status")
+@jsonp
 def wmGearmanStatus():
 	return Response( json.dumps( WorkerMonitor().getGearmanStatus() ) )
 
 @app.route("/workermonitor/gearman-workers")
+@jsonp
 def wmGearmanWorkers():
 	return Response( json.dumps( WorkerMonitor().getGearmanWorkers() ) )
 
 @app.route("/workermonitor/gearman-ping")
+@jsonp
 def wmGearmanPing():
 	return Response( json.dumps( WorkerMonitor().getGearmanPing() ) )
 
 @app.route("/workermonitor/gearman-start-worker")
+@jsonp
 def wmGearmanStartWorker():
 	return Response( json.dumps( WorkerMonitor().startNewWorker() ) )
 
@@ -350,7 +374,7 @@ def wmChangeServer():
 	ip = request.args.get("serverIP")
 	if ip == "":
 		ip = "localhost"
-	WorkerMonitor().setGearmanServer(ip,request.args.get("serverPort"))
+	WorkerMonitor().setGearmanServer(ip,request.args.get("serverPort","4730"))
 	return redirect(url_for("workermonitor"))
 
 # TESTING #

@@ -107,11 +107,13 @@ if __name__ == "__main__":
 	# Instantiate the worker and register all the appropiate functions.
 	gm_worker = gearman.GearmanWorker(Config().GearmanServer) # Creates the worker on the default port.
 	gm_worker.data_encoder = PickleDataEncoder
+	gm_worker.set_client_id("id")
 	
 	# Print a welcome message
 	if not "--silent" in sys.argv:
 		welcome()
-		
+	
+	registerFunctions(Worker(), gm_worker) # Register the necessary functions for the worker.
 	gm_worker.work() # Enter the work loop
 	
 # TESTING #

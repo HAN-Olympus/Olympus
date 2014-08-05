@@ -49,17 +49,19 @@ class WorkerMonitor(object):
 	def getGearmanStatus(self):
 		""" Returns the Gearman Server status. """
 		try:
-			print Config().GearmanServer
 			gac = gearman.admin_client.GearmanAdminClient(Config().GearmanServer)
+			print gac.get_status()
 			return gac.get_status()
 		except gearman.admin_client.ServerUnavailable:
 			return None
 		
 	def getGearmanWorkers(self):
 		""" Returns the Gearman Server worker data. Only returns workers that have a task assigned to them. """
+		print "Getting gearman workers"
 		try:
 			gac = gearman.admin_client.GearmanAdminClient(Config().GearmanServer)
 			workers = filter(lambda w: len(w["tasks"]) > 0, gac.get_workers())
+			print "Workers", workers
 			return workers
 		except gearman.admin_client.ServerUnavailable:
 			return None
@@ -98,7 +100,7 @@ class WorkerMonitor(object):
 		app.exec_()
 		
 	def startNewWorker(self):
-		command = "cd %s; python -m Olympus.core.Worker --silent" % Config().RootDirectory
+		command = "cd %s; cd ..; python -m Olympus.core.Worker" % Config().RootDirectory
 		worker = subprocess.Popen(command, shell=True)
 		print worker.pid
 		return {"pid" : worker.pid}

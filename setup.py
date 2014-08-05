@@ -54,27 +54,9 @@ class installNativeDependencies(install):
             else:
                 permission = True
             if permission == "n":
-                return False
-            try:
-                # Full compilation of PySide
-                """
-                # Get wheel
-                os.system("sudo pip install wheel")
-                # Download Qt4 dependenices
-                os.system("sudo apt-get install build-essential cmake libqt4-dev libphonon-dev libxml2-dev libxslt1-dev qtmobility-dev -y")
-                # Download Pyside and unpack it into /tmp/
-                os.system("wget https://pypi.python.org/packages/source/P/PySide/PySide-1.2.2.tar.gz -P /tmp/")
-                os.system("tar -xvzf /tmp/PySide-1.2.2.tar.gz -C /tmp/")
-                # Build PySide
-                os.system("python /tmp/PySide-1.2.2/setup.py bdist_wheel --qmake=/usr/bin/qmake-qt4")
-                # Get the directory name to install
-                name = os.popen("ls /tmp/PySide-1.2.2/dist").read()
-                os.system("sudo pip install /tmp/PySide-1.2.2/dist/%s" % name)
-                # Perform post-installation
-                os.system("sudo python /tmp/PySide-1.2.2/pyside_postinstall.py -install")
-                """
-                
-                # Perfom the actual PySide install
+                return True
+            try:                
+                # Perfom the PySide install
                 os.system("sudo add-apt-repository -y ppa:pyside")
                 os.system("sudo apt-get -y update")
                 os.system("sudo apt-get install -y python-pyside")
