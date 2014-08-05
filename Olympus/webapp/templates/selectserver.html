@@ -1,0 +1,62 @@
+{% extends "main.html" %} {% block index %}
+<div class="container">
+	<p></p>
+	<ol class="breadcrumb">
+		<li>
+			<a href="/">Olympus</a>
+		</li>
+		<li class="active">Select server</li>
+	</ol>
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Select a server</h2>
+			<p>You can select a MongoDB or a Gearman server here. If you don't know what these are, you should probably not be changing these.</p>
+
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<td>Service</td>
+						<td style="width: 50%">IP</td>
+						<td>Port</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						{% set addr, port = config.MongoServer.split(":") %}
+						<td>MongoDB (Database)</td>
+						<td>
+							<input type="text" name="mongo-addr" class="form-control" placeholder="localhost" value="{{addr}}">
+						</td>
+						<td>
+							<input type="number" name="mongo-port" class="form-control " placeholder="27017 " value="{{port}}">
+						</td>
+					</tr>
+					{% for gearmanServer in config.GearmanServer %} {% set addr, port = gearmanServer.split(":") %}
+					<tr class="gearman-server">
+						<td>Gearman</td>
+						<td>
+							<input type="text" name="gear-addr" class="form-control" placeholder="localhost" value="{{addr}}">
+						</td>
+						<td>
+							<input type=" number " name="gear-port" class="form-control " placeholder="4730" value="{{port}}">
+						</td>
+					</tr>
+					{% endfor %}
+					<tr class="gearman-server">
+						<td>Gearman</td>
+						<td>
+							<input type="text" name="gear-addr" class="form-control" placeholder="localhost">
+						</td>
+						<td>
+							<input type="number" name="gear-port" class="form-control " placeholder="4730">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<a href="#" class="btn btn-primary btn-lg server-form-submit"> Select these servers </a>
+		</div>
+	</div>
+
+</div>
+
+{{deferJS("/js/selectserver.js")}} {% endblock %}

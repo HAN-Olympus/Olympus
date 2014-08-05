@@ -5,21 +5,44 @@
 	{% include "header.html" %}
 </head>
 
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+	<span class="icon-bar">topkek</span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+</button>
+
 <body>
 	{% block header %}
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
 				<a class="navbar-brand" href="/">Olympus
 					<span class="glyphicon glyphicon-flash" style="color:white;"></span>
 				</a>
 			</div>
+			<ul class="nav navbar-nav">
+				<li><a href="/interface">Build a tool</a>
+				</li>
+				<li><a href="/latest"><del>Show the latest results</del></a>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+               Options 
+               <b class="caret"></b>
+            </a>
+					<ul class="dropdown-menu">
+						<li><a href="/select-server">Select a server</a>
+						</li>
+						<li><a href="/module-loader">Select or add modules</a>
+						</li>
+						<li><a href="/workermonitor">Show worker status</a>
+						</li>
+					</ul>
+				</li>
+				<li><a href="https://github.com/HAN-Olympus/Olympus">Help</a>
+				</li>
+			</ul>
 			<div class="navbar-right">
 				<a href="https://travis-ci.org/HAN-Olympus/Olympus/" class="navbar-brand">
 					<img src="https://travis-ci.org/HAN-Olympus/Olympus.png?branch=master" alt="Build state Olympus" />

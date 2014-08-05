@@ -258,9 +258,24 @@ def results(job, output):
 	else:
 		return render_template("results.notfound.html", config=Config())
 
+# This is for the server selector #
+	
+@app.route("/select-server")
+def selectServer():
+	""" Renders the server selection interface. """
+	return render_template("selectserver.html", config=Config())
+
+@app.route("/select-server/submit")
+def selectServerSubmit():
+	""" Saves the server selection."""
+	data = json.loads(request.args.get("data"))
+	Config().MongoServer = data["mongoServer"]
+	Config().GearmanServer = data["gearmanServers"]
+	Config().save()
+	return Response(json.dumps(True))
 
 # This is for the ModuleLoader interface #
-@app.route("/moduleLoader")
+@app.route("/module-loader")
 def moduleLoader():
 	""" Renders the ModuleLoader interface """
 	return render_template("moduleloader.html", config=Config(), loader=ModuleLoader(), modules=modules)
@@ -337,7 +352,7 @@ def toolStart():
 @app.route("/toolQueue", methods=['GET', 'POST'])
 def toolQueue():	
  	""" Puts the Procedure in the Gearman Queue. """
- 	data = json.dumps({"nodes":request.args.get("nodes"), "edges":request.args.get("edges"), "edgeAttributes":request.args.get("edgeAttributes")})
+	# TODO: Send a proper procedure.
 	gm_client = gearman.GearmanClient(['localhost:4730'])
 	job = gm_client.submit_job("runNewProcedure", data, background=True)
 	

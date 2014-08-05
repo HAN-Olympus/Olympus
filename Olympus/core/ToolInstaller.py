@@ -129,6 +129,7 @@ python -m Olympus.core.ToolInterface --tool
 		self.activateVirtualEnv()
 		self.installRequirements()
 		self.installTool()
+		self.setInitialConfigs()
 		self.createShortcuts()
 		
 	def help(self):
