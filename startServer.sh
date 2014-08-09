@@ -1,0 +1,1 @@
+screen -S "OlympusServer" -d -m python -m Olympus.webapp.start
