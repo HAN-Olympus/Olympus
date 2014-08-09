@@ -13,6 +13,8 @@ If you have forked Olympus and do not wish to receive updates
 import os
 import requests
 import json
+import datetime
+from github import Github
 from pprint import pprint as pp
 from Olympus.lib.Config import Config
 
@@ -95,7 +97,15 @@ class Updater():
 		currentCommitHash = self.getCurrentCommitHash()
 		data = self.getDataByHash(currentCommitHash)
 		print data
-		return data		
+		return data
+	
+	def getAllCommits(self):
+		g = Github();
+		repository = g.get_repo(Config().OlympusRepo)
+		for commit in repository.get_commits(since=datetime.datetime.now()-datetime.timedelta(days=1)):
+			print commit.sha
+			pp(commit.commit.message)
+			print "-"*20
 		
 	
 # TESTING #
@@ -134,3 +144,14 @@ def test_getCurrentCommitDetails():
 	u = Updater()
 	u.getCurrentCommitDetails()
 	
+def test_getDataByHash():
+	u = Updater()
+	assert u.getDataByHash("a")['commits_behind'] == -1
+	
+def test_getCurrentCommitDetails():
+	u = Updater()
+	assert u.getCurrentCommitDetails()['commits_behind'] >= 0
+	
+def test_getAllCommits():
+	u = Updater()
+	u.getAllCommits()

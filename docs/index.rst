@@ -1,10 +1,10 @@
-.. Olympus documentation master file, created by
-   sphinx-quickstart on Thu Jul 31 21:36:22 2014.
+.. . documentation master file, created by
+   sphinx-quickstart on Sat Aug  9 20:40:13 2014.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Olympus's documentation!
-===================================
+Welcome to .'s documentation!
+=============================
 
 Contents:
 

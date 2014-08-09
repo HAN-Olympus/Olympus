@@ -59,6 +59,14 @@ Olympus.core.ToolInterface module
     :undoc-members:
     :show-inheritance:
 
+Olympus.core.Updater module
+---------------------------
+
+.. automodule:: Olympus.core.Updater
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Olympus.core.Worker module
 --------------------------
 

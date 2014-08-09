@@ -124,10 +124,10 @@ class ModuleLoader():
 		:param user: The username for this repository.
 		:param repo" The name of the repository.
 		"""
-#		g = Github();
-#		repository = g.get_repo("%s/%s" % (user,repo))
-#		url = repository.get_archive_link("tarball")
-		url = "https://codeload.github.com/HAN-Olympus/Olympus-PubMed/legacy.tar.gz/master"
+		g = Github();
+		repository = g.get_repo("%s/%s" % (user,repo))
+		url = repository.get_archive_link("tarball")
+#		url = "https://codeload.github.com/HAN-Olympus/Olympus-PubMed/legacy.tar.gz/master"
 		
 		r = requests.get(url)
 		
