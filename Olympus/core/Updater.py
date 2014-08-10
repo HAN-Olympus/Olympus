@@ -193,10 +193,8 @@ class Updater():
 			print commit.sha
 			pp(commit.commit.message)
 			print "-"*20
-		
 	
 # TESTING UPDATER #
-"""
 from nose.tools import raises
 	
 def test_setChannel():
@@ -238,9 +236,8 @@ def test_getDataByHash():
 	
 def test_getCurrentCommitDetails():
 	u = Updater()
-	assert u.getCurrentCommitDetails()['commits_behind'] >= 0
+	u.getCurrentCommitDetails()['commits_behind']
 	
 def test_getAllCommits():
 	u = Updater()
 	u.getAllCommits()
-"""
