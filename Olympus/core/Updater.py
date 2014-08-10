@@ -20,6 +20,7 @@ from uuid import getnode as get_mac
 from github import Github
 from pprint import pprint as pp
 from Olympus.lib.Config import Config
+from threading import Timer
 
 
 class IRCClient(SingleServerIRCBot):
@@ -31,6 +32,7 @@ class IRCClient(SingleServerIRCBot):
 		SingleServerIRCBot.__init__(self, [(host,int(port))], self.makeUserName(), "OlympusIRCUpdater" )
 		self.channel = "#" + channel
 		self.connection.buffer_class.errors = 'replace'
+		self.ping_interval = 60
 		print "Connecting to the update server. This might take some time..."
 		print "-------------------------------------------------------------"
 
@@ -50,6 +52,26 @@ class IRCClient(SingleServerIRCBot):
 		if source.lower() == "travis-ci":
 			self.handle_travis_message(message)
 			conn.privmsg(self.channel, "Thank you, Travis.")
+			
+	def on_disconnect(self, conn, event):
+		self.routine_ping(first_run = True)
+		self.__init__()
+	
+	def routine_ping(self, first_run = False):
+		""" Ping server to know when try to reconnect to a new server. """
+		global pinger
+		if not first_run and not self.pong_received:
+			print "Ping reply timeout, disconnecting from", self.connection.get_server_name()
+			self.disconnect()
+			return
+		self.pong_received = False
+		self.connection.ping(self.connection.get_server_name())
+		pinger = Timer(self.ping_interval, self.routine_ping, ())
+		pinger.start()
+		
+	def on_pong(self, connection, event):
+		""" React to pong. """
+		self.pong_received = True
 		
 	def handle_travis_message(self, message):
 		""" This should handle and parse messages from Travis. """
