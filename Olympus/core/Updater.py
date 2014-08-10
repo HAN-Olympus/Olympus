@@ -48,7 +48,7 @@ class IRCClient(SingleServerIRCBot):
 		source = event.source.split("!")[0] # Gets the username of the sender
 		print source, message
 		if source.lower() == "travis-ci":
-			self.handle_travis_message(conn, message)
+			self.handle_travis_message(message)
 			conn.privmsg(self.channel, "Thank you, Travis.")
 		
 	def handle_travis_message(self, message):
