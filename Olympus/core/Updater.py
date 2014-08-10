@@ -14,10 +14,61 @@ import os
 import requests
 import json
 import datetime
+import re
+from irc.bot import SingleServerIRCBot, ServerSpec
+from uuid import getnode as get_mac
 from github import Github
 from pprint import pprint as pp
 from Olympus.lib.Config import Config
 
+
+class IRCClient(SingleServerIRCBot):
+	""" This class allows the updater to connect to IRC for live updates. It subclasses the irc SingleServerIRCBot """
+	def __init__(self):
+		""" This initializes the bot with Config values. """
+		server, channel = Config().UpdateServer.split("#")
+		host, port = server.split(":")
+		SingleServerIRCBot.__init__(self, [(host,int(port))], self.makeUserName(), "OlympusIRCUpdater" )
+		self.channel = "#" + channel
+		self.connection.buffer_class.errors = 'replace'
+		print "Connecting to:", server, channel
+
+	def on_welcome(self, conn, event):
+		""" This is executed when the client connects and recieves the welcome message. """
+		conn.join(self.channel)
+		
+	def on_join(self, conn, event):
+		""" This is executed when the client joins the channel. """
+		print "Joined"
+		
+	def on_pubmsg(self, conn, event):
+		""" Handles all the public messages sent to the channel. """
+		message = event.arguments[0]
+		source = event.source.split("!")[0] # Gets the username of the sender
+		print source, message
+		if source != self.makeUserName:
+			self.handle_travis_message(conn, message)
+		
+	def handle_travis_message(self, conn, message):
+		print "This is relevant to my interests."
+		conn.send_raw("Relevant")
+		
+	def makeUserName(self):
+		""" Produces a hex username based on the MAC address of this machine. """
+		mac = get_mac()
+		return "".join(chr(int(l) + ord('a')) for l in str(mac))
+	
+if __name__ == "__main__":
+	bot = IRCClient().start()
+	
+# TESTING IRC #
+
+def test_makeUserName():
+	i = IRCClient()
+	assert re.match( "^[a-z]+$", i.makeUserName() )
+
+# UPDATER #
+		
 class Updater():
 	""" This class is responsible for updating the Olympus app. 
 		It can be run as a service or used periodically.
@@ -73,15 +124,17 @@ class Updater():
 		gitDir = os.path.join(Config().RootDirectory, "..", ".git")
 		headPath = os.path.join(gitDir, "HEAD")
 		with open(headPath, "r") as headFile:
-			refPath = headFile.read().strip("\n")[5:]
-		
-		refPath = os.path.join(gitDir,refPath)
-		with open(refPath, "r") as ref:
-			hash = ref.read().strip(" \n")
+			contents = headFile.read().strip("\n")
+		if os.path.sep in contents:
+			refPath = os.path.join(gitDir,contents[5:])
+			with open(refPath, "r") as ref:
+				hash = ref.read().strip(" \n")
+		else:
+			hash = contents
 		return hash
 	
 	def getDataByHash(self, hash):
-		""" Retrieves data from Travis on the given hash.  If this returns None, the current version is at least 25 commits behind. """
+		""" Retrieves data from Travis on the given hash. If it does not exist, the current version is at least 25 commits behind. """
 		commits = self.getTravisCommits()
 		builds = self.getTravisBuilds()
 		for c in range(len(commits)):
@@ -108,7 +161,8 @@ class Updater():
 			print "-"*20
 		
 	
-# TESTING #
+# TESTING UPDATER #
+
 from nose.tools import raises
 	
 def test_setChannel():
