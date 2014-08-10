@@ -31,7 +31,8 @@ class IRCClient(SingleServerIRCBot):
 		SingleServerIRCBot.__init__(self, [(host,int(port))], self.makeUserName(), "OlympusIRCUpdater" )
 		self.channel = "#" + channel
 		self.connection.buffer_class.errors = 'replace'
-		print "Connecting to:", server, channel
+		print "Connecting to the update server. This might take some time..."
+		print "-------------------------------------------------------------"
 
 	def on_welcome(self, conn, event):
 		""" This is executed when the client connects and recieves the welcome message. """
@@ -39,19 +40,33 @@ class IRCClient(SingleServerIRCBot):
 		
 	def on_join(self, conn, event):
 		""" This is executed when the client joins the channel. """
-		print "Joined"
+		print "Succesfully joined %s." % self.channel
 		
 	def on_pubmsg(self, conn, event):
 		""" Handles all the public messages sent to the channel. """
 		message = event.arguments[0]
 		source = event.source.split("!")[0] # Gets the username of the sender
 		print source, message
-		if source != self.makeUserName:
+		if source.lower() == "travis-ci":
 			self.handle_travis_message(conn, message)
+			conn.privmsg(self.channel, "Thank you, Travis.")
 		
-	def handle_travis_message(self, conn, message):
-		print "This is relevant to my interests."
-		conn.send_raw("Relevant")
+	def handle_travis_message(self, message):
+		""" This should handle and parse messages from Travis. """
+		msg = message.split(" ")
+		pattern = "([\w\-\/]+?)#(\d+?) \((\w+) - (\w+) : [\w ]+\): The build ([\w ]+)\.?"
+		result = re.search(pattern, message)
+		if result!=None:
+			buildResult = {
+				"repo":result.group(1),
+				"build":result.group(2),
+				"branch":result.group(3),
+				"shorthash":result.group(4),
+				"state": ("fixed" in result.group(5) or "passed" in result.group(5)) # True or false based on the contents of the state message
+			}
+		else:
+			buildResult=None
+		return buildResult
 		
 	def makeUserName(self):
 		""" Produces a hex username based on the MAC address of this machine. """
@@ -66,6 +81,25 @@ if __name__ == "__main__":
 def test_makeUserName():
 	i = IRCClient()
 	assert re.match( "^[a-z]+$", i.makeUserName() )
+	
+def test_handle_travis_message():
+	messages = [
+		("HAN-Olympus/Olympus#237 (master - c879119 : Stephan Heijl): The build was fixed.", True),
+		("HAN-Olympus/Olympus#238 (master - 12d5201 : StephanHeijl): The build passed.", True),
+		("HAN-Olympus/Olympus#236 (master - a96c4cb : Stephan Heijl): The build is still failing.", False),
+		("Test message", None),
+		("Change view : https://github.com/HAN-Olympus/Olympus/compare/ea638702475a...a96c4cb9fe9c ", None),
+		("Build details : http://travis-ci.org/HAN-Olympus/Olympus/builds/32119430", None)
+	]
+	i = IRCClient()
+	for message,expected in messages:
+		response = i.handle_travis_message(message)
+		if expected == True:
+			assert response["state"]
+		if expected == False:
+			assert not response["state"]
+		if expected == None:
+			assert response == None
 
 # UPDATER #
 		
@@ -162,7 +196,7 @@ class Updater():
 		
 	
 # TESTING UPDATER #
-
+"""
 from nose.tools import raises
 	
 def test_setChannel():
@@ -209,3 +243,4 @@ def test_getCurrentCommitDetails():
 def test_getAllCommits():
 	u = Updater()
 	u.getAllCommits()
+"""
