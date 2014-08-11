@@ -15,6 +15,8 @@ import requests
 import json
 import datetime
 import re
+import subprocess
+from pprint import pprint as pp 
 from irc.bot import SingleServerIRCBot, ServerSpec
 from uuid import getnode as get_mac
 from github import Github
@@ -133,18 +135,20 @@ class Updater():
 	"""
 	def __init__(self):
 		self.channel = "Release"
-		self.builds = None
+		self.travisBuilds = None
+		self.travisCommits = None
 		self.commits = None
 	
 	def setChannel(self, channel):
 		""" Sets the updating channel for this distribution of Olympus.
 		
-		:param channel: A string that defines the channel. Should be one of the following: Commit, Nightly, Milestone, Release
+		:param channel: A string that defines the channel. Should be one of the following: Mirror, Commit, Nightly, Milestone, Release
 		"""
 		if not isinstance(channel, str):
 			raise TypeError, "Must be a string"
 		allowedChannels = [
-			"Commit", # This channel will update on every commit
+			"Mirror", # This channel will update on ANY commit, even if it does not pass the Travis-CI inspection.
+			"Commit", # This channel will update on every passing commit
 			"Nightly", # This channel will update to the latest passing build of the previous day.
 			"Milestone", # This channel will update when a release with a milestone tag is added
 			"Release" # This channel will update with every actual version release
@@ -160,20 +164,20 @@ class Updater():
 		buildsUrl = "https://api.travis-ci.org/repos/" + Config().OlympusRepo + "/builds"
 		r = requests.get(buildsUrl,headers={"Accept":"application/vnd.travis-ci.2+json"})
 		result = json.loads(r.text)
-		self.builds = result['builds']
-		self.commits = result['commits']
+		self.travisBuilds = result['builds']
+		self.travisCommits = result['commits']
 			
 	def getTravisBuilds(self):
 		""" Gets the latest commit details for this Olympus distrubution. """
-		if self.builds == None:
+		if self.travisBuilds == None:
 			self.__queryTravisBuilds()
-		return self.builds
+		return self.travisBuilds
 	
 	def getTravisCommits(self):
 		""" Gets the latest build details for this Olympus distrubution. """
-		if self.commits == None:
+		if self.travisCommits == None:
 			self.__queryTravisBuilds()
-		return self.commits
+		return self.travisCommits
 	
 	def getCurrentCommitHash(self):
 		""" Will retrieve the current commit hash from the .git directory. """
@@ -189,38 +193,83 @@ class Updater():
 			hash = contents
 		return hash
 	
-	def getDataByHash(self, hash):
+	def getDataByHashTravis(self, hash):
 		""" Retrieves data from Travis on the given hash. If it does not exist, the current version is at least 25 commits behind. """
 		commits = self.getTravisCommits()
 		builds = self.getTravisBuilds()
 		for c in range(len(commits)):
 			commit = commits[c]
-			if commit['sha'] == hash:
+			if commit['sha'] == hash or commit['sha'].startswith(hash):
 				result = dict( commit.items() + builds[c].items() )
 				result["commits_behind"] = c
 				return result
 		return {"commits_behind":-1}
 	
-	def getCurrentCommitDetails(self):
-		""" Retrieves data from Travis on the current version of Olympus. """
-		currentCommitHash = self.getCurrentCommitHash()
-		data = self.getDataByHash(currentCommitHash)
-		print data
-		return data
-	
-	def getAllCommits(self):
+	def getAllCommitsGithub(self):
+		""" Will attempt to retrieve all the GitHub commits. """
+		if self.commits != None:
+			return self.commits
 		g = Github();
 		repository = g.get_repo(Config().OlympusRepo)
-		for commit in repository.get_commits(since=datetime.datetime.now()-datetime.timedelta(days=1)):
-			print commit.sha
-			pp(commit.commit.message)
-			print "-"*20
+		self.commits = repository.get_commits(since=datetime.datetime.now()-datetime.timedelta(days=1))
+		return self.commits
 	
+	def getDataByHashGithub(self, hash):
+		commits = self.getAllCommitsGithub() 
+		for commit in commits:
+			c = commit.commit
+			if c.sha == hash or c.sha.startswith(hash):
+				details = {
+							"sha":c.sha,
+							"author":c.author,
+							"files":commit.files,
+							"commit-message":c.message
+							}
+				return details
+	
+	def getAllDataForHash(self, hash):
+		data = self.getDataByHashTravis(hash).items()
+		data+= self.getDataByHashGithub(hash).items()
+		return dict(data)
+	
+	def getCurrentCommitDetails(self):
+		""" Retrieves data from Travis and Github on the current version of Olympus. """
+		currentCommitHash = self.getCurrentCommitHash()
+		return self.getAllDataForHash(currentCommitHash)
+	
+			
+	def gitPull(self):
+		""" Performs a git pull in the repo root. """
+		gitDir = os.path.join(Config().RootDirectory, "..", ".git")
+		if not os.path.exists(gitDir):
+			raise Exception, "This is not a git repository. Cannot pull. "
+		p = subprocess.Popen("cd %s; cd ..; git pull" % Config().RootDirectory, shell=True, stdout=subprocess.PIPE)
+		print p.communicate()
+		
+	def checkAppropiateUpdateForChannel(self, message, branch, hash, state):
+		""" This function attempts to determine whether or not a given commit is appropiate for the set channel according to its properties. """
+		if self.channel == "Mirror":
+			# The mirror channel will always update.
+			return True
+		if self.channel == "Commit":
+			# The Commit channel will pull any commit that passes the travis-ci build
+			return state
+		if self.channel == "Nightly":
+			return True			
+		if self.channel == "Milestone":
+			# The Milestone channel will pull any working commit from a Milestone channel
+			return state and ("milestone" in branch.lower() or "<milestone>" in message.lower())
+		if self.channel == "Release":
+			# The Milestone channel will pull any working commit from a Milestone channel
+			return state and ("release" in branch.lower() or "<release>" in message.lower())
+		
+		
 # TESTING UPDATER #
 from nose.tools import raises
-	
+
 def test_setChannel():
 	u = Updater()
+	assert u.setChannel("Mirror")
 	assert u.setChannel("Commit")
 	assert u.setChannel("Nightly")
 	assert u.setChannel("Milestone")
@@ -252,14 +301,52 @@ def test_getCurrentCommitDetails():
 	u = Updater()
 	u.getCurrentCommitDetails()
 	
-def test_getDataByHash():
+def test_getDataByHashTravis():
 	u = Updater()
-	assert u.getDataByHash("a")['commits_behind'] == -1
+	assert u.getDataByHashTravis("adwjdijaidjiawjdij")['commits_behind'] == -1
 	
 def test_getCurrentCommitDetails():
 	u = Updater()
 	u.getCurrentCommitDetails()['commits_behind']
 	
-def test_getAllCommits():
+def test_getAllCommitsGithub():
 	u = Updater()
-	u.getAllCommits()
+	u.getAllCommitsGithub()
+
+
+def test_checkAppropiateUpdateForChannel():
+	u = Updater()
+	# test data
+	test_data = [
+		( "Mirror", ("","","",True), True ),
+		( "Mirror", ("","","",False), True ),
+		( "Commit", ("","","",True), True ),
+		( "Commit", ("","","",False), False ),
+
+		# Make test cases for nightly
+		( "Nightly", ("","","",False), True ),
+		# //
+		
+		( "Milestone", ("","Milestone","",False), False ),
+		( "Milestone", ("","Milestone","",True), True ),
+		( "Milestone", ("","Regular","",True), False ),
+		( "Milestone", ("<Milestone>","Milestone","",True), True ),
+		( "Milestone", ("<Milestone>","Regular","",True), True ),
+		( "Milestone", ("<milestone>","Regular","",True), True ),
+		( "Milestone", ("<Milestone>","Regular","",False), False ),
+
+		( "Release", ("","Release","",False), False ),
+		( "Release", ("","Release","",True), True ),
+		( "Release", ("","Regular","",True), False ),
+		( "Release", ("<Release>","Release","",True), True ),
+		( "Release", ("<Release>","Regular","",True), True ),
+		( "Release", ("<Release>","Regular","",True), True ),
+		( "Release", ("<Release>","Regular","",False), False ),
+	]
+	for channel, args, result in test_data:
+		u.setChannel(channel)
+		assert u.checkAppropiateUpdateForChannel(*args) == result
+
+def test_gitPull():
+	u = Updater()
+	u.gitPull()
