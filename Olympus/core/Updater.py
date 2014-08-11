@@ -52,9 +52,11 @@ class IRCClient(SingleServerIRCBot):
 		source = event.source.split("!")[0] # Gets the username of the sender
 		print source, message
 		if source.lower() == "travis-ci":
-			self.handle_travis_message(message)
 			conn.privmsg(self.channel, "Thank you, Travis.")
-			
+			if self.handle_travis_message(message):
+				conn.privmsg(self.channel, "Will update.")
+			else:
+				conn.privmsg(self.channel, "Will not update.")
 	def on_disconnect(self, conn, event):
 		self.routine_ping(first_run = True)
 		self.__init__()
@@ -75,8 +77,8 @@ class IRCClient(SingleServerIRCBot):
 		""" React to pong. """
 		self.pong_received = True
 		
-	def handle_travis_message(self, message):
-		""" This should handle and parse messages from Travis. """
+	def parseTravisBuildResult(self, message):
+		""" This function parses message from Travis-CI. """ 
 		msg = message.split(" ")
 		pattern = "([\w\-\/]+?)#(\d+?) \((\w+) - (\w+) : [\w ]+\): The build ([\w ]+)\.?"
 		result = re.search(pattern, message)
@@ -92,38 +94,30 @@ class IRCClient(SingleServerIRCBot):
 			buildResult=None
 		return buildResult
 		
+	def handle_travis_message(self, message):
+		""" This should handle messages from Travis. """
+		buildResult = self.parseTravisBuildResult(message)		
+		if buildResult != None:
+			return self.doUpdateIfAppropiate(buildResult)
+		return False
+		
+	def doUpdateIfAppropiate(self, buildResult):
+		""" Will pull the repo if an update is appropiate according to the channel. """
+		u = Updater()
+		args = ["", buildResult["branch"], buildResult["shorthash"], buildResult["state"]]
+		print args
+		print u.channel
+		if u.checkAppropiateUpdateForChannel(*args):
+			print u.checkAppropiateUpdateForChannel(*args)
+			u.gitPull()
+			u.restartServer()
+			return True
+		return False
+		
 	def makeUserName(self):
 		""" Produces a hex username based on the MAC address of this machine. """
 		mac = get_mac()
 		return "".join(chr(int(l) + ord('a')) for l in str(mac))
-	
-if __name__ == "__main__":
-	bot = IRCClient().start()
-	
-# TESTING IRC #
-
-def test_makeUserName():
-	i = IRCClient()
-	assert re.match( "^[a-z]+$", i.makeUserName() )
-	
-def test_handle_travis_message():
-	messages = [
-		("HAN-Olympus/Olympus#237 (master - c879119 : Stephan Heijl): The build was fixed.", True),
-		("HAN-Olympus/Olympus#238 (master - 12d5201 : StephanHeijl): The build passed.", True),
-		("HAN-Olympus/Olympus#236 (master - a96c4cb : Stephan Heijl): The build is still failing.", False),
-		("Test message", None),
-		("Change view : https://github.com/HAN-Olympus/Olympus/compare/ea638702475a...a96c4cb9fe9c ", None),
-		("Build details : http://travis-ci.org/HAN-Olympus/Olympus/builds/32119430", None)
-	]
-	i = IRCClient()
-	for message,expected in messages:
-		response = i.handle_travis_message(message)
-		if expected == True:
-			assert response["state"]
-		if expected == False:
-			assert not response["state"]
-		if expected == None:
-			assert response == None
 
 # UPDATER #
 		
@@ -134,7 +128,7 @@ class Updater():
 		It will listen on an Updater IRC Channel
 	"""
 	def __init__(self):
-		self.channel = "Release"
+		self.channel = Config().UpdateChannel
 		self.travisBuilds = None
 		self.travisCommits = None
 		self.commits = None
@@ -236,7 +230,6 @@ class Updater():
 		""" Retrieves data from Travis and Github on the current version of Olympus. """
 		currentCommitHash = self.getCurrentCommitHash()
 		return self.getAllDataForHash(currentCommitHash)
-	
 			
 	def gitPull(self):
 		""" Performs a git pull in the repo root. """
@@ -245,6 +238,18 @@ class Updater():
 			raise Exception, "This is not a git repository. Cannot pull. "
 		p = subprocess.Popen("cd %s; cd ..; git pull" % Config().RootDirectory, shell=True, stdout=subprocess.PIPE)
 		print p.communicate()
+		
+	def restartServer(self):
+		""" Restarts the server. Calls the stopServer and startServer scripts. """
+		print "Stopping Olympus server."
+		stopping = subprocess.Popen("cd %s; cd ..; bash stopServer.sh;" % Config().RootDirectory, shell="True")
+		stopping.communicate()
+		print "Starting Olympus server."
+		stopping = subprocess.Popen("cd %s; cd ..; bash startServer.sh;" % Config().RootDirectory, shell="True")
+		stopping.communicate()
+		print "Restart successfull."
+		return True
+		
 		
 	def checkAppropiateUpdateForChannel(self, message, branch, hash, state):
 		""" This function attempts to determine whether or not a given commit is appropiate for the set channel according to its properties. """
@@ -313,10 +318,10 @@ def test_getAllCommitsGithub():
 	u = Updater()
 	u.getAllCommitsGithub()
 
-
 def test_checkAppropiateUpdateForChannel():
 	u = Updater()
-	# test data
+	# Test data formatted like so:
+	# ( Branch, (list of arguments for checkAppropiateUpdateForChannel() ), Expected Value)
 	test_data = [
 		( "Mirror", ("","","",True), True ),
 		( "Mirror", ("","","",False), True ),
@@ -350,3 +355,33 @@ def test_checkAppropiateUpdateForChannel():
 def test_gitPull():
 	u = Updater()
 	u.gitPull()
+
+# TESTING IRC #
+
+def test_makeUserName():
+	i = IRCClient()
+	assert re.match( "^[a-z]+$", i.makeUserName() )
+	
+def test_parseTravisBuildResult():
+	messages = [
+		("HAN-Olympus/Olympus#237 (master - c879119 : Stephan Heijl): The build was fixed.", True),
+		("HAN-Olympus/Olympus#238 (master - 12d5201 : StephanHeijl): The build passed.", True),
+		("HAN-Olympus/Olympus#236 (master - a96c4cb : Stephan Heijl): The build is still failing.", False),
+		("Test message", None),
+		("Change view : https://github.com/HAN-Olympus/Olympus/compare/ea638702475a...a96c4cb9fe9c ", None),
+		("Build details : http://travis-ci.org/HAN-Olympus/Olympus/builds/32119430", None)
+	]
+	i = IRCClient()
+	for message,expected in messages:
+		response = i.parseTravisBuildResult(message)
+		if expected:
+			assert response['state']
+		if expected == False:
+			assert not response['state']
+		if expected == None:
+			assert response == None
+
+
+# Start the Updater #
+if __name__ == "__main__":
+	bot = IRCClient().start()
