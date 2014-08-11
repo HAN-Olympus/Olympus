@@ -1,5 +1,5 @@
 .. Olympus documentation master file, created by
-   sphinx-quickstart on Mon Aug 11 16:49:35 2014.
+   sphinx-quickstart on Mon Aug 11 16:50:42 2014.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
