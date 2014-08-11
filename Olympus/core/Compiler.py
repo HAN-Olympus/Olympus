@@ -57,8 +57,9 @@ class Compiler():
 						 ...
                          'Singleton': 'Singleton',
                          'StoredObject': 'StoredObject'},
-                 'modules': {'acquisition': {'AcquisitionModule': 'AcquisitionModule'}}}}
-
+                 'modules': {'acquisition': {'AcquisitionModule': 'AcquisitionModule'}}
+				 }
+			}
 		"""
 		hierarchy = {}
 		
