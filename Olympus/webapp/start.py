@@ -13,6 +13,7 @@ from tornado.ioloop import IOLoop
 from Olympus.webapp import app
 from flask.ext.compress import Compress
 
+
 class Server(threading.Thread):
 	def __init__(self):
 		self.PORT = 5000

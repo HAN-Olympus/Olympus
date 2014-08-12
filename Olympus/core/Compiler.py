@@ -5,8 +5,7 @@
 @version 0.1.0
 """
 
-import cStringIO
-import os,re, inspect,time,subprocess, pprint
+import os,re, inspect,time,subprocess, pprint, shutil, cStringIO,zipfile
 from Olympus.lib.Procedure import Procedure
 from Olympus.lib.Config import Config
 from Olympus.core.Core import Core
@@ -243,20 +242,77 @@ setup(
 	packages = {packages},
 	py_modules= {modules},
 	data_files = {data},
-	
 )		
-		""".format(**data)
-		
-		#print [module for module in self.modules.keys() + self.basics]
-		
+		""".format(**data)	
+				
 		with open(os.path.join(tmpDir, "setup.py"),"w") as sfile:
 			sfile.write(setup)
+			
+		# Add the ToolInstaller
+		installerPath = os.path.join(Config().RootDirectory,"core", "ToolInstaller.py")
+		shutil.copy(installerPath, os.path.join(tmpDir, "install.py"))
 		
 		# Run temporary setup file with temporary directory as output
 		command = "cd %s ; cd .. ; echo pwd; python %s bdist_egg -d %s" % (Config().RootDirectory, os.path.join(tmpDir, "setup.py"), tmpDir)
 		subprocess.Popen(command, shell=True, stdout=open(os.devnull, 'wb')).communicate()
-				
+		
 		return id
+	
+	@staticmethod
+	def buildWindowsDist(id):
+		""" Zips the Build directory for this distribution for Windows """
+		f = cStringIO.StringIO() # We want to read the pure contents of this file, so we load it in memory.
+		z = zipfile.ZipFile(f, 'w')
+
+		directory = os.path.join( Config().WebAppDirectory, "tmp", "build-%s" % id )
+		
+		installBat = "python install.py --with-site-packages --skip-warn"
+		with open(os.path.join(directory, "install.bat"), "w") as i:
+			i.write(installBat)
+			
+		z.write(os.path.join(directory, "install.bat"), "install.bat")
+		
+		for root, dirs, files in os.walk(directory):
+			for file in files:
+				if file.endswith(".egg"): # Just add the .egg
+					path = os.path.join(root, file)
+					z.write(path, path.replace(directory, ""))
+		
+		# Include the setup.exe
+		setup = os.path.join(Config().RootDirectory,"core", "windows-installer-dependencies", "setup.exe")
+		z.write(setup, "setup.exe")
+		
+		# And include the requirements.
+		requirements = os.path.join(Config().RootDirectory,"..", "requirements.txt")
+		z.write(requirements, "requirements.txt")
+
+		requirements = os.path.join(directory, "install.py")
+		z.write(requirements, "install.py")
+		return f
+	
+	@staticmethod
+	def buildPosixDist(id):
+		""" Zips the Build directory for this distribution for Linux """
+		f = cStringIO.StringIO() # We want to read the pure contents of this file, so we load it in memory.
+		z = zipfile.ZipFile(f, 'w')
+
+		directory = os.path.join( Config().WebAppDirectory, "tmp", "build-%s" % id )
+		for root, dirs, files in os.walk(directory):
+			for file in files:
+				if file.endswith(".egg"): # Just add the .egg
+					path = os.path.join(root, file)
+					z.write(path, path.replace(directory, ""))
+
+		# And include the requirements.
+		requirements = os.path.join(Config().RootDirectory,"..", "requirements.txt")
+		z.write(requirements, "requirements.txt")
+
+		requirements = os.path.join(directory, "install.py")
+		z.write(requirements, "install.py")
+
+		z.close()
+		return f
+
 
 # TESTING #
 

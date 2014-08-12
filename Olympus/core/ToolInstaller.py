@@ -72,6 +72,7 @@ class ToolInstaller():
 	def activateVirtualEnv(self):
 		""" Makes sure the following commands are run inside the virtualenv. """
 		actthispath = os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, self.virtualEnvActivationPath)
+		print actthispath
 		execfile(actthispath,dict(__file__=actthispath) )
 	
 	def installRequirements(self, installPySide=True):
@@ -96,8 +97,31 @@ class ToolInstaller():
 					self.olympusToolPath = file
 				os.system(easyInstallPath + " " + file)
 	
-	def createShortcuts(self):
-		""" Creates a variety of shortcuts for the tool.
+	def createShortcutsWindows(self):
+		""" Creates a variety of shortcuts for the tool on Windows systems.
+		
+		* startServer.bat - starts a local webapp server (Done)
+		* startTool.bat - starts the tool (WIP)
+		
+		"""
+		params = {"python": os.path.join(os.path.abspath(self.virtualEnvDir), self.virtualEnvBinPath, "python")}
+		
+		startServerScript = """
+{python} -m Olympus.webapp.start --tool
+		""".format(**params)
+		
+		startToolScript = """
+{python} -m Olympus.core.ToolInterface --tool
+		""".format(**params)
+		
+		with open("startServer.bat", "w") as startServerFile:
+			startServerFile.write(startServerScript)
+			
+		with open("startTool.bat", "w") as startToolFile:
+			startToolFile.write(startToolScript)
+			
+	def createShortcutsPosix(self):
+		""" Creates a variety of shortcuts for the tool on Posix systems.
 		
 		* startServer.sh - starts a local webapp server (Done)
 		* startTool.sh - starts the tool (WIP)
@@ -125,11 +149,13 @@ python -m Olympus.core.ToolInterface --tool
 			
 	def setInitialConfigs(self):
 		""" Makes sure that the initial configuration for the tool is correct. This is mainly the directory settings. """
+		libDir = os.path.abspath(os.path.join(self.virtualEnvDir, "lib"))
+		versionDir = os.listdir(libDir)[0]
+		sys.path.append(os.path.join(libDir, versionDir, "site-packages", self.olympusToolPath))
+		sys.path.append(os.path.join(libDir, "site-packages", self.olympusToolPath))
 		from Olympus.lib.Config import Config
 		
 		config = Config()
-		libDir = os.path.abspath(os.path.join(self.virtualEnvDir, "lib"))
-		versionDir = os.listdir(libDir)[0]
 		if os.name == "posix":
 			config.RootDirectory = os.path.join(libDir, versionDir, "site-packages", self.olympusToolPath, "Olympus")
 		elif os.name == "nt":
@@ -146,12 +172,16 @@ python -m Olympus.core.ToolInterface --tool
 		self.installRequirements()
 		self.installTool()
 		self.setInitialConfigs()
-		self.createShortcuts()
+		if os.name == "posix":
+			self.createShortcutsPosix()
+		if os.name == "nt":
+			self.createShortcutsWindows()
 		
 	def help(self):
 		print "This will install the Olympus tool. The following options are available:"
 		print "    --help                    Will show this screen."
 		print "    --with-site-packages      Will install this tool with virtualenv site packages."
+		print "    --skip-warn               Skips waiting for user input after the warning."
 		print "    This is useful if you are running multiple tools on this computer and some"
 		print "    dependencies are already available."
 		
@@ -167,8 +197,8 @@ if __name__ == "__main__":
 	if os.name == "nt":
 		ti.warnBuildRequirementsNt()
 	print "-"*50
-	
-	raw_input("Press enter to continue.")
+	if "--skip-warn" not in sys.argv:
+		raw_input("Press enter to continue.")
 	ti.start()
 	
 def test_installVirtualEnv():
@@ -207,14 +237,10 @@ def test_installRequirements():
 	assert len(packages) < len(newPackages)
 	os.system("rm -r %s" % ti.virtualEnvDir)
 	
-def test_createShortcuts():
+def test_createShortcutsPosix():
 	ti = ToolInstaller()
-	ti.createShortcuts()	
+	ti.createShortcutsPosix()	
 	assert os.path.isfile("startServer.sh")
 	assert os.path.isfile("startTool.sh")
 	os.system("rm startTool.sh")
-	
-def test_shortCuts():
-	os.system("bash startServer.sh")
-	os.system("bash startTool.sh")
 	

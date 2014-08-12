@@ -1,1 +1,5 @@
-screen -S "OlympusServer" -d -m python -m Olympus.webapp.start
+
+#!/bin/sh
+source /var/www/Olympus/env/bin/activate
+python -m Olympus.webapp.start --tool
+		

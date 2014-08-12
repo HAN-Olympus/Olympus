@@ -211,29 +211,13 @@ def compiler():
 	id = C.buildDist()
 	return Response(json.dumps({"id":id}))
 
-@app.route("/downloadCompiled/<id>")
-def downloadCompiled(id):
-	""" Zips the Build directory for this distribution and allows the user to download it. """
-	f = cStringIO.StringIO() # We want to read the pure contents of this file, so we load it in memory.
-	z = zipfile.ZipFile(f, 'w')
-	
-	directory = os.path.join( Config().WebAppDirectory, "tmp", "build-%s" % id )
-	for root, dirs, files in os.walk(directory):
-		for file in files:
-			if file.endswith(".egg"): # Just add the .egg
-				path = os.path.join(root, file)
-				z.write(path, path.replace(directory, ""))
-	
-	# Add ToolInstaller.py as install.py
-	installer = os.path.join(Config().RootDirectory,"core", "ToolInstaller.py")
-	z.write(installer, "install.py")
-	
-	# And include the requirements.
-	requirements = os.path.join(Config().RootDirectory,"..", "requirements.txt")
-	z.write(requirements, "requirements.txt")
-
-	z.close()
-
+@app.route("/downloadCompiled/<id>/<platform>")
+def downloadCompiled(id, platform):
+	""" Enables the user to download the zip for their platform."""
+	if platform == "windows":
+		f = Compiler.buildWindowsDist(id)
+	if platform == "posix":
+		f = Compiler.buildPosixDist(id)
 	return Response(f.getvalue(), mimetype="application/zip")
 
 	

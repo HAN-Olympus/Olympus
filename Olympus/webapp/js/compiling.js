@@ -36,7 +36,8 @@ $(function () {
 	//
 	$.getJSON("/compiler/" + window.location.search, function (response) {
 		console.log(response);
-		$(".btn.download").attr("disabled", false).attr("href", "/downloadCompiled/" + response["id"])
+		$(".btn.download-linux").attr("disabled", false).attr("href", "/downloadCompiled/" + response["id"] + "/posix")
+		$(".btn.download-windows").attr("disabled", false).attr("href", "/downloadCompiled/" + response["id"] + "/windows")
 		$("h2").append("Done.")
 		// We can stop drawing a little after when we're done compiling.
 		setTimeout(function () {
