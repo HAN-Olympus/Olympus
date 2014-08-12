@@ -76,7 +76,9 @@ class FancyTable(Table.Table):
 		if isinstance(v, dict):
 			return "<dl>" + "".join(["<dt>%s</dt><dd>%s</dd>" % (ik, self.formatValue(iv)) for ik, iv in v.items()]) + "</dl>"
 		
-		return unicode(value)
+		if isinstance(value, str):
+			return unicode(value, errors='ignore')
+		return value
 		
 		
 		
