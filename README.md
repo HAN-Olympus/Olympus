@@ -1,6 +1,6 @@
 Olympus
 =======
-[Documentation](http://cytosine.nl/~stephan/OlympusDocs/) -
+[Documentation](http://cytosine.nl/~olympus/olympus/docs/_build/html/) -
 [Travis-CI](https://travis-ci.org/HAN-Olympus/Olympus/) -
 [![Build Status](https://travis-ci.org/HAN-Olympus/Olympus.svg?branch=master)](https://travis-ci.org/HAN-Olympus/Olympus)
 
