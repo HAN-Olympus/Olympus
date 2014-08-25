@@ -1,14 +1,18 @@
 """
 @name ToolInstaller
-@author Stephan Heijl, Tom Linssen
+@author Stephan Heijl
 @module core
 @version 0.2.0
 
 This module installs a tool when it has been downloaded.
 It will appear in the root folder of the downloaded zip.
 """
-import os,sys, urllib2
+import os,sys
 
+try:
+	import pip
+except ImportError:
+	raise Exception, "Python 'pip' is required for this installer to work."
 	
 class ToolInstaller():
 	""" This script installs the egg and all its dependencies in the current directory inside a virtualenv. """
@@ -23,20 +27,7 @@ class ToolInstaller():
 		
 		self.virtualEnvActivationPath = "activate_this.py"
 		self.requirementsFile = "requirements.txt"
-	
-	def installPip(self):
-		"""Downloading latest version of pip from the internet and installing pip."""
-		pipurl = "https://bootstrap.pypa.io/get-pip.py"
-		response = urllib2.urlopen(pipurl)
-		script = response.read()
-		with open("getpip.py", "w") as f:
-			f.write(script)
-		execfile("getpip.py")
-		try: 
-			import pip
-		except:
-			raise ImportError, "Need pip to install"
-	
+		
 	def warnBuildRequirementsPosix(self):
 		requirements = "build-essential git cmake libqt4-dev libphonon-dev python2.7-dev libxml2-dev libxslt1-dev qtmobility-dev"
 		print "To use this tool the following dependencies are required for your system:"
@@ -175,7 +166,6 @@ python -m Olympus.core.ToolInterface --tool
 	
 	def start(self):
 		""" Starts the installation procedure. """
-		self.installPip()
 		self.installVirtualEnv()
 		self.createVirtualEnv()
 		self.activateVirtualEnv()
@@ -253,14 +243,4 @@ def test_createShortcutsPosix():
 	assert os.path.isfile("startServer.sh")
 	assert os.path.isfile("startTool.sh")
 	os.system("rm startTool.sh")
-	os.system("rm startServer.sh")
-	
-def test_installPip():
-	ti = ToolInstaller()
-	ti.installPip()
-	assert os.path.isfile("getpip.py")
-	import pip
-	
-	
-	
 	
