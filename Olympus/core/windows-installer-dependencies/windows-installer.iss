@@ -46,13 +46,6 @@ var
   Result1: Boolean;
   WebJRE: string;
 begin
-  PythonInstalled := RegKeyExists(HKLM, 'SOFTWARE\Wow6432Node\Python\PythonCore\2.7\InstallPath');
-  if PythonInstalled then
-  begin
-    MsgBox('installed', mbInformation, MB_OK);
-  end
-  else
-  begin
     Result1 := MsgBox('This tool requires Python and several modules for it to run. If this is your first time we recommend you install these. If you know these are already installed, click No. ', mbConfirmation, MB_YESNO) = IDYES;
     if not Result1 then
     begin    
@@ -74,7 +67,6 @@ begin
       WebJRE:='"'+Expandconstant('{tmp}\biopython-1.64.win32-py2.7.exe')+'"'
       Exec('cmd.exe ','/c'+WebJRE,'', SW_HIDE,ewWaituntilterminated, Errorcode);
     end;
-  end;
 end;
                                                                                         
 [Icons]
