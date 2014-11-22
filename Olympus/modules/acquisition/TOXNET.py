@@ -65,7 +65,10 @@ class TOXNET(AcquisitionModule):
 		# The Query result will contain some HTML linebreaks, which do not count as correct XML
 		xml = xml.replace("<br>","\n")
 		dictionary = xmltodict.parse(xml)
-		root = dictionary["QueryResult"]
+		try:
+			root = dictionary["QueryResult"]
+		except:
+			return "{}"
 		print json.dumps(root, sort_keys=True, indent=4, separators=(',', ': '))
 		return root
 	
