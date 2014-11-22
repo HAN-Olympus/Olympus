@@ -210,12 +210,12 @@ class Compiler():
 		self.tmpDir = tmpDir
 		try:
 			os.mkdir("tmp")
-		except (IOError,WindowsError) as e:
+		except (IOError,OSError) as e:
 			pass # Directory already exists
 
 		try:
 			os.mkdir(tmpDir)
-		except (IOError,WindowsError) as e:
+		except (IOError,OSError) as e:
 			pass # Directory already exists
 		
 		# Add various tool-specific components
