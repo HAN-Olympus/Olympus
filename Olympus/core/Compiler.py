@@ -289,6 +289,20 @@ setup(
 
 		requirements = os.path.join(directory, "install.py")
 		z.write(requirements, "install.py")
+
+		try:
+			tool = os.path.join(directory, "tool.prc")
+			z.write(tool, "tool.prc")
+		except:
+			pass # No tool included
+
+		try:
+			toolPage = os.path.join(directory, "tool.htm")
+			z.write(toolPage, "tool.htm")
+		except:
+			pass # No toolpage included
+
+		z.close()
 		return f
 	
 	@staticmethod
@@ -310,6 +324,18 @@ setup(
 
 		requirements = os.path.join(directory, "install.py")
 		z.write(requirements, "install.py")
+
+		try:
+			tool = os.path.join(directory, "tool.prc")
+			z.write(tool, "tool.prc")
+		except:
+			pass # No tool included
+
+		try:
+			toolPage = os.path.join(directory, "tool.htm")
+			z.write(toolPage, "tool.htm")
+		except:
+			pass # No toolpage included
 
 		z.close()
 		return f
