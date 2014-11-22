@@ -5,7 +5,6 @@ from Olympus.lib.Config import Config
 import os, sys, re
 import pprint
 
-
 class installNativeDependencies(install):
     """ We need some more stuff for the client to actually run. """
     
@@ -135,7 +134,7 @@ class installNativeDependencies(install):
             print "Run this install with --force as a parameter to try installing without root permissions."
             return False
         
-        print self.getInstalledPackages()
+        self.getInstalledPackages()
         
         if not self.installPipRequirements():
             raise Exception, "Not all dependencies installed."
