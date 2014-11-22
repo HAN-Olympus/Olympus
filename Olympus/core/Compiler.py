@@ -210,11 +210,12 @@ class Compiler():
 		self.tmpDir = tmpDir
 		try:
 			os.mkdir("tmp")
-		except:
+		except (IOError,WindowsError) as e:
 			pass # Directory already exists
+
 		try:
 			os.mkdir(tmpDir)
-		except:
+		except (IOError,WindowsError) as e:
 			pass # Directory already exists
 		
 		# Add various tool-specific components
@@ -347,9 +348,8 @@ def test_convertModulesToHierarchy():
 	import pprint
 	pprint.pprint( C.convertModulesToHierarchy() )
 
-	
 def test_buildDist():
-	print "Building pacakge"
+	print "Building package"
 	C = Compiler(Procedure([],[],[]))
 	C.addModule("modules.acquisition.PubMed")
 	C.processDependencies()
