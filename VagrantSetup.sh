@@ -7,5 +7,4 @@ cd /OlympusNew
 sudo git clone https://github.com/HAN-Olympus/Olympus.git /OlympusNew
 sudo python setup.py install --force
 gearmand -d
-cd Olympus
-sudo sphinx-apidoc -f -o docs/ . ; cd docs/ ; make html ; cd ..
+sudo bash startServer.sh
