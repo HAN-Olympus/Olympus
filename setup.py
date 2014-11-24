@@ -24,6 +24,7 @@ class installNativeDependencies(install):
         return self.packages
     
     def installPipRequirements(self):
+		print "Installing Pip requirements"
         try:
             os.popen("sudo pip install --use-mirrors -r requirements.txt")
             return True
