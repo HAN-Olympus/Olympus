@@ -14,11 +14,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder ".", "/Olympus"
   config.vm.network "forwarded_port", guest: 5000, host: 6000
   config.vm.network "forwarded_port", guest: 5001, host: 6001
+
   config.vm.provision "shell",
     inline: "sudo bash /Olympus/VagrantSetup.sh"
-	
-  config.vm.network "forwarded_port", guest: 5000, host: 6000
-  config.vm.network "forwarded_port", guest: 5001, host: 6001
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
