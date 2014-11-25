@@ -11,7 +11,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "https://cloud-images.ubuntu.com/vagrant/saucy/current/saucy-server-cloudimg-amd64-vagrant-disk1.box"
-  config.vm.synced_folder ".", "/Olympus"
+  config.vm.synced_folder "", "/Olympus"
+  config.vm.synced_folder "VagrantSync", "/OlympusNew"
   config.vm.network "forwarded_port", guest: 5000, host: 6000
   config.vm.network "forwarded_port", guest: 5001, host: 6001
 
