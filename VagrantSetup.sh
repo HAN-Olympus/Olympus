@@ -1,6 +1,8 @@
 sudo apt-get install python mongodb python-pip gearman git-core -y
+sudo mkdir /data
+sudo mkdir /data/db
 mongod
-sleep 10
+sleep 30
 mongo localhost:27017/olympus createMongoDatabase.js
 sudo mkdir /OlympusNew
 cd /OlympusNew
