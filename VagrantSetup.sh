@@ -8,6 +8,6 @@ cd /OlympusNew
 
 sudo git clone https://github.com/HAN-Olympus/Olympus.git /OlympusNew
 mongo localhost:27017/olympus createMongoDatabase.js
-sudo python setup.py install --force
+sudo python setup.py install --force --skip-pyside
 gearmand -d
 sudo bash startServer.sh

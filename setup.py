@@ -148,10 +148,12 @@ class installNativeDependencies(install):
 		
 		if not self.installPipRequirements():
 			raise Exception, "Not all dependencies installed."
-			return False		
-		if not self.installPySide():
-			raise Exception, "Not all dependencies installed."
 			return False
+			
+		if "--skip-pyside" in sys.argv:
+			if not self.installPySide():
+				raise Exception, "Not all dependencies installed."
+				return False
 		if not self.installLibFreeType():
 			raise Exception, "Not all dependencies installed."
 			return False
