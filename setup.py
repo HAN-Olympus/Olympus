@@ -26,10 +26,16 @@ class installNativeDependencies(install):
 	def installPipRequirements(self):
 		print "Installing Pip requirements"
 		try:
-			print subprocess.call("sudo pip install --use-mirrors -r requirements.txt")
+			print subprocess.call("sudo pip install -r requirements.txt",shell=True)
 			return True
-		except:
-			return False
+		except Exception as e:
+			print e
+			try:
+				# accounts for Travis
+				os.popen("sudo pip install --use-mirrors -r requirements.txt")
+			except Exception as e:
+				return False
+			return True
 	
 	def installPySide(self):
 		""" We install PySide for the user interface. 
