@@ -88,17 +88,20 @@ class installNativeDependencies(install):
 			permission = raw_input("Install libfreetype6-dev? (Y/n): ")
 		else:
 			permission = True
-		installed = False   
+		
+		installed = False
 		if not installed:
-			permission = raw_input("Install LibFreeType? (Y/n): ")
 			if permission == "n" and "--force" not in sys.argv:
 				return False
 			try:
-				# Perfom the actual PySide install
-				os.system("sudo apt-get install libfreetype6-dev")
-				return True
+				if permission:
+					# Perfom the actual libfreetype install
+					os.system("sudo apt-get install libfreetype6-dev -y")
+					return True
+				return False
 			except:
 				return False
+		
 		return False
 	
 	def installGearman(self):
