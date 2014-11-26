@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 from Olympus.core.Core import Core
 from Olympus.lib.Config import Config
-import os, sys, re
+import os, sys, re, subprocess
 import pprint
 
 class installNativeDependencies(install):
@@ -26,7 +26,7 @@ class installNativeDependencies(install):
 	def installPipRequirements(self):
 		print "Installing Pip requirements"
 		try:
-			os.popen("sudo pip install --use-mirrors -r requirements.txt")
+			print subprocess.call("sudo pip install --use-mirrors -r requirements.txt")
 			return True
 		except:
 			return False
