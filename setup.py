@@ -149,8 +149,8 @@ class installNativeDependencies(install):
 		if not self.installPipRequirements():
 			raise Exception, "Not all dependencies installed."
 			return False
-			
-		if "--skip-pyside" in sys.argv:
+		
+		if not skipPySide:
 			if not self.installPySide():
 				raise Exception, "Not all dependencies installed."
 				return False
@@ -172,6 +172,10 @@ if __name__ == "__main__":
 	
 	with open("requirements.txt") as requirements:
 		requiredList = requirements.read().split("\n")
+	
+	skipPySide = "--skip-pyside" in sys.argv
+	if skipPySide:
+		sys.argv.remove("--skip-pyside")
 
 	setup(
 		name = "Olympus",
