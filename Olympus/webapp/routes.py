@@ -333,7 +333,10 @@ def toolStart():
 	for key, value in dict(request.files).items():
 		moduleName = key.split("-")[0]
 		keyName = "-".join(key.split("-")[1:])
-		
+
+		if isinstance(value, list):
+			value = value[0]
+
 		if moduleName in arguments:
 			arguments[moduleName][keyName] = value.read()
 		else:

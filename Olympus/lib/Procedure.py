@@ -135,19 +135,23 @@ class Procedure():
 
 		output = {}
 		storedOutput = {}
+		edges = list(self.bfs_edges(graph, "start"))
+		
+		outputBuffer = {}
 
-		for edge in self.bfs_edges(graph, "start"):
+		for edge in edges:
 			parent = edge[0]
 			child = edge[1]
 
 			print "%s -> %s" % (parent, child)
 			# Should contain an outputId, determining what exactly should be retrieved from the function call.
+			
 			attributes = edge[2]
 			# Only start the node if it's actually a module...
-			if not isinstance(child, Module):
+			if not isinstance(child, Module) and not issubclass(child, Module):
 				continue
 
-			if not isinstance(parent, Module):
+			if not isinstance(parent, Module):				
 				if str(child) in arguments.keys():
 					print "Using arguments for: ",arguments[str(child)]
 					output[child] = [child.start(**arguments[str(child)])]
@@ -155,8 +159,8 @@ class Procedure():
 					output[child] = [child.start()]
 			else:
 				argcount = child.start.func_code.co_argcount
-				print argcount
-				print output
+				print 
+				print child, argcount
 				
 				if argcount == 2:
 					if child in output and isinstance(output[child], list):
@@ -166,18 +170,33 @@ class Procedure():
 						output[child] = [child.start(c) for c in output[parent]]
 
 				elif argcount > 2:
+					if child in outputBuffer.keys() and len(outputBuffer[child]) == argcount-1:
+						output[child] = [child.start(*outputBuffer[child])]
 					if len(output[parent]) == argcount -1:
 						output[child] = [child.start(*output[parent])]
 					elif len(output[parent]) < argcount -1:
-						while(len(output[parent]) < argcount -1):
-							output[parent].append(None)
+						for e in edges:
+							if e[0] != parent and e[1] == child:
+								if child not in outputBuffer:
+									outputBuffer[child] = []
+								outputBuffer[child].append(output[parent])
+						
+						if child in outputBuffer.keys() and len(outputBuffer[child]) < argcount-1:
+							continue
+						elif child in outputBuffer.keys() and len(outputBuffer[child]) == argcount-1:
+							output[child] = [child.start(*outputBuffer[child])]
+							continue
+						else:
+							while(len(output[parent]) < argcount -1):
+								output[parent].append(None)
 							
+						print output[parent]
 						output[child] = [child.start(*output[parent])]
+						
+						
 					elif len(output[parent]) > argcount -1:
 						output[parent] = output[parent][:argcount-1]
 						output[child] = [child.start(*output[parent])]
-						
-
 				else:
 					output[child] = None
 
@@ -191,7 +210,7 @@ class Procedure():
 		"""
 		
 		html = XHTML()
-		form = html.form("", role="form", action="/toolStart", method="post")		
+		form = html.form("", role="form", action="/toolStart", method="post", enctype="multipart/form-data")		
 		for node in self.instantiatedNodes:
 			if node == "start":
 				continue;
@@ -206,11 +225,13 @@ class Procedure():
 				
 			for key, control in controls.items():
 				group = fieldset.div(klass="form-group")
-				theControl = control.toHTML()
-				
 				name = control.name
 				if control.name == None:
 					name = "undefined"
+					
+				control.name = str(node)+"-"+control.name
+					
+				theControl = control.toHTML()
 				
 				label = group.label(control.label)
 				label._attrs["for"] = "control-"+name;
@@ -243,6 +264,8 @@ class Procedure():
 			return False, traceback.print_exc(file=sys.stdout)
 		
 		out.job_id = str(int(time.time()))
+		
+		print output.items()
 		
 		for k,v in output.items():
 			print k, len(v)
