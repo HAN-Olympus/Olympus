@@ -169,7 +169,7 @@ python -m Olympus.core.ToolInterface --tool
 		self.installVirtualEnv()
 		self.createVirtualEnv()
 		self.activateVirtualEnv()
-		self.installRequirements()
+		self.installRequirements(installPySide="--skip-pyside" not in sys.argv)
 		self.installTool()
 		self.setInitialConfigs()
 		if os.name == "posix":

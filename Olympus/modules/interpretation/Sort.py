@@ -1,4 +1,5 @@
 import InterpretationModule
+from Olympus.lib.Module import Module
 from Olympus.lib.Collection import Collection
 
 class Sort(InterpretationModule.InterpretationModule):

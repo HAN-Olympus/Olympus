@@ -306,6 +306,7 @@ def moduleInstallLog():
 	return log
 	
 # This is for the Tool interface #
+
 @app.route("/tool")
 def tool():
 	""" Renders the tool interface. """
@@ -328,6 +329,18 @@ def toolStart():
 			arguments[moduleName][keyName] = value
 		else:
 			arguments[moduleName] = {keyName:value}
+			
+	for key, value in dict(request.files).items():
+		moduleName = key.split("-")[0]
+		keyName = "-".join(key.split("-")[1:])
+		
+		if isinstance(value, list):
+			value = value[0]
+		
+		if moduleName in arguments:
+			arguments[moduleName][keyName] = value.read()
+		else:
+			arguments[moduleName] = {keyName:value.read()}		
 	
 	print arguments
 	id = procedure.run(arguments=arguments)
